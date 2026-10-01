@@ -28,11 +28,61 @@ Item {
   readonly property bool installed: loaded && state !== "uninitialised"
   readonly property bool running: status.running === true
   readonly property var sync: status.sync || ({})
-  readonly property bool home: sync.home !== false
-  readonly property var projects: sync.projects instanceof Array ? sync.projects : []
-  readonly property var excluded: sync.exclude instanceof Array ? sync.exclude : []
+  // Every folder that syncs, home memory among them (its name is "~").
+  readonly property var syncing: sync.projects instanceof Array ? sync.projects : []
+  readonly property var homeEntry: {
+    for (var i = 0; i < syncing.length; i++) if (syncing[i].project === "~") return syncing[i]
+    return null
+  }
+  readonly property bool home: homeEntry !== null
+  readonly property var projects: {
+    var out = []
+    for (var i = 0; i < syncing.length; i++) if (syncing[i].project !== "~") out.push(syncing[i])
+    return out
+  }
+  // Whether everything found syncs, or only what is mapped. A node from
+  // before mappings does not say: it syncs everything found.
+  readonly property bool knowsMappings: sync.all !== undefined
+  readonly property bool all: sync.all === true
+  // Project names kept off this device. Folders in the list are ones that
+  // were unmapped; they show under "found" instead, where they can be
+  // turned back on.
+  readonly property var excluded: {
+    var list = sync.exclude instanceof Array ? sync.exclude : []
+    var out = []
+    for (var i = 0; i < list.length; i++) if (String(list[i]).charAt(0) !== "/") out.push(list[i])
+    return out
+  }
   readonly property var conflicts: sync.conflicts instanceof Array ? sync.conflicts : []
-  readonly property var unsynced: sync.unsynced instanceof Array ? sync.unsynced : []
+  // Names this person's other devices sync and this one does not.
+  readonly property var available: sync.available instanceof Array ? sync.available : []
+  readonly property bool homeAvailable: available.indexOf("~") !== -1
+  // Memory found here that does not sync, each with the name it would get.
+  // A folder that is not a git project is offered under its own name.
+  readonly property var found: {
+    var list = sync.unmapped instanceof Array ? sync.unmapped : []
+    var out = []
+    for (var i = 0; i < list.length; i++) {
+      var entry = list[i]
+      if (!entry.cwd || entry.name === "~") continue
+      var name = entry.name ? String(entry.name) : suggestedName(entry.cwd)
+      if (name === "") continue
+      out.push({ cwd: String(entry.cwd), name: name, named: !!entry.name, elsewhere: available.indexOf(name) !== -1 })
+    }
+    return out
+  }
+  // Names synced elsewhere with no folder found for them here.
+  readonly property var elsewhere: {
+    var out = []
+    for (var i = 0; i < available.length; i++) {
+      var name = String(available[i])
+      if (name === "~") continue
+      var here = false
+      for (var j = 0; j < found.length; j++) if (found[j].name === name) here = true
+      if (!here) out.push(name)
+    }
+    return out
+  }
   readonly property var devices: status.devices instanceof Array ? status.devices : []
   readonly property var relays: {
     var list = status.peers && status.peers.list instanceof Array ? status.peers.list : []
@@ -82,11 +132,16 @@ Item {
     }
   }
 
+  // Which line of a finished command's output to show: "last" (the
+  // default), "first", or "none".
+  property string _show: "last"
+
   // Run a cordelia command; `note` shows while it runs.
-  function run(args, note) {
+  function run(args, note, show) {
     if (actionProcess.running) return
     lastError = ""
     actionStatus = note || ""
+    _show = show || "last"
     actionProcess.command = [cli].concat(args)
     actionProcess.running = true
   }
@@ -95,10 +150,13 @@ Item {
     if (actionProcess.running) return
     lastError = ""
     actionStatus = note || ""
+    _show = "last"
     actionProcess.command = ["bash", "-c", script, cli]
     actionProcess.running = true
   }
 
+  // Turning sync on again keeps what was set before: the folders that are
+  // mapped, and whether everything found syncs.
   function toggleSync() {
     if (!running) return
     if (syncOn) {
@@ -106,13 +164,45 @@ Item {
       run(["sync", "off"], "")
     } else {
       _desiredSync = 1
-      run(home ? ["sync", "claude"] : ["sync", "claude", "--no-home"], "")
+      run(["sync", "claude"], "", "none")
     }
   }
 
   function setHome(on) { run(["sync", "home", on ? "on" : "off"], "") }
-  function setProject(project, on) { run(["sync", on ? "include" : "exclude", project], "") }
+  function setAll(on) { run(["sync", "claude", on ? "--all" : "--mapped-only"], "", "none") }
+  // A git project is named by its remote; any other folder is given `name`.
+  function mapFolder(cwd, name) { run(["sync", "map", cwd].concat(name ? [name] : []), "", "first") }
+  // A mapped folder is unmapped; one found because everything syncs is
+  // excluded on this device.
+  function stopSyncing(entry) {
+    if (entry.mapped === true) run(["sync", "unmap", String(entry.project)], "", "first")
+    else run(["sync", "exclude", String(entry.project)], "")
+  }
+  function include(project) { run(["sync", "include", project], "") }
   function removeDevice(key) { run(["remove-device", key], "Removing the device and changing keys…") }
+
+  // The name a folder that is not a git project is offered under: its own
+  // name, in the characters a sync name allows. "" if nothing usable is left.
+  function suggestedName(cwd) {
+    var parts = String(cwd || "").split("/")
+    var base = ""
+    for (var i = parts.length - 1; i >= 0 && base === ""; i--) base = parts[i]
+    var name = base.toLowerCase().replace(/[^a-z0-9._-]+/g, "-").replace(/^-+|-+$/g, "")
+    return /[a-z0-9]/.test(name) ? name : ""
+  }
+
+  // `path` with the home directory written as ~.
+  function shortPath(path) {
+    var p = String(path || "")
+    var home = String(Quickshell.env("HOME") || "")
+    if (home !== "" && (p === home || p.indexOf(home + "/") === 0)) return "~" + p.substring(home.length)
+    return p
+  }
+
+  function copyText(text, note) {
+    Quickshell.execDetached(["bash", "-c", "printf %s \"$1\" | wl-copy", "copy", String(text)])
+    flash(note)
+  }
 
   function startNode() {
     runShell("systemctl --user start cordelia", "Starting the node…")
@@ -209,7 +299,9 @@ Item {
       } else {
         root.lastError = ""
         var lines = out.trim().split("\n")
-        root.flash(root.elide(lines[lines.length - 1]))
+        if (root._show === "first") root.flash(root.elide(lines[0]))
+        else if (root._show === "last") root.flash(root.elide(lines[lines.length - 1]))
+        else root.actionStatus = ""
       }
       root.refresh()
       settle.restart()

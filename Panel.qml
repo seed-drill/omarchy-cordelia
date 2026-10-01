@@ -7,7 +7,7 @@ import qs.Commons
 import qs.Ui
 
 // Cordelia in the bar: one icon that says whether your agent's memory is in
-// step, and a panel with the switch, relays, devices, projects and conflicts.
+// step, and a panel with the switch, what syncs, relays, devices and conflicts.
 Panel {
   id: root
   moduleName: "seeddrill.cordelia"
@@ -221,9 +221,22 @@ Panel {
             SwitchRow {
               width: parent.width
               title: "Home memory"
-              detail: "What Claude remembers outside any project"
+              detail: cordelia.home
+                ? (cordelia.homeEntry.waiting === true ? "Waiting for one of your other devices to let this one in"
+                  : "What Claude remembers outside any project")
+                : (cordelia.homeAvailable ? "Your other devices sync it" : "What Claude remembers outside any project")
               checked: cordelia.home
               onToggled: cordelia.setHome(!cordelia.home)
+            }
+
+            SwitchRow {
+              visible: cordelia.knowsMappings
+              width: parent.width
+              title: "Everything found"
+              detail: cordelia.all ? "Home memory and every git project, now and later"
+                : "Off: only the folders you turn on below"
+              checked: cordelia.all
+              onToggled: cordelia.setAll(!cordelia.all)
             }
 
             InfoPair {
@@ -333,16 +346,16 @@ Panel {
             }
           }
 
-          // ── Projects ────────────────────────────────────────────
+          // ── What syncs ──────────────────────────────────────────
           Column {
             visible: cordelia.running && cordelia.syncOn
-              && (cordelia.projects.length > 0 || cordelia.excluded.length > 0 || cordelia.unsynced.length > 0)
+              && (cordelia.projects.length > 0 || cordelia.excluded.length > 0)
             width: parent.width
             spacing: Style.space(6)
 
             PanelSeparator { foreground: root.foreground }
             PanelSectionHeader {
-              text: "PROJECTS"
+              text: "SYNCING"
               foreground: root.foreground
               fontFamily: root.fontFamily
             }
@@ -350,14 +363,13 @@ Panel {
               model: cordelia.projects
               SwitchRow {
                 required property var modelData
-                readonly property bool isHome: modelData.project === "~"
-                // Home has its own switch above.
-                visible: !isHome
                 width: column.width
-                title: root.projectLabel(modelData.project)
-                detail: modelData.waiting === true ? "Waiting to be added by another device" : "Syncing"
+                title: modelData.cwd ? cordelia.shortPath(modelData.cwd) : String(modelData.project)
+                detail: modelData.error ? "Error: " + String(modelData.error)
+                  : (modelData.waiting === true ? "Waiting for one of your other devices to let this one in"
+                    : (modelData.cwd ? String(modelData.project) : "Syncing"))
                 checked: true
-                onToggled: cordelia.setProject(String(modelData.project), false)
+                onToggled: cordelia.stopSyncing(modelData)
               }
             }
             Repeater {
@@ -366,21 +378,63 @@ Panel {
                 required property var modelData
                 width: column.width
                 title: String(modelData)
-                detail: "Not synced from this device"
+                detail: "Kept off this device"
                 checked: false
-                onToggled: cordelia.setProject(String(modelData), true)
+                onToggled: cordelia.include(String(modelData))
               }
             }
-            Text {
-              textFormat: Text.PlainText
-              visible: cordelia.unsynced.length > 0
-              width: parent.width
-              text: cordelia.unsynced.length + (cordelia.unsynced.length === 1 ? " folder is" : " folders are")
-                + " not synced: only home memory and git projects sync."
-              color: root.dim
-              font.family: root.fontFamily
-              font.pixelSize: Style.font.caption
-              wrapMode: Text.WordWrap
+          }
+
+          // ── Found here, not syncing ─────────────────────────────
+          Column {
+            visible: cordelia.running && cordelia.syncOn && cordelia.found.length > 0
+            width: parent.width
+            spacing: Style.space(6)
+
+            PanelSeparator { foreground: root.foreground }
+            PanelSectionHeader {
+              text: "FOUND ON THIS MACHINE"
+              foreground: root.foreground
+              fontFamily: root.fontFamily
+            }
+            Repeater {
+              model: cordelia.found
+              SwitchRow {
+                required property var modelData
+                width: column.width
+                title: cordelia.shortPath(modelData.cwd)
+                detail: (modelData.named ? modelData.name : "Syncs as " + modelData.name)
+                  + (modelData.elsewhere ? " · your other devices sync it" : "")
+                checked: false
+                onToggled: cordelia.mapFolder(modelData.cwd, modelData.named ? "" : modelData.name)
+              }
+            }
+          }
+
+          // ── On the other devices, with no folder here ───────────
+          Column {
+            visible: cordelia.running && cordelia.syncOn && cordelia.elsewhere.length > 0
+            width: parent.width
+            spacing: Style.space(6)
+
+            PanelSeparator { foreground: root.foreground }
+            PanelSectionHeader {
+              text: "ON YOUR OTHER DEVICES"
+              foreground: root.foreground
+              fontFamily: root.fontFamily
+            }
+            Repeater {
+              model: cordelia.elsewhere
+              ActionRow {
+                required property var modelData
+                width: column.width
+                icon: String.fromCodePoint(0xF0322) // laptop
+                title: String(modelData)
+                detail: "Click to copy the command that syncs a folder with it"
+                actionIcon: String.fromCodePoint(0xF018F) // copy
+                onActivated: cordelia.copyText("cordelia sync map <folder> " + String(modelData),
+                  "Copied. Put the folder in and run it in a terminal.")
+              }
             }
           }
         }
