@@ -43,6 +43,7 @@ TRACKS = "1ee44bb"
 HOME = os.path.expanduser("~")
 CONFIG = os.path.join(HOME, ".config", "cordelia", "menubar.json")
 PLIST = os.path.join(HOME, "Library", "LaunchAgents", "ai.seeddrill.cordelia.plist")
+ACTION_LOG = os.path.join(HOME, ".cordelia", "logs", "menubar.log")
 SELF = os.path.realpath(sys.argv[0])
 URGENT = "#e5484d"
 DIM = "#8e8e93"
@@ -245,22 +246,6 @@ def action(title, *args, **params):
     line(title, bash=SELF, terminal="false", refresh=True, **ps, **params)
 
 
-def header(text):
-    print("---")
-    line(text, size=11, color=DIM)
-
-
-def item(title, detail=None, *args, **params):
-    """A row as the panel draws it: a title, and a small grey line under it.
-    With `args`, clicking the title runs this file with them."""
-    if args:
-        action(title, *args, **params)
-    else:
-        line(title, **params)
-    if detail:
-        line(detail, size=11, color=DIM)
-
-
 def render():
     st = status()
     m = model(st)
@@ -273,126 +258,123 @@ def render():
     print("---")
 
     if not m["installed"]:
-        item("Cordelia", "Install it to keep your agent's memory in step across your machines",
-             href="https://seeddrill.ai/install")
+        line("Install Cordelia…", href="https://seeddrill.ai/install")
         return
 
-    # ── The header: the switch is memory sync itself ──
+    # The first row is the switch, as the panel's header is, with the summary beside the name.
     about = f"cordelia {m['version'] or '?'} · panel {TRACKS}"
-    summary = (m["summary"] or m["state"]).upper()
+    summary = m["summary"] or m["state"]
+    if m["waiting"] > 0:
+        summary += f" · {m['waiting']} waiting to send"
     if m["running"]:
-        item("Cordelia", summary, "toggle-sync", checked=m["sync_on"], size=14,
-             tooltip=("Stop syncing memory on this device" if m["sync_on"] else "Sync Claude Code's memory") + f" ({about})")
+        action(f"Cordelia · {summary}", "toggle-sync", checked=m["sync_on"],
+               tooltip=("Click to stop syncing memory on this device" if m["sync_on"]
+                        else "Click to sync Claude Code's memory") + f" ({about})")
     else:
-        item("Cordelia", summary, size=14, tooltip=about)
-        item("Start the node", "It runs in the background and keeps memory in step", "start-node")
+        line(f"Cordelia · {summary}", tooltip=about)
+        action("Start the node", "start-node", tooltip="It runs in the background and keeps memory in step")
     for v in bad:
-        line(f"On your never-sync list, and syncing: {v}", color=URGENT)
+        line(f"Never-sync, but syncing: {v}", color=URGENT)
     if CFG.get("broken"):
-        line("menubar.json can't be read, so everything counts as never-sync", color=URGENT)
+        line("menubar.json can't be read: everything counts as never-sync", color=URGENT)
     if not m["running"]:
         return
 
-    if m["sync_on"]:
-        print("---")
-        if on_never("~") and not m["home"]:
-            item("Home memory", "Kept off this device (never-sync list)")
-        else:
-            if m["home"]:
-                detail = ("Waiting for one of your other devices to let this one in"
-                          if (m["home_entry"] or {}).get("waiting") is True
-                          else "What Claude remembers outside any project")
-            else:
-                detail = ("Your other devices sync it" if m["home_available"]
-                          else "What Claude remembers outside any project")
-            item("Home memory", detail, "home", "off" if m["home"] else "on", checked=m["home"])
-        if m["knows_mappings"]:
-            if NEVER and not m["all"]:
-                item("Everything found", "Off: only the folders you turn on below (never-sync list set)")
-            else:
-                item("Everything found",
-                     "Home memory and every git project, now and later" if m["all"]
-                     else "Off: only the folders you turn on below",
-                     "all", "off" if m["all"] else "on", checked=m["all"])
-        if m["waiting"] > 0:
-            item(f"Waiting to send: {m['waiting']}")
-
-    # ── Conflicts ──
     if m["conflicts"]:
-        header("CONFLICTS TO MERGE")
+        line(f"{len(m['conflicts'])} conflict(s) to merge", color=URGENT)
         for c in m["conflicts"]:
-            item(file_name(c), "Two machines edited this at once. Merge it, then delete this file.", "open", c)
+            action(f"--{file_name(c)}", "open", c,
+                   tooltip="Two machines edited this at once. Merge it, then delete this file.")
 
-    # ── Relays ──
-    header("RELAYS")
-    if not m["relays"]:
-        item("No relay connected. Changes wait here until one is.")
-    for r in m["relays"]:
-        item(f"{short_key(r.get('key'))}      connected {duration(r.get('connected_secs'))}",
-             tooltip=str(r.get("key") or ""))
+    if m["sync_on"]:
+        # ── What syncs ──
+        print("---")
+        if not m["projects"] and not m["home"]:
+            line("Nothing syncs yet", color=DIM)
+        if m["home"]:
+            action("Home memory", "home", "off", checked=True,
+                   tooltip="What Claude remembers outside any project. Click to stop syncing it here.")
+        for p in m["projects"]:
+            title = short_path(p["cwd"]) if p.get("cwd") else project_label(p.get("project"))
+            if p.get("error"):
+                tip = f"Error: {p['error']}"
+            elif p.get("waiting") is True:
+                tip = "Waiting for one of your other devices to let this one in"
+            else:
+                tip = f"Syncs as {p.get('project')}. Click to stop syncing it here."
+            action(title, "stop", p.get("project"), "mapped" if p.get("mapped") is True else "found", title,
+                   checked=True, color=URGENT if p.get("error") else None, tooltip=tip)
+        for x in m["excluded"]:
+            if not on_never(x):
+                action(str(x), "include", x, checked=False, tooltip="Kept off this device. Click to sync it again.")
 
-    # ── Devices ──
-    header("YOUR DEVICES")
+        # ── Turning more on: only what can be turned on ──
+        offer = [f for f in m["found"] if not on_never(f["name"], f["cwd"])]
+        hidden = len(m["found"]) - len(offer)
+        home_offer = not m["home"] and not on_never("~")
+        all_offer = m["knows_mappings"] and not NEVER
+        if offer or m["elsewhere"] or home_offer or all_offer:
+            line("Sync another folder")
+            for f in offer:
+                action(f"--{short_path(f['cwd'])}", "map", f["cwd"], f["name"], "named" if f["named"] else "unnamed",
+                       tooltip=(f["name"] if f["named"] else f"Syncs as {f['name']}") + ". Asks first.")
+            if home_offer:
+                action("--Home memory", "home", "on",
+                       tooltip="Your other devices sync it" if m["home_available"]
+                       else "What Claude remembers outside any project")
+            if m["elsewhere"]:
+                line("-----")
+                line("--On your other devices", size=11, color=DIM)
+                for n in m["elsewhere"]:
+                    action(f"--{n}", "copy", f"cordelia sync map <folder> {n}",
+                           tooltip="Click to copy the command that syncs a folder with it")
+            if all_offer:
+                line("-----")
+                action("--Everything found", "all", "off" if m["all"] else "on", checked=m["all"],
+                       tooltip="Home memory and every git project, now and later" if m["all"]
+                       else "Off: only the folders you turn on")
+            if hidden:
+                line("-----")
+                line(f"--{hidden} on your never-sync list, not shown", size=11, color=DIM)
+
+    # ── Devices and relays, one row each ──
+    print("---")
+    line(f"Devices: {len(m['devices'])}")
     for d in m["devices"]:
         mine = d.get("this_device") is True
-        title = (str(d.get("name")) if d.get("name") else short_key(d.get("key"))) + ("  (this device)" if mine else "")
+        name = str(d.get("name")) if d.get("name") else short_key(d.get("key"))
         if mine:
-            item(title, "Click to copy this device's key", "copy-key")
+            action(f"--{name}  (this device)", "copy-key", tooltip="Click to copy this device's key")
         else:
-            line(title)
-            action("--Remove this device…", "remove-device", d.get("key"),
+            waiting = d.get("in_personal_channel") is not True
+            line(f"--{name}" + ("  (waiting to join)" if waiting else ""), tooltip=str(d.get("key") or ""))
+            action("----Remove this device…", "remove-device", d.get("key"),
                    tooltip="Asks twice, then changes the keys on every channel")
-            if d.get("in_personal_channel") is not True:
-                detail = "Trusted, waiting for it to join"
-            else:
-                detail = short_key(d.get("key")) if d.get("name") else "Another of your devices"
-            line(detail, size=11, color=DIM)
-    item("Add a device from the clipboard", "Copy the other device's key (cordelia id), then click", "add-device")
-
-    if not m["sync_on"]:
-        return
-
-    # ── Syncing ──
-    header("SYNCING")
-    if not m["projects"] and not m["excluded"]:
-        item("Nothing syncs yet", "Turn on a folder below")
-    for p in m["projects"]:
-        title = short_path(p["cwd"]) if p.get("cwd") else project_label(p.get("project"))
-        if p.get("error"):
-            detail = f"Error: {p['error']}"
-        elif p.get("waiting") is True:
-            detail = "Waiting for one of your other devices to let this one in"
-        else:
-            detail = str(p.get("project")) if p.get("cwd") else "Syncing"
-        item(title, detail, "stop", p.get("project"), "mapped" if p.get("mapped") is True else "found",
-             checked=True, color=URGENT if p.get("error") else None, tooltip="Click to stop syncing it here")
-    for x in m["excluded"]:
-        if on_never(x):
-            item(str(x), "Kept off this device (never-sync list)")
-        else:
-            item(str(x), "Kept off this device", "include", x, checked=False, tooltip="Click to sync it again")
-
-    # ── Found here ──
-    if m["found"]:
-        header("FOUND ON THIS MACHINE")
-        for f in m["found"]:
-            detail = f["name"] if f["named"] else f"Syncs as {f['name']}"
-            if on_never(f["name"], f["cwd"]):
-                item(short_path(f["cwd"]), f"{detail} · never-sync list")
-            else:
-                item(short_path(f["cwd"]), detail, "map", f["cwd"], f["name"],
-                     "named" if f["named"] else "unnamed", checked=False,
-                     tooltip="Click to start syncing it. Asks first.")
-
-    # ── Elsewhere ──
-    if m["elsewhere"]:
-        header("ON YOUR OTHER DEVICES")
-        for n in m["elsewhere"]:
-            item(str(n), "Click to copy the command that syncs a folder with it",
-                 "copy", f"cordelia sync map <folder> {n}")
+    line("-----")
+    action("--Add a device from the clipboard", "add-device",
+           tooltip="Copy the other device's key (cordelia id), then click")
+    relays = m["relays"]
+    line(f"Relays: {len(relays)} connected" if relays else "Relays: none connected",
+         color=None if relays else URGENT)
+    if not relays:
+        line("--Changes wait here until one is", color=DIM)
+    for r in relays:
+        line(f"--{short_key(r.get('key'))}  ·  {duration(r.get('connected_secs'))}", tooltip=str(r.get("key") or ""))
 
 
 # ── Actions ──────────────────────────────────────────────────────────────
+
+
+def log(text):
+    """One line per click, and its outcome, in ~/.cordelia/logs/menubar.log.
+    Never the clipboard's content."""
+    try:
+        import datetime
+        stamp = datetime.datetime.now(datetime.timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
+        with open(ACTION_LOG, "a") as f:
+            f.write(f"{stamp} {elide(text)}\n")
+    except OSError:
+        pass
 
 
 def _osa_text(text):
@@ -409,7 +391,9 @@ def confirm(text, ok):
     script = (f'display dialog "{_osa_text(text)}" with title "Cordelia" '
               f'buttons {{"Cancel", "{_osa_text(ok)}"}} default button "Cancel" '
               f'cancel button "Cancel" with icon caution')
-    return subprocess.run(["/usr/bin/osascript", "-e", script], capture_output=True).returncode == 0
+    ok = subprocess.run(["/usr/bin/osascript", "-e", script], capture_output=True).returncode == 0
+    log(f"  confirm {'yes' if ok else 'no or cancelled'}: {text}")
+    return ok
 
 
 def pbcopy(text):
@@ -424,6 +408,8 @@ def finish(result, show="last"):
     """Report a finished command the way the panel does: the error, or the
     first or last line of its output."""
     code, out, err = result
+    first = (err or out).strip().splitlines()
+    log(f"  exit {code}: {first[0] if first else ''}")
     if code != 0:
         notify(err or out or "The command failed")
         return
@@ -435,6 +421,7 @@ def finish(result, show="last"):
 
 
 def act(a, rest):
+    log(f"click: {a} {' '.join(rest)}")
     arg = lambda i: rest[i] if len(rest) > i else ""
     if a == "toggle-sync":
         # Turning sync on again keeps the mappings and the scope set before.
@@ -471,6 +458,9 @@ def act(a, rest):
         finish(run(["sync", "map", cwd] + ([] if named else [name])), show="first")
     elif a == "stop":
         # A mapped folder is unmapped; one found because everything syncs is excluded here.
+        if not confirm(f"Stop syncing {arg(2) or arg(0)} on this device? Its files stay where they are.",
+                       "Stop syncing"):
+            return
         if arg(1) == "mapped":
             finish(run(["sync", "unmap", arg(0)]), show="first")
         else:
