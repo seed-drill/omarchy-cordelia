@@ -1,0 +1,44 @@
+{
+  "schemaVersion": 1,
+  "id": "seeddrill.cordelia",
+  "name": "Cordelia",
+  "version": "0.1.0",
+  "author": "Seed Drill Labs",
+  "license": "MIT",
+  "description": "Cordelia in the Omarchy bar: whether your agent's memory is in step across your devices, with relays, devices, projects and conflicts.",
+  "kinds": [
+    "bar-widget"
+  ],
+  "entryPoints": {
+    "barWidget": "Panel.qml"
+  },
+  "barWidget": {
+    "displayName": "Cordelia",
+    "description": "See whether your agent's memory is in step, turn sync on or off, pair devices and open conflicts.",
+    "category": "AI",
+    "allowMultiple": false,
+    "defaultSection": "right",
+    "defaults": {
+      "refreshIntervalSec": 10,
+      "command": ""
+    },
+    "schema": [
+      {
+        "key": "refreshIntervalSec",
+        "type": "integer",
+        "label": "Refresh interval (seconds)",
+        "min": 5,
+        "max": 600,
+        "step": 5,
+        "defaultValue": 10
+      },
+      {
+        "key": "command",
+        "type": "string",
+        "label": "cordelia command",
+        "defaultValue": "",
+        "description": "Leave empty for ~/.cordelia/bin/cordelia."
+      }
+    ]
+  }
+}
