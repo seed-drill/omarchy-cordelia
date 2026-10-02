@@ -20,6 +20,7 @@ enum Act {
     case removeDevice(String)
     case open(String)
     case openURL(String)
+    case openLoginItems
     case about
     case quit
 
@@ -39,6 +40,7 @@ enum Act {
         case .removeDevice(let key): return "remove-device \(shortKey(key))"
         case .open(let path): return "open \(path)"
         case .openURL(let url): return "open-url \(url)"
+        case .openLoginItems: return "open-login-items"
         case .about: return "about"
         case .quit: return "quit"
         }
@@ -62,6 +64,13 @@ func command(for act: Act) -> [String]? {
     case .removeDevice(let key): return ["remove-device", key]
     default: return nil
     }
+}
+
+/// Whether macOS will start the node at the next login (see Login.swift).
+enum NodeAgent: String {
+    case ok
+    case needsApproval = "needs-approval"
+    case absent
 }
 
 enum Tone: String {
@@ -107,10 +116,13 @@ let SYMBOLS: [String: String] = [
     "uninitialised": "brain",
 ]
 
-func buildMenu(_ m: Model, config: Config, home: String, cliVersion: String = "") -> MenuTree {
+func buildMenu(_ m: Model, config: Config, home: String, cliVersion: String = "",
+               nodeAgent: NodeAgent = .ok) -> MenuTree {
     let never = config.never
     let bad = violations(m, never: never, home: home)
-    let state = bad.isEmpty ? m.state : "attention"
+    // The node runs now and will not be started at the next login.
+    let blocked = m.installed && nodeAgent == .needsApproval
+    let state = bad.isEmpty && !blocked ? m.state : "attention"
     var rows: [Row] = []
 
     let tail: [Row] = [
@@ -144,6 +156,12 @@ func buildMenu(_ m: Model, config: Config, home: String, cliVersion: String = ""
     }
     if config.broken {
         rows.append(Row(title: "menubar.json can't be read: everything counts as never-sync", tone: .urgent))
+    }
+    if blocked {
+        rows.append(Row(title: "Allow Cordelia to Start at Login…", act: .openLoginItems,
+                        tip: "macOS has the node's background item switched off, so memory stops syncing at the next login. "
+                           + "Click to open Login Items, then switch “cordelia” on.",
+                        tone: .urgent))
     }
     if !m.running {
         rows.append(.line)

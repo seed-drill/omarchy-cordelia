@@ -1,5 +1,5 @@
 #!/bin/bash
-# Builds the app, puts it in ~/Applications, and starts it now and at every
+# Builds the app, puts it in ~/Applications, and opens it now and at every
 # login. Run it again after `git pull` to update. Remove with ./uninstall.sh.
 set -euo pipefail
 cd "$(dirname "$0")"
@@ -7,44 +7,24 @@ cd "$(dirname "$0")"
 
 LABEL=ai.seeddrill.cordelia.menubar
 DEST="${HOME:?}/Applications/Cordelia.app"
-PLIST="$HOME/Library/LaunchAgents/$LABEL.plist"
 
-# Stop the copy that is running, however it was started.
+# Stop the copy that is running, and retire the launch agent that the first
+# version of this script installed.
 launchctl bootout "gui/$(id -u)/$LABEL" 2>/dev/null || true
+rm -f "$HOME/Library/LaunchAgents/$LABEL.plist"
 pkill -f "Cordelia.app/Contents/MacOS/Cordelia" 2>/dev/null || true
 
-mkdir -p "$HOME/Applications" "$HOME/Library/LaunchAgents"
+mkdir -p "$HOME/Applications"
 rm -rf "$DEST"
 cp -R build/Cordelia.app "$DEST"
 
-# Started at login, and again if it crashes. Quit from the menu stays quit
+# A login item of its own: macOS lists it under "Open at Login" by name and
+# icon, apart from the node's background item. Quit from the menu stays quit
 # until the next login.
-cat > "$PLIST" <<PLIST
-<?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
-<plist version="1.0">
-<dict>
-    <key>Label</key>
-    <string>$LABEL</string>
-    <key>ProgramArguments</key>
-    <array>
-        <string>$DEST/Contents/MacOS/Cordelia</string>
-    </array>
-    <key>RunAtLoad</key>
-    <true/>
-    <key>KeepAlive</key>
-    <dict>
-        <key>SuccessfulExit</key>
-        <false/>
-    </dict>
-    <key>LimitLoadToSessionType</key>
-    <string>Aqua</string>
-    <key>ProcessType</key>
-    <string>Interactive</string>
-</dict>
-</plist>
-PLIST
-launchctl bootstrap "gui/$(id -u)" "$PLIST"
+if ! "$DEST/Contents/MacOS/Cordelia" --login-item on; then
+    echo "Add it by hand: System Settings > General > Login Items > Open at Login." >&2
+fi
+open -g "$DEST"
 
 # The earlier SwiftBar plugin would put a second icon beside this one.
 LINK="$HOME/.swiftbar/cordelia.10s.py"

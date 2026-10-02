@@ -268,6 +268,9 @@ final class Actions {
         case .openURL(let url):
             if let u = URL(string: url) { NSWorkspace.shared.open(u) }
 
+        case .openLoginItems:
+            openLoginItemsSettings()
+
         case .startNode:
             work.async {
                 let target = "gui/\(getuid())/ai.seeddrill.cordelia"

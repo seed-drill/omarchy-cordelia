@@ -47,7 +47,8 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate, UNUser
     private func tree(timeout: TimeInterval) -> MenuTree {
         let cfg = config()
         let status = CLI(command: cfg.command).status(timeout: timeout)
-        return buildMenu(Model(status: status, home: home), config: cfg, home: home, cliVersion: cliVersion)
+        return buildMenu(Model(status: status, home: home), config: cfg, home: home, cliVersion: cliVersion,
+                         nodeAgent: nodeAgentState(home: home))
     }
 
     /// Asks the node off the main thread and redraws the icon.

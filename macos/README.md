@@ -4,8 +4,9 @@ The macOS twin of the Omarchy panel: a small native app that puts one icon in th
 
 ## What it shows
 
-- **The icon** is a brain while memory is in step. It changes to turning arrows while syncing, a crossed cloud when no relay can be reached, and a red warning triangle for a conflict, an error, or anything on your never-sync list that syncs anyway. It is dimmed when sync is off or the node is stopped.
+- **The icon** is a brain while memory is in step. It changes to turning arrows while syncing, a crossed cloud when no relay can be reached, and a red warning triangle for anything that needs you: a conflict, an error, something on your never-sync list that syncs anyway, or a node that macOS will not start at the next login. It is dimmed when sync is off or the node is stopped.
 - **Status** is the node's own summary.
+- **Allow Cordelia to Start at Login…** appears, in red, when macOS has the node's background item switched off in Login Items. The node can be running now, because an installer started it by hand, and still not be started at the next login; memory then stops syncing without a word. Click the row to open Login Items, and switch `cordelia` on. This is the one thing the menu shows that the node cannot report itself.
 - **Sync Memory on This Mac** is the switch, like the panel's header.
 - **The folders that sync** are ticked. Click one to stop syncing it here; it asks first.
 - **Sync Another Folder** lists:
@@ -35,7 +36,7 @@ git clone https://github.com/seed-drill/omarchy-cordelia.git ~/omarchy-cordelia
 
 The script:
 - builds `Cordelia.app` and puts it in `~/Applications`;
-- starts it now and at every login, through a launch agent (`ai.seeddrill.cordelia.menubar`);
+- opens it now and at every login, as a login item of its own. It is listed by name under *System Settings › General › Login Items › Open at Login*, apart from the node's background item, and can be removed there;
 - removes the link to the earlier SwiftBar plugin if there is one, so there are not two icons.
 
 macOS asks once whether Cordelia may send notifications. If you decline, they are still sent, but appear as Script Editor's.
@@ -99,6 +100,6 @@ macos/app/build.sh
 macos/app/tests/run.sh
 ```
 
-Each file in `tests/fixtures/` is a saved `status --json` (some with a settings file beside them), and `tests/expected/` holds the menu the app draws for it, as text. After a deliberate change, `run.sh --update` rewrites the expected files; read the diff before committing it.
+Each `.status.json` in `tests/fixtures/` is a saved `status --json`, some with a settings file or extra arguments beside them, and `tests/expected/` holds the menu the app draws for it, as text, with the `cordelia` command each row runs. After a deliberate change, `run.sh --update` rewrites the expected files; read the diff before committing it.
 
 `Cordelia.app/Contents/MacOS/Cordelia --dump-menu` prints the menu for the node on this Mac.

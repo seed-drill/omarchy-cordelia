@@ -3,8 +3,10 @@
 # drew when the fixture was written. `run.sh --update` rewrites the expected
 # files after a deliberate change; read the diff before committing it.
 #
-# A fixture is tests/fixtures/<name>.status.json, with <name>.config.json
-# beside it if the case needs settings. The home directory is /Users/alex.
+# A fixture is tests/fixtures/<name>.status.json. Beside it, if the case needs
+# them: <name>.config.json for settings, and <name>.args for anything the
+# status cannot say (--node-agent needs-approval). The home directory is
+# /Users/alex.
 set -uo pipefail
 cd "$(dirname "$0")"
 BIN=../build/Cordelia.app/Contents/MacOS/Cordelia
@@ -14,7 +16,8 @@ fail=0; n=0
 for status in fixtures/*.status.json; do
     name=$(basename "$status" .status.json)
     config="fixtures/$name.config.json"; [ -f "$config" ] || config=/nonexistent/menubar.json
-    got=$("$BIN" --dump-menu --status-file "$status" --config "$config" --home /Users/alex)
+    extra=(); [ -f "fixtures/$name.args" ] && read -r -a extra < "fixtures/$name.args"
+    got=$("$BIN" --dump-menu --status-file "$status" --config "$config" --home /Users/alex ${extra[@]+"${extra[@]}"})
     n=$((n + 1))
     if [ "$update" = 1 ]; then
         printf '%s\n' "$got" > "expected/$name.txt"
