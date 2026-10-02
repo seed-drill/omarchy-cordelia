@@ -1,45 +1,52 @@
 # Cordelia for the macOS menu bar
 
-The macOS twin of the Omarchy panel. A single [SwiftBar](https://swiftbar.app) plugin puts one icon in the menu bar, showing whether memory is in step, and a short native menu manages it. The menu covers the panel's sections and commands; the switches and folders sit at the top and everything else is in submenus.
+The macOS twin of the Omarchy panel: a small native app that puts one icon in the menu bar, showing whether memory is in step, with a short menu to manage it. The menu covers the panel's sections in a handful of rows, and the detail sits in submenus.
 
 ## What it shows
 
-- **The icon** shows synced, syncing, offline, off, or needs attention. It shows attention for a conflict, an error, or anything on your never-sync list that syncs anyway.
-- **Cordelia · *summary*** is the switch for memory sync on this device, like the panel's header.
+- **The icon** is a brain while memory is in step. It changes to turning arrows while syncing, a crossed cloud when no relay can be reached, and a red warning triangle for a conflict, an error, or anything on your never-sync list that syncs anyway. It is dimmed when sync is off or the node is stopped.
+- **Status** is the node's own summary.
+- **Sync Memory on This Mac** is the switch, like the panel's header.
 - **The folders that sync** are ticked. Click one to stop syncing it here; it asks first.
-- **Sync another folder** lists:
+- **Sync Another Folder** lists:
   - folders Claude Code has memory for that don't sync;
-  - home memory and *Everything found*, when they can be turned on;
+  - home memory and *Everything Found*, when they can be turned on;
   - names your other devices sync. Click one to copy the command that maps a folder to it.
 
   Starting a folder asks first.
 - **Devices.**
   - Click this device to copy its key.
-  - Each other device has *Remove this device…*, which asks twice.
-  - *Add a device from the clipboard* takes the other device's key, asks first, and puts the `cordelia accept` command for the other device on the clipboard.
-- **Relays** shows how many are connected, and for how long each.
-- **Conflicts to merge** appears when there are any. Click one to open it.
+  - Each other device has *Remove This Device…*, which asks twice.
+  - *Add a Device from the Clipboard…* takes the other device's key, asks first, and puts the `cordelia accept` command for the other device on the clipboard.
+- **Relays** lists each relay with its key, its address and how long it has been connected. Click one to copy its key. A relay that is not connected shows in red.
+- **Conflicts to Merge** appears when there are any. Click one to open it.
+- **Quit Cordelia Menu** closes the menu bar app only. The node keeps running and memory keeps syncing.
 
 Hover over any row to see what it does. Each action shows a notification. Every click and its outcome are logged to `~/.cordelia/logs/menubar.log`, so a click that did nothing can be seen.
 
 ## Install
 
-Needs Cordelia `v0.2.0-alpha.3` or later. It uses the system `python3`, so nothing else needs installing.
+Needs Cordelia `v0.2.0-alpha.3` or later, macOS 13 or later, and the Xcode command line tools (`xcode-select --install`). There is nothing else to install.
 
 ```bash
-brew install --cask swiftbar
 git clone https://github.com/seed-drill/omarchy-cordelia.git ~/omarchy-cordelia
-mkdir -p ~/.swiftbar
-defaults write com.ameba.SwiftBar PluginDirectory ~/.swiftbar
-ln -s ~/omarchy-cordelia/macos/cordelia.10s.py ~/.swiftbar/
-open -a SwiftBar
+~/omarchy-cordelia/macos/app/install.sh
 ```
 
-The plugin is a symlink into the clone, so `git pull` updates it. The `10s` in the file name is how often SwiftBar refreshes it, and it also refreshes whenever the menu opens.
+The script:
+- builds `Cordelia.app` and puts it in `~/Applications`;
+- starts it now and at every login, through a launch agent (`ai.seeddrill.cordelia.menubar`);
+- removes the link to the earlier SwiftBar plugin if there is one, so there are not two icons.
+
+macOS asks once whether Cordelia may send notifications. If you decline, they are still sent, but appear as Script Editor's.
+
+The app is built on your Mac and signed for that Mac only. There is no developer identity behind it, which is why it is built here and not downloaded.
+
+To update, `git pull` and run `install.sh` again. To remove it, run `macos/app/uninstall.sh`.
 
 ## Settings
 
-Settings live in `~/.config/cordelia/menubar.json`. All keys are optional; see `menubar.example.json`.
+Settings live in `~/.config/cordelia/menubar.json`. All keys are optional; see `menubar.example.json`. The file is read again every time the menu opens.
 
 | Key | Default | What |
 |---|---|---|
@@ -57,7 +64,7 @@ Each entry is one of:
 
 While the list is set:
 - Entries on it aren't offered. The menu only counts them.
-- *Everything found* stays off and isn't offered.
+- *Everything Found* stays off and isn't offered.
 - Anything on the list that syncs anyway turns the icon to attention, with a line saying what it is.
 
 A file that can't be read counts as a list that matches everything, so a typo never widens what syncs.
@@ -66,15 +73,32 @@ The list guards the menu only. Nothing stops `cordelia sync map` typed in a term
 
 ## Keeping in step with the panel
 
-`TRACKS` at the top of `cordelia.10s.py` is the panel commit this file matches. When `Service.qml` or `Panel.qml` changes:
+`TRACKS` at the top of `app/Sources/Model.swift` is the panel commit this app matches. When `Service.qml` or `Panel.qml` changes:
 
 ```bash
 git diff <TRACKS>..HEAD -- Service.qml Panel.qml
 ```
 
-Port the change into `cordelia.10s.py` and move `TRACKS`. The two files map one to one:
-- `model()` is the derived properties in `Service.qml`;
-- `act()` is its command functions;
-- `render()` shows the same sections as `Panel.qml`, with its words, laid out as a native menu.
+Port the change and move `TRACKS`. The files map one to one:
+
+| Here | The panel |
+|---|---|
+| `Model.swift` | the derived properties in `Service.qml` |
+| `Actions.swift` | its command functions |
+| `MenuTree.swift` | the sections of `Panel.qml`, with its words, as menu rows |
+| `App.swift` | draws the rows as a native menu; no logic of its own |
 
 Neither widget holds any logic of its own about state. The icon state and summary come from the node (`status --json`: `state`, `summary`), so a change there reaches both without touching either.
+
+## Tests
+
+The menu is built as data before it is drawn, so it can be checked without a screen:
+
+```bash
+macos/app/build.sh
+macos/app/tests/run.sh
+```
+
+Each file in `tests/fixtures/` is a saved `status --json` (some with a settings file beside them), and `tests/expected/` holds the menu the app draws for it, as text. After a deliberate change, `run.sh --update` rewrites the expected files; read the diff before committing it.
+
+`Cordelia.app/Contents/MacOS/Cordelia --dump-menu` prints the menu for the node on this Mac.

@@ -1,0 +1,32 @@
+icon: icloud.slash
+tooltip: Cordelia: no relay connected
+
+    Status: No relay connected   {info, disabled}
+        tip: cordelia 0.2.0-alpha.3 · panel 1ee44bb
+[x] Sync Memory on This Mac   {-> toggle-sync}
+        tip: Click to stop syncing memory on this device
+────
+    Nothing syncs yet   {info, disabled}
+    Sync Another Folder   {submenu}
+        Home Memory   {-> home on}
+            tip: What Claude remembers outside any project
+    ────
+    [ ] Everything Found   {-> all on}
+            tip: Off: only the folders you turn on
+────
+    Devices: 2   {submenu}
+        cordelia_pk1thisma…qqqqqq  (this device)   {-> copy-key}
+            tip: Click to copy this device's key
+        studio  |  cordelia_pk1studio…qqqqqq   {submenu}
+            tip: cordelia_pk1studioqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq
+            Remove This Device…   {-> remove-device cordelia_pk1studio…qqqqqq}
+                tip: Asks twice, then changes the keys on every channel
+    ────
+        Add a Device from the Clipboard…   {-> add-device}
+            tip: Copy the other device's key (cordelia id), then click
+    Relays: none connected   {urgent, submenu}
+        Changes wait here until one is   {info, disabled}
+────
+    About Cordelia   {-> about}
+    Quit Cordelia Menu   {-> quit}
+        tip: The node keeps running and memory keeps syncing

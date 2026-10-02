@@ -27,7 +27,7 @@ step, and a panel to manage it.
 Keys in the panel: `s` toggles sync, `c` copies this device's key, `r`
 refreshes, Tab moves to the next panel, Esc closes.
 
-**On a Mac:** the same panel as a menu bar icon, through SwiftBar. See
+**On a Mac:** the same panel as a native menu bar app. See
 [`macos/`](macos/README.md).
 
 ## Install

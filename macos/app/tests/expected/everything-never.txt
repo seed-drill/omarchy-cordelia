@@ -1,0 +1,46 @@
+icon: exclamationmark.triangle.fill urgent
+tooltip: Cordelia: memory synced
+
+    Status: Memory synced   {info, disabled}
+        tip: cordelia 0.2.0-alpha.3 · panel 1ee44bb
+    Never-sync, but syncing: Everything Found   {urgent, disabled}
+    Never-sync, but syncing: Home Memory   {urgent, disabled}
+    Never-sync, but syncing: github.com/your-company/acme   {urgent, disabled}
+[x] Sync Memory on This Mac   {-> toggle-sync}
+        tip: Click to stop syncing memory on this device
+────
+[x] Home Memory   {-> home off}
+        tip: What Claude remembers outside any project. Click to stop syncing it here.
+[x] ~/work/app   {-> stop github.com/example/app mapped}
+        tip: Syncs as github.com/example/app. Click to stop syncing it here.
+[x] ~/client-work/acme   {-> stop github.com/your-company/acme found}
+        tip: Syncs as github.com/your-company/acme. Click to stop syncing it here.
+    Sync Another Folder   {submenu}
+        ~/work/site  |  github.com/example/site   {-> map /Users/alex/work/site github.com/example/site named}
+            tip: Asks first.
+    ────
+        On Your Other Devices   {info, disabled}
+        github.com/example/notes   {-> copy (cordelia sync map <folder> github.com/example/notes)}
+            tip: Click to copy the command that syncs a folder with it
+    ────
+        2 on your never-sync list, not shown   {info, disabled}
+────
+    Devices: 2   {submenu}
+        cordelia_pk1thisma…qqqqqq  (this device)   {-> copy-key}
+            tip: Click to copy this device's key
+        studio  |  cordelia_pk1studio…qqqqqq   {submenu}
+            tip: cordelia_pk1studioqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq
+            Remove This Device…   {-> remove-device cordelia_pk1studio…qqqqqq}
+                tip: Asks twice, then changes the keys on every channel
+    ────
+        Add a Device from the Clipboard…   {-> add-device}
+            tip: Copy the other device's key (cordelia id), then click
+    Relays: 2 connected   {submenu}
+        cordelia_pk1relayo…qqqqqq  |  203.0.113.10:9474 · connected 1h 19m   {-> copy (relay key)}
+            tip: Click to copy this relay's key
+        cordelia_pk1relayt…qqqqqq  |  198.51.100.20:9474 · connected 1m   {-> copy (relay key)}
+            tip: Click to copy this relay's key
+────
+    About Cordelia   {-> about}
+    Quit Cordelia Menu   {-> quit}
+        tip: The node keeps running and memory keeps syncing
