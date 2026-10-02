@@ -3,7 +3,8 @@ tooltip: Cordelia: sync is off
 
     Status: Sync is off   {info, disabled}
         tip: cordelia 0.2.0-alpha.3 · panel 1ee44bb
-[ ] Sync Memory on This Mac   {-> toggle-sync}
+[ ] Sync Memory on This Mac   {-> sync on}
+        runs: cordelia sync claude
         tip: Click to sync Claude Code's memory
 ────
     Devices: 2   {submenu}
@@ -12,6 +13,7 @@ tooltip: Cordelia: sync is off
         studio  |  cordelia_pk1studio…qqqqqq   {submenu}
             tip: cordelia_pk1studioqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq
             Remove This Device…   {-> remove-device cordelia_pk1studio…qqqqqq}
+                runs: cordelia remove-device cordelia_pk1studioqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq
                 tip: Asks twice, then changes the keys on every channel
     ────
         Add a Device from the Clipboard…   {-> add-device}

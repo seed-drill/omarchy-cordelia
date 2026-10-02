@@ -6,7 +6,8 @@ import Foundation
 
 /// What a row does when clicked. Actions.swift carries each one out.
 enum Act {
-    case toggleSync
+    /// The switch: on or off, as the row showed it when it was clicked.
+    case setSync(on: Bool)
     case startNode
     case home(on: Bool)
     case all(on: Bool)
@@ -25,7 +26,7 @@ enum Act {
     /// A short name for the log and the dump. Never a key or a clipboard value.
     var name: String {
         switch self {
-        case .toggleSync: return "toggle-sync"
+        case .setSync(let on): return "sync " + (on ? "on" : "off")
         case .startNode: return "start-node"
         case .home(let on): return "home " + (on ? "on" : "off")
         case .all(let on): return "all " + (on ? "on" : "off")
@@ -41,6 +42,25 @@ enum Act {
         case .about: return "about"
         case .quit: return "quit"
         }
+    }
+}
+
+/// The cordelia command a row runs, for the rows that run exactly one. Actions
+/// runs what this returns and the dump prints it, so the tests cover what a
+/// click would execute.
+func command(for act: Act) -> [String]? {
+    switch act {
+    // Turning sync on again keeps the mappings and the scope set before.
+    case .setSync(let on): return on ? ["sync", "claude"] : ["sync", "off"]
+    case .home(let on): return ["sync", "home", on ? "on" : "off"]
+    case .all(let on): return ["sync", "claude", on ? "--all" : "--mapped-only"]
+    // A git project is named by its remote; any other folder is given its name.
+    case .map(let cwd, let name, let named): return ["sync", "map", cwd] + (named ? [] : [name])
+    // A mapped folder is unmapped; one found because everything syncs is excluded here.
+    case .stop(let project, let mapped, _): return ["sync", mapped ? "unmap" : "exclude", project]
+    case .include(let name): return ["sync", "include", name]
+    case .removeDevice(let key): return ["remove-device", key]
+    default: return nil
     }
 }
 
@@ -133,7 +153,7 @@ func buildMenu(_ m: Model, config: Config, home: String, cliVersion: String = ""
     }
 
     // The switch, as the panel's header switch.
-    rows.append(Row(title: "Sync Memory on This Mac", checked: m.syncOn, act: .toggleSync,
+    rows.append(Row(title: "Sync Memory on This Mac", checked: m.syncOn, act: .setSync(on: !m.syncOn),
                     tip: m.syncOn ? "Click to stop syncing memory on this device"
                                   : "Click to sync Claude Code's memory"))
 
@@ -290,6 +310,9 @@ func dump(_ tree: MenuTree) -> String {
             if !r.children.isEmpty { tags.append("submenu") }
             if !tags.isEmpty { line += "   {" + tags.joined(separator: ", ") + "}" }
             out.append(line)
+            if let a = r.act, let c = command(for: a) {
+                out.append(pad + "        runs: cordelia " + c.joined(separator: " "))
+            }
             if let t = r.tip { out.append(pad + "        tip: " + t) }
             walk(r.children, depth + 1)
         }

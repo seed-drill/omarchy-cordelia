@@ -3,13 +3,16 @@ tooltip: Cordelia: memory synced
 
     Status: Memory synced   {info, disabled}
         tip: cordelia 0.2.0-alpha.3 · panel 1ee44bb
-[x] Sync Memory on This Mac   {-> toggle-sync}
+[x] Sync Memory on This Mac   {-> sync off}
+        runs: cordelia sync off
         tip: Click to stop syncing memory on this device
 ────
 [x] ~/work/app   {-> stop github.com/example/app mapped}
+        runs: cordelia sync unmap github.com/example/app
         tip: Syncs as github.com/example/app. Click to stop syncing it here.
     Sync Another Folder   {submenu}
         ~/work/site  |  github.com/example/site   {-> map /Users/alex/work/site github.com/example/site named}
+            runs: cordelia sync map /Users/alex/work/site
             tip: Asks first.
     ────
         On Your Other Devices   {info, disabled}
@@ -24,6 +27,7 @@ tooltip: Cordelia: memory synced
         studio  |  cordelia_pk1studio…qqqqqq   {submenu}
             tip: cordelia_pk1studioqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq
             Remove This Device…   {-> remove-device cordelia_pk1studio…qqqqqq}
+                runs: cordelia remove-device cordelia_pk1studioqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq
                 tip: Asks twice, then changes the keys on every channel
     ────
         Add a Device from the Clipboard…   {-> add-device}

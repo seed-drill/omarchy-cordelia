@@ -167,15 +167,8 @@ final class Actions {
         let cli = CLI(command: cfg.command)
 
         switch act {
-        case .toggleSync:
-            // Turning sync on again keeps the mappings and the scope set before.
-            work.async {
-                if Model(status: cli.status(), home: self.home).syncOn {
-                    self.finish(cli.run(["sync", "off"]))
-                } else {
-                    self.finish(cli.run(["sync", "claude"]), show: .none)
-                }
-            }
+        case .setSync(let on):
+            run(command(for: act)!, show: on ? .none : .last)
 
         case .home(let on):
             if on && onNever(never, name: "~", home: home) {
@@ -184,7 +177,7 @@ final class Actions {
             if on && !confirm("Sync home memory on this Mac?",
                               detail: "It goes to every device that syncs home memory.",
                               ok: "Sync Home Memory") { return }
-            run(["sync", "home", on ? "on" : "off"])
+            run(command(for: act)!)
 
         case .all(let on):
             if on && !never.isEmpty {
@@ -193,9 +186,9 @@ final class Actions {
             if on && !confirm("Sync everything found?",
                               detail: "Home memory and every git project on this Mac, now and later.",
                               ok: "Sync Everything") { return }
-            run(["sync", "claude", on ? "--all" : "--mapped-only"], show: .none)
+            run(command(for: act)!, show: .none)
 
-        case .map(let cwd, let name, let named):
+        case .map(let cwd, let name, _):
             guard !cwd.isEmpty, !name.isEmpty else { return }
             let folder = shortPath(cwd, home: home)
             if onNever(never, name: name, cwd: cwd, home: home) {
@@ -204,25 +197,19 @@ final class Actions {
             guard confirm("Start syncing \(folder) as \(name)?",
                           detail: "Claude's memory for it will go to all your devices.",
                           ok: "Start Syncing") else { return }
-            // A git project is named by its remote; any other folder is given its name.
-            run(["sync", "map", cwd] + (named ? [] : [name]), show: .first)
+            run(command(for: act)!, show: .first)
 
         case .stop(let project, let mapped, let title):
             guard confirm("Stop syncing \(title.isEmpty ? project : title) on this Mac?",
                           detail: "Its files stay where they are.",
                           ok: "Stop Syncing") else { return }
-            // A mapped folder is unmapped; one found because everything syncs is excluded here.
-            if mapped {
-                run(["sync", "unmap", project], show: .first)
-            } else {
-                run(["sync", "exclude", project])
-            }
+            run(command(for: act)!, show: mapped ? .first : .last)
 
         case .include(let name):
             if onNever(never, name: name, home: home) {
                 return Notifier.post("\(name) is on your never-sync list")
             }
-            run(["sync", "include", name])
+            run(command(for: act)!)
 
         case .copyKey:
             work.async {
@@ -272,7 +259,7 @@ final class Actions {
                           detail: "This changes the keys on every channel.",
                           ok: "Remove", destructive: true) else { return }
             Notifier.post("Removing the device and changing keys…")
-            run(["remove-device", key], timeout: 180)
+            run(command(for: act)!, timeout: 180)
 
         case .open(let path):
             guard !path.isEmpty else { return }

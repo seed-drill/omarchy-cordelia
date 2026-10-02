@@ -5,10 +5,12 @@ tooltip: Cordelia: memory synced
         tip: cordelia 0.2.0-alpha.3 · panel 1ee44bb
     Never-sync, but syncing: github.com/example/app   {urgent, disabled}
     menubar.json can't be read: everything counts as never-sync   {urgent, disabled}
-[x] Sync Memory on This Mac   {-> toggle-sync}
+[x] Sync Memory on This Mac   {-> sync off}
+        runs: cordelia sync off
         tip: Click to stop syncing memory on this device
 ────
 [x] ~/work/app   {-> stop github.com/example/app mapped}
+        runs: cordelia sync unmap github.com/example/app
         tip: Syncs as github.com/example/app. Click to stop syncing it here.
     Sync Another Folder   {submenu}
     ────
@@ -24,6 +26,7 @@ tooltip: Cordelia: memory synced
         studio  |  cordelia_pk1studio…qqqqqq   {submenu}
             tip: cordelia_pk1studioqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq
             Remove This Device…   {-> remove-device cordelia_pk1studio…qqqqqq}
+                runs: cordelia remove-device cordelia_pk1studioqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq
                 tip: Asks twice, then changes the keys on every channel
     ────
         Add a Device from the Clipboard…   {-> add-device}
