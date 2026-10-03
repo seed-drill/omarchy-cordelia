@@ -1,0 +1,118 @@
+{
+  "device": "cordelia_pk1thismacqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq",
+  "version": "0.2.0-alpha.3",
+  "role": "personal",
+  "running": true,
+  "state": "attention",
+  "summary": "1 conflict to merge",
+  "outbox_waiting": 3,
+  "devices": [
+    {
+      "key": "cordelia_pk1thismacqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq",
+      "this_device": true,
+      "in_personal_channel": true,
+      "explicitly_trusted": false
+    },
+    {
+      "key": "cordelia_pk1studioqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq",
+      "this_device": false,
+      "in_personal_channel": false,
+      "explicitly_trusted": true
+    }
+  ],
+  "peers": {
+    "hot": 2,
+    "warm": 0,
+    "list": [
+      {
+        "key": "cordelia_pk1relayoneqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq",
+        "role": "relay",
+        "state": "hot",
+        "address": "203.0.113.10:9474",
+        "connected_secs": 4740,
+        "idle_secs": 0
+      },
+      {
+        "key": "cordelia_pk1relaytwoqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq",
+        "role": "relay",
+        "state": "unreachable",
+        "address": "198.51.100.20:9474",
+        "connected_secs": 0,
+        "idle_secs": 2
+      }
+    ]
+  },
+  "sync": {
+    "enabled": true,
+    "all": false,
+    "home": false,
+    "available": [
+      "~",
+      "github.com/example/notes"
+    ],
+    "conflicts": [
+      "/Users/alex/.claude/projects/-Users-alex-work-app/memory/MEMORY.conflict-studio.md"
+    ],
+    "exclude": [
+      "github.com/example/old",
+      "/Users/alex/unmapped-folder"
+    ],
+    "errors": [],
+    "projects": [
+      {
+        "project": "~",
+        "cwd": null,
+        "mapped": false,
+        "error": null,
+        "waiting": false,
+        "channel": "grp_00000000-0000-0000-0000-000000000000",
+        "conflicts": []
+      },
+      {
+        "project": "github.com/example/app",
+        "cwd": "/Users/alex/work/app",
+        "mapped": true,
+        "error": "channel key missing",
+        "waiting": false,
+        "channel": "grp_00000000-0000-0000-0000-000000000000",
+        "conflicts": []
+      },
+      {
+        "project": "github.com/example/lib",
+        "cwd": null,
+        "mapped": false,
+        "error": null,
+        "waiting": true,
+        "channel": "grp_00000000-0000-0000-0000-000000000000",
+        "conflicts": []
+      }
+    ],
+    "unmapped": [
+      {
+        "cwd": null,
+        "folder": "/Users/alex/.claude/projects/-Users-alex",
+        "name": null
+      },
+      {
+        "cwd": "/Users/alex/work/site",
+        "folder": "x",
+        "name": "github.com/example/site"
+      },
+      {
+        "cwd": "/Users/alex/Client Work",
+        "folder": "x",
+        "name": null
+      },
+      {
+        "cwd": "/Users/alex/client-work/acme",
+        "folder": "x",
+        "name": "github.com/your-company/acme"
+      },
+      {
+        "cwd": "/opt/outside",
+        "folder": "x",
+        "name": null
+      }
+    ]
+  }
+}

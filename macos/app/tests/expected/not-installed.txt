@@ -1,0 +1,10 @@
+icon: cordelia dimmed
+tooltip: Cordelia
+
+    Status: Not installed   {info, disabled}
+────
+    Install Cordelia…   {-> open-url https://seeddrill.ai/install}
+────
+    About Cordelia   {-> about}
+    Quit Cordelia Menu   {-> quit}
+        tip: The node keeps running and memory keeps syncing

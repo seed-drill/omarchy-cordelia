@@ -1,0 +1,4 @@
+{
+  "command": "~/.cordelia/bin/cordelia",
+  "never": ["~", "github.com/your-company/*", "~/client-work"]
+}

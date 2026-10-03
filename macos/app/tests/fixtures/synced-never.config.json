@@ -1,0 +1,7 @@
+{
+  "never": [
+    "~",
+    "github.com/your-company/*",
+    "~/Client Work"
+  ]
+}

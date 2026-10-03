@@ -1,0 +1,63 @@
+icon: exclamationmark.triangle.fill urgent
+tooltip: Cordelia: 1 conflict to merge
+
+    Status: 1 conflict to merge · 3 waiting to send   {info, disabled}
+        tip: cordelia 0.2.0-alpha.3 · panel 1ee44bb
+[x] Sync Memory on This Mac   {-> sync off}
+        runs: cordelia sync off
+        tip: Click to stop syncing memory on this device
+    1 Conflict to Merge   {urgent, submenu}
+        MEMORY.conflict-studio.md   {-> open /Users/alex/.claude/projects/-Users-alex-work-app/memory/MEMORY.conflict-studio.md}
+            tip: Two machines edited this at once. Merge it, then delete this file.
+────
+[x] Home Memory   {-> home off}
+        runs: cordelia sync home off
+        tip: What Claude remembers outside any project. Click to stop syncing it here.
+[x] ~/work/app   {urgent, -> stop github.com/example/app mapped}
+        runs: cordelia sync unmap github.com/example/app
+        tip: Error: channel key missing
+[x] github.com/example/lib   {-> stop github.com/example/lib found}
+        runs: cordelia sync exclude github.com/example/lib
+        tip: Waiting for one of your other devices to let this one in
+[ ] github.com/example/old   {-> include github.com/example/old}
+        runs: cordelia sync include github.com/example/old
+        tip: Kept off this device. Click to sync it again.
+    Sync Another Folder   {submenu}
+        ~/work/site  |  github.com/example/site   {-> map /Users/alex/work/site github.com/example/site named}
+            runs: cordelia sync map /Users/alex/work/site
+            tip: Asks first.
+        ~/Client Work  |  Syncs as client-work   {-> map /Users/alex/Client Work client-work unnamed}
+            runs: cordelia sync map /Users/alex/Client Work client-work
+            tip: Asks first.
+        ~/client-work/acme  |  github.com/your-company/acme   {-> map /Users/alex/client-work/acme github.com/your-company/acme named}
+            runs: cordelia sync map /Users/alex/client-work/acme
+            tip: Asks first.
+    ────
+        On Your Other Devices   {info, disabled}
+        github.com/example/notes   {-> copy (cordelia sync map <folder> github.com/example/notes)}
+            tip: Click to copy the command that syncs a folder with it
+    ────
+    [ ] Everything Found   {-> all on}
+            runs: cordelia sync claude --all
+            tip: Off: only the folders you turn on
+────
+    Devices: 2   {submenu}
+        cordelia_pk1thisma…qqqqqq  (this device)   {-> copy-key}
+            tip: Click to copy this device's key
+        cordelia_pk1studio…qqqqqq  (waiting to join)   {submenu}
+            tip: cordelia_pk1studioqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq
+            Remove This Device…   {-> remove-device cordelia_pk1studio…qqqqqq}
+                runs: cordelia remove-device cordelia_pk1studioqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq
+                tip: Asks twice, then changes the keys on every channel
+    ────
+        Add a Device from the Clipboard…   {-> add-device}
+            tip: Copy the other device's key (cordelia id), then click
+    Relays: 1 of 2 connected   {urgent, submenu}
+        cordelia_pk1relayo…qqqqqq  |  203.0.113.10:9474 · connected 1h 19m   {-> copy (relay key)}
+            tip: Click to copy this relay's key
+        cordelia_pk1relayt…qqqqqq  |  198.51.100.20:9474 · unreachable   {urgent, -> copy (relay key)}
+            tip: Click to copy this relay's key
+────
+    About Cordelia   {-> about}
+    Quit Cordelia Menu   {-> quit}
+        tip: The node keeps running and memory keeps syncing

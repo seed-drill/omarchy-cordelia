@@ -1,0 +1,40 @@
+{
+  "device": "cordelia_pk1thismacqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq",
+  "version": "0.2.0-alpha.3",
+  "role": "personal",
+  "running": true,
+  "state": "offline",
+  "summary": "no relay connected",
+  "outbox_waiting": 0,
+  "devices": [
+    {
+      "key": "cordelia_pk1thismacqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq",
+      "this_device": true,
+      "in_personal_channel": true,
+      "explicitly_trusted": false
+    },
+    {
+      "key": "cordelia_pk1studioqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq",
+      "name": "studio",
+      "this_device": false,
+      "in_personal_channel": true,
+      "explicitly_trusted": true
+    }
+  ],
+  "peers": {
+    "hot": 0,
+    "warm": 0,
+    "list": []
+  },
+  "sync": {
+    "enabled": true,
+    "all": false,
+    "home": false,
+    "available": [],
+    "conflicts": [],
+    "exclude": [],
+    "errors": [],
+    "projects": [],
+    "unmapped": []
+  }
+}
