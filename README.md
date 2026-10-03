@@ -7,8 +7,11 @@ step, and a panel to manage it.
 
 ## What it shows
 
-- **The icon:** synced, sending, offline, or needs attention (a conflict to
-  merge, or an error), which the bar highlights.
+- **The icon:** Cordelia's mark while memory is in step, and dimmed while
+  sync is off, the node is stopped or Cordelia is not set up. It gives way to
+  a glyph while sending, while offline, and when something needs attention (a
+  conflict to merge, or an error), which the bar highlights. The mark is
+  `assets/cordelia-mark.svg`, drawn in the bar's own colour.
 - **The switch:** memory sync on or off for this device. Below it, a switch
   for home memory and one for syncing everything Claude Code has memory for.
 - **Relays:** which are connected, and for how long.
@@ -29,6 +32,9 @@ refreshes, Tab moves to the next panel, Esc closes.
 
 **On a Mac:** the same panel as a native menu bar app. See
 [`macos/`](macos/README.md).
+
+**In Waybar:** `cordelia status --waybar` prints text, so it keeps a Nerd Font
+glyph for every state: a brain where this panel draws the mark.
 
 ## Install
 
