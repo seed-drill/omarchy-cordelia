@@ -28,13 +28,18 @@ Panel {
   readonly property color barIconColor: quiet ? Qt.darker(barForeground, 1.55) : barForeground
   readonly property color iconColor: attention ? urgent : (quiet ? dim : foreground)
 
-  // Nerd Font glyphs, the same ones `cordelia status --waybar` prints.
+  // Cordelia's own mark (Mark.qml) while memory is in step, and, dimmed,
+  // where nothing is being passed on: off, stopped, not set up. The passing
+  // states have a Nerd Font glyph each, the same ones `cordelia status
+  // --waybar` prints. The Mac menu bar app draws the same.
+  readonly property bool showsMark: cordelia.state !== "syncing"
+    && cordelia.state !== "offline" && cordelia.state !== "attention"
+
   function glyph(state) {
     if (state === "syncing") return String.fromCodePoint(0xF04E6)   // sync
     if (state === "offline") return String.fromCodePoint(0xF0164)   // cloud off
     if (state === "attention") return String.fromCodePoint(0xF0026) // alert
-    if (state === "off" || state === "stopped") return String.fromCodePoint(0xF04B2) // sleep
-    return String.fromCodePoint(0xF09D1)                             // brain
+    return ""                                                        // the mark
   }
 
   function headline() {
@@ -98,6 +103,7 @@ Panel {
     anchors.fill: parent
     bar: root.bar
     text: root.glyph(cordelia.state)
+    iconComponent: root.showsMark ? barMark : null
     foreground: root.barIconColor
     active: root.attention
     tooltipText: cordelia.installed ? "Cordelia: " + cordelia.summary : "Cordelia"
@@ -105,6 +111,11 @@ Panel {
       if (buttonCode === Qt.RightButton) cordelia.refresh()
       else root.toggle()
     }
+  }
+
+  Component {
+    id: barMark
+    Mark { color: root.barIconColor }
   }
 
   KeyboardPanel {
@@ -153,12 +164,23 @@ Panel {
             fontFamily: root.fontFamily
             iconOpacity: root.quiet ? 0.6 : 1.0
             iconComponent: Component {
-              Text {
-                textFormat: Text.PlainText
-                text: root.glyph(cordelia.state)
-                color: root.iconColor
-                font.family: root.fontFamily
-                font.pixelSize: Style.font.display
+              Item {
+                width: Style.font.display * 1.15
+                height: Style.font.display * 1.15
+                Mark {
+                  anchors.fill: parent
+                  visible: root.showsMark
+                  color: root.iconColor
+                }
+                Text {
+                  anchors.centerIn: parent
+                  visible: !root.showsMark
+                  textFormat: Text.PlainText
+                  text: root.glyph(cordelia.state)
+                  color: root.iconColor
+                  font.family: root.fontFamily
+                  font.pixelSize: Style.font.display
+                }
               }
             }
             // The switch is memory sync itself: on, or off.
