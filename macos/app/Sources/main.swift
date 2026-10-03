@@ -7,6 +7,7 @@
 //       [--node-agent S]           ok, needs-approval or absent, instead of asking macOS
 //   Cordelia --login-item on|off|status   open this app at login, or not
 //   Cordelia --make-iconset DIR    write the app icon's PNGs (used by build.sh)
+//   Cordelia --make-menubar-image FILE   write the menu bar mark as a PNG, enlarged, to look at
 //   Cordelia --version
 
 import AppKit
@@ -56,6 +57,10 @@ if let want = option("--login-item") {
 
 if let dir = option("--make-iconset") {
     exit(makeIconset(dir) ? 0 : 1)
+}
+
+if let file = option("--make-menubar-image") {
+    exit(writeMenuBarImage(file) ? 0 : 1)
 }
 
 let app = NSApplication.shared

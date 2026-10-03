@@ -63,13 +63,14 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate, UNUser
 
     private func draw(_ tree: MenuTree) {
         guard let button = item.button else { return }
-        let image = NSImage(systemSymbolName: tree.symbol, accessibilityDescription: "Cordelia")
-            ?? NSImage(systemSymbolName: "brain", accessibilityDescription: "Cordelia")
-        if tree.urgent, let red = image?.withSymbolConfiguration(.init(paletteColors: [.systemRed])) {
+        // Cordelia's own mark while memory is in step, and an SF Symbol for the passing states.
+        let image = tree.symbol == MARK ? cordeliaMarkImage()
+            : NSImage(systemSymbolName: tree.symbol, accessibilityDescription: "Cordelia") ?? cordeliaMarkImage()
+        if tree.urgent, let red = image.withSymbolConfiguration(.init(paletteColors: [.systemRed])) {
             red.isTemplate = false
             button.image = red
         } else {
-            image?.isTemplate = true
+            image.isTemplate = true
             button.image = image
         }
         button.appearsDisabled = tree.dimmed

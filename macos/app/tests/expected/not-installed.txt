@@ -1,4 +1,4 @@
-icon: brain dimmed
+icon: cordelia dimmed
 tooltip: Cordelia
 
     Status: Not installed   {info, disabled}

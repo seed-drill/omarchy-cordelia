@@ -1,4 +1,4 @@
-icon: brain dimmed
+icon: cordelia dimmed
 tooltip: Cordelia: the node is not running
 
     Status: The node is not running   {info, disabled}

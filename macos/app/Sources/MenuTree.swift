@@ -104,16 +104,17 @@ struct MenuTree {
     var rows: [Row]
 }
 
-/// The SF Symbol for each state the node reports (status.state). The panel
-/// uses Nerd Font glyphs; these are their equivalents.
+/// The image for each state the node reports (status.state): Cordelia's own
+/// mark (Mark.swift) where the panel shows its brain, and an SF Symbol for the
+/// passing states. The panel uses Nerd Font glyphs; these are their equivalents.
 let SYMBOLS: [String: String] = [
-    "synced": "brain",
+    "synced": MARK,
     "syncing": "arrow.triangle.2.circlepath",
     "offline": "icloud.slash",
     "attention": "exclamationmark.triangle.fill",
-    "off": "brain",
-    "stopped": "brain",
-    "uninitialised": "brain",
+    "off": MARK,
+    "stopped": MARK,
+    "uninitialised": MARK,
 ]
 
 func buildMenu(_ m: Model, config: Config, home: String, cliVersion: String = "",
@@ -131,7 +132,7 @@ func buildMenu(_ m: Model, config: Config, home: String, cliVersion: String = ""
         Row(title: "Quit Cordelia Menu", act: .quit, tip: "The node keeps running and memory keeps syncing"),
     ]
     func tree(_ rows: [Row]) -> MenuTree {
-        MenuTree(symbol: SYMBOLS[state] ?? "brain",
+        MenuTree(symbol: SYMBOLS[state] ?? MARK,
                  urgent: state == "attention",
                  dimmed: ["off", "stopped", "uninitialised"].contains(state),
                  tooltip: m.summary.isEmpty ? "Cordelia" : "Cordelia: " + m.summary,

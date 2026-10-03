@@ -1,4 +1,5 @@
-// The app icon, drawn at build time from the same symbol the menu bar shows:
+// The app icon, drawn at build time from the mark the menu bar shows
+// (Mark.swift), in the colours of seeddrill.ai:
 // `Cordelia --make-iconset <dir>`, then iconutil turns the folder into .icns.
 
 import AppKit
@@ -29,22 +30,13 @@ private func drawIcon(size: CGFloat) {
     let inset = size * 0.1
     let tile = NSRect(x: inset, y: inset, width: size - 2 * inset, height: size - 2 * inset)
     let shape = NSBezierPath(roundedRect: tile, xRadius: tile.width * 0.225, yRadius: tile.width * 0.225)
-    let top = NSColor(calibratedRed: 0.22, green: 0.26, blue: 0.36, alpha: 1)
-    let bottom = NSColor(calibratedRed: 0.10, green: 0.12, blue: 0.18, alpha: 1)
+    // The site's card and page backgrounds (#131e28 over #0a1118), and its accent (#1DD3B0).
+    let top = NSColor(srgbRed: 0x13 / 255.0, green: 0x1e / 255.0, blue: 0x28 / 255.0, alpha: 1)
+    let bottom = NSColor(srgbRed: 0x0a / 255.0, green: 0x11 / 255.0, blue: 0x18 / 255.0, alpha: 1)
     NSGradient(starting: top, ending: bottom)?.draw(in: shape, angle: -90)
 
-    let config = NSImage.SymbolConfiguration(pointSize: tile.width * 0.6, weight: .medium)
-    guard let symbol = NSImage(systemSymbolName: "brain", accessibilityDescription: nil)?
-        .withSymbolConfiguration(config) else { return }
-    let white = NSImage(size: symbol.size, flipped: false) { rect in
-        symbol.draw(in: rect)
-        NSColor.white.set()
-        rect.fill(using: .sourceAtop)
-        return true
-    }
-    // Fit the symbol into the middle 74% of the tile, keeping its shape.
-    let box = tile.width * 0.74
-    let scale = min(box / symbol.size.width, box / symbol.size.height)
-    let w = symbol.size.width * scale, h = symbol.size.height * scale
-    white.draw(in: NSRect(x: tile.midX - w / 2, y: tile.midY - h / 2, width: w, height: h))
+    // The mark in the middle 80% of the tile.
+    let box = tile.width * 0.8
+    NSColor(srgbRed: 0x1d / 255.0, green: 0xd3 / 255.0, blue: 0xb0 / 255.0, alpha: 1).setStroke()
+    strokeCordeliaMark(in: NSRect(x: tile.midX - box / 2, y: tile.midY - box / 2, width: box, height: box))
 }

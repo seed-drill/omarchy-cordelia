@@ -4,7 +4,7 @@ The macOS twin of the Omarchy panel: a small native app that puts one icon in th
 
 ## What it shows
 
-- **The icon** is a brain while memory is in step. It changes to turning arrows while syncing, a crossed cloud when no relay can be reached, and a red warning triangle for anything that needs you: a conflict, an error, something on your never-sync list that syncs anyway, or a node that macOS will not start at the next login. It is dimmed when sync is off or the node is stopped.
+- **The icon** is Cordelia's mark, a brain seen from above, while memory is in step. It changes to turning arrows while syncing, a crossed cloud when no relay can be reached, and a red warning triangle for anything that needs you: a conflict, an error, something on your never-sync list that syncs anyway, or a node that macOS will not start at the next login. It is dimmed when sync is off or the node is stopped. The mark is our own drawing (`assets/cordelia-mark.svg`), and the app icon is drawn from it: Apple's terms keep SF Symbols out of app icons and logos. The passing states use SF Symbols, as any menu may.
 - **Status** is the node's own summary.
 - **Allow Cordelia to Start at Login…** appears, in red, when macOS has the node's background item switched off in Login Items. The node can be running now, because an installer started it by hand, and still not be started at the next login; memory then stops syncing without a word. Click the row to open Login Items, and switch `cordelia` on. This is the one thing the menu shows that the node cannot report itself.
 - **Sync Memory on This Mac** is the switch, like the panel's header.

@@ -1,4 +1,4 @@
-icon: brain
+icon: cordelia
 tooltip: Cordelia: memory synced
 
     Status: Memory synced   {info, disabled}
