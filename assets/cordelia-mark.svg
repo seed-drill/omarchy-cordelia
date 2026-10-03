@@ -1,15 +1,17 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" width="32" height="32">
   <!-- The Cordelia mark: a brain seen from above, in the stroke of the Seed
        Drill chevrons (2.5 on a 32 grid, round caps and joins). Our own
-       drawing: six arcs for the outline, a line for the fissure, four folds.
-       One colour: it is stroked in currentColor, so it takes the colour of
-       the text around it. macos/app/Sources/Mark.swift draws the same shape. -->
+       drawing: eight arcs for the outline (four lobes a side), a line for the
+       fissure, and two folds a side that curl inwards from where the lobes
+       meet. One colour: it is stroked in currentColor, so it takes the colour
+       of the text around it. macos/app/Sources/Mark.swift draws the same
+       shape. -->
   <g fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-    <path d="M16 6.01 A5.75 5.75 0 0 1 25.986 11.626 A5.25 5.25 0 0 1 25.867 20.936 A5.75 5.75 0 0 1 16 26.58 A5.75 5.75 0 0 1 6.133 20.936 A5.25 5.25 0 0 1 6.014 11.626 A5.75 5.75 0 0 1 16 6.01 Z"/>
-    <path d="M16 6.01 V26.58"/>
-    <path d="M6.014 11.626 L10.2 13.2"/>
-    <path d="M25.986 11.626 L21.8 13.2"/>
-    <path d="M6.133 20.936 L10.2 19.4"/>
-    <path d="M25.867 20.936 L21.8 19.4"/>
+    <path d="M16 6.444 A4.9 4.9 0 0 1 25.297 8.766 A4.4 4.4 0 0 1 27.01 16.3 A4.4 4.4 0 0 1 25.3 23.833 A4.9 4.9 0 0 1 16 25.956 A4.9 4.9 0 0 1 6.7 23.833 A4.4 4.4 0 0 1 4.99 16.3 A4.4 4.4 0 0 1 6.703 8.766 A4.9 4.9 0 0 1 16 6.444 Z"/>
+    <path d="M16 6.444 V25.956"/>
+    <path d="M6.703 8.766 C8.2 9.8 10.6 10.2 10.9 12.6"/>
+    <path d="M25.297 8.766 C23.8 9.8 21.4 10.2 21.1 12.6"/>
+    <path d="M4.99 16.3 C7 16.4 9.4 16.6 10.2 18.9"/>
+    <path d="M27.01 16.3 C25 16.4 22.6 16.6 21.8 18.9"/>
   </g>
 </svg>

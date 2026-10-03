@@ -10,8 +10,9 @@ import AppKit
 /// The name the menu tree gives this mark, beside the SF Symbol names.
 let MARK = "cordelia"
 
-// The shape on a 32-unit grid with y running down, as the SVG has it: six
-// arcs for the outline, a line for the fissure, four folds.
+// The shape on a 32-unit grid with y running down, as the SVG has it: eight
+// arcs for the outline (four lobes a side), a line for the fissure, and two
+// folds a side that curl inwards from where the lobes meet.
 private let GRID: CGFloat = 32
 private let STROKE: CGFloat = 2.5
 
@@ -21,27 +22,33 @@ private struct Lobe {
     let from, to: CGPoint
 }
 
+/// Clockwise from the notch at the top: down the right side, up the left.
 private let OUTLINE: [Lobe] = [
-    Lobe(centre: CGPoint(x: 20.75, y: 9.25), radius: 5.75,
-         from: CGPoint(x: 16, y: 6.01), to: CGPoint(x: 25.986, y: 11.626)),
-    Lobe(centre: CGPoint(x: 23.5, y: 16.25), radius: 5.25,
-         from: CGPoint(x: 25.986, y: 11.626), to: CGPoint(x: 25.867, y: 20.936)),
-    Lobe(centre: CGPoint(x: 20.5, y: 23), radius: 5.75,
-         from: CGPoint(x: 25.867, y: 20.936), to: CGPoint(x: 16, y: 26.58)),
-    Lobe(centre: CGPoint(x: 11.5, y: 23), radius: 5.75,
-         from: CGPoint(x: 16, y: 26.58), to: CGPoint(x: 6.133, y: 20.936)),
-    Lobe(centre: CGPoint(x: 8.5, y: 16.25), radius: 5.25,
-         from: CGPoint(x: 6.133, y: 20.936), to: CGPoint(x: 6.014, y: 11.626)),
-    Lobe(centre: CGPoint(x: 11.25, y: 9.25), radius: 5.75,
-         from: CGPoint(x: 6.014, y: 11.626), to: CGPoint(x: 16, y: 6.01)),
+    Lobe(centre: CGPoint(x: 20.4, y: 8.6), radius: 4.9,
+         from: CGPoint(x: 16, y: 6.444), to: CGPoint(x: 25.297, y: 8.766)),
+    Lobe(centre: CGPoint(x: 24.1, y: 13), radius: 4.4,
+         from: CGPoint(x: 25.297, y: 8.766), to: CGPoint(x: 27.01, y: 16.3)),
+    Lobe(centre: CGPoint(x: 24.1, y: 19.6), radius: 4.4,
+         from: CGPoint(x: 27.01, y: 16.3), to: CGPoint(x: 25.3, y: 23.833)),
+    Lobe(centre: CGPoint(x: 20.4, y: 23.8), radius: 4.9,
+         from: CGPoint(x: 25.3, y: 23.833), to: CGPoint(x: 16, y: 25.956)),
+    Lobe(centre: CGPoint(x: 11.6, y: 23.8), radius: 4.9,
+         from: CGPoint(x: 16, y: 25.956), to: CGPoint(x: 6.7, y: 23.833)),
+    Lobe(centre: CGPoint(x: 7.9, y: 19.6), radius: 4.4,
+         from: CGPoint(x: 6.7, y: 23.833), to: CGPoint(x: 4.99, y: 16.3)),
+    Lobe(centre: CGPoint(x: 7.9, y: 13), radius: 4.4,
+         from: CGPoint(x: 4.99, y: 16.3), to: CGPoint(x: 6.703, y: 8.766)),
+    Lobe(centre: CGPoint(x: 11.6, y: 8.6), radius: 4.9,
+         from: CGPoint(x: 6.703, y: 8.766), to: CGPoint(x: 16, y: 6.444)),
 ]
 
-private let LINES: [(CGPoint, CGPoint)] = [
-    (CGPoint(x: 16, y: 6.01), CGPoint(x: 16, y: 26.58)),
-    (CGPoint(x: 6.014, y: 11.626), CGPoint(x: 10.2, y: 13.2)),
-    (CGPoint(x: 25.986, y: 11.626), CGPoint(x: 21.8, y: 13.2)),
-    (CGPoint(x: 6.133, y: 20.936), CGPoint(x: 10.2, y: 19.4)),
-    (CGPoint(x: 25.867, y: 20.936), CGPoint(x: 21.8, y: 19.4)),
+private let FISSURE = (CGPoint(x: 16, y: 6.444), CGPoint(x: 16, y: 25.956))
+
+/// The folds of the left side, as cubic curves: start, two controls, end. The
+/// right side is their mirror image.
+private let FOLDS: [[CGPoint]] = [
+    [CGPoint(x: 6.703, y: 8.766), CGPoint(x: 8.2, y: 9.8), CGPoint(x: 10.6, y: 10.2), CGPoint(x: 10.9, y: 12.6)],
+    [CGPoint(x: 4.99, y: 16.3), CGPoint(x: 7, y: 16.4), CGPoint(x: 9.4, y: 16.6), CGPoint(x: 10.2, y: 18.9)],
 ]
 
 /// Strokes the mark into `rect`, in the stroke colour that is set. `weight` is
@@ -52,6 +59,7 @@ func strokeCordeliaMark(in rect: NSRect, weight: CGFloat = STROKE) {
     func place(_ g: CGPoint) -> NSPoint {
         NSPoint(x: rect.minX + g.x * scale, y: rect.maxY - g.y * scale)
     }
+    func mirror(_ g: CGPoint) -> CGPoint { CGPoint(x: GRID - g.x, y: g.y) }
     func angle(_ centre: NSPoint, _ p: NSPoint) -> CGFloat {
         atan2(p.y - centre.y, p.x - centre.x) * 180 / .pi
     }
@@ -67,9 +75,13 @@ func strokeCordeliaMark(in rect: NSRect, weight: CGFloat = STROKE) {
                        endAngle: angle(centre, place(lobe.to)), clockwise: true)
     }
     path.close()
-    for (a, b) in LINES {
-        path.move(to: place(a))
-        path.line(to: place(b))
+    path.move(to: place(FISSURE.0))
+    path.line(to: place(FISSURE.1))
+    for fold in FOLDS {
+        for side in [fold, fold.map(mirror)] {
+            path.move(to: place(side[0]))
+            path.curve(to: place(side[3]), controlPoint1: place(side[1]), controlPoint2: place(side[2]))
+        }
     }
     path.stroke()
 }
