@@ -2,7 +2,7 @@ icon: exclamationmark.triangle.fill urgent
 tooltip: Cordelia: memory synced
 
     Status: Memory synced   {info, disabled}
-        tip: cordelia 0.2.0-alpha.3 · panel 1ee44bb
+        tip: cordelia 0.2.0-alpha.3 · panel 5286109
     Never-sync, but syncing: Everything Found   {urgent, disabled}
     Never-sync, but syncing: Home Memory   {urgent, disabled}
     Never-sync, but syncing: github.com/your-company/acme   {urgent, disabled}

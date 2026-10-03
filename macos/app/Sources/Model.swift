@@ -4,7 +4,7 @@
 import Foundation
 
 /// The Omarchy panel commit this app matches. See the README, "Keeping in step".
-let TRACKS = "1ee44bb"
+let TRACKS = "5286109"
 let APP_VERSION = "0.1.0"
 
 typealias JSON = [String: Any]
