@@ -2,7 +2,7 @@ icon: exclamationmark.triangle.fill urgent
 tooltip: Cordelia: memory synced
 
     Status: Memory synced   {info, disabled}
-        tip: cordelia 0.2.0-alpha.3 · panel 1ee44bb
+        tip: cordelia 0.2.0-alpha.3 · panel 5286109
     Allow Cordelia to Start at Login…   {urgent, -> open-login-items}
         tip: macOS has the node's background item switched off, so memory stops syncing at the next login. Click to open Login Items, then switch “cordelia” on.
 [x] Sync Memory on This Mac   {-> sync off}

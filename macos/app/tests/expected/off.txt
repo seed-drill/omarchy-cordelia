@@ -2,7 +2,7 @@ icon: cordelia dimmed
 tooltip: Cordelia: sync is off
 
     Status: Sync is off   {info, disabled}
-        tip: cordelia 0.2.0-alpha.3 · panel 1ee44bb
+        tip: cordelia 0.2.0-alpha.3 · panel 5286109
 [ ] Sync Memory on This Mac   {-> sync on}
         runs: cordelia sync claude
         tip: Click to sync Claude Code's memory

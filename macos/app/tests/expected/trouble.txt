@@ -2,7 +2,7 @@ icon: exclamationmark.triangle.fill urgent
 tooltip: Cordelia: 1 conflict to merge
 
     Status: 1 conflict to merge · 3 waiting to send   {info, disabled}
-        tip: cordelia 0.2.0-alpha.3 · panel 1ee44bb
+        tip: cordelia 0.2.0-alpha.3 · panel 5286109
 [x] Sync Memory on This Mac   {-> sync off}
         runs: cordelia sync off
         tip: Click to stop syncing memory on this device

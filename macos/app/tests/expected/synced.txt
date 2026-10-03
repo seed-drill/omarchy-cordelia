@@ -2,7 +2,7 @@ icon: cordelia
 tooltip: Cordelia: memory synced
 
     Status: Memory synced   {info, disabled}
-        tip: cordelia 0.2.0-alpha.3 · panel 1ee44bb
+        tip: cordelia 0.2.0-alpha.3 · panel 5286109
 [x] Sync Memory on This Mac   {-> sync off}
         runs: cordelia sync off
         tip: Click to stop syncing memory on this device
