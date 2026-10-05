@@ -312,18 +312,18 @@ private func launch(_ path: String, _ args: [String], wait: Bool = false) -> Int
 }
 
 func showAbout(cliVersion: String) {
+    let about = aboutText(cliVersion: cliVersion)
     let centred = NSMutableParagraphStyle()
     centred.alignment = .center
     let credits = NSAttributedString(
-        string: "Your AI agent's memory, in step across your machines.\n"
-            + "cordelia \(cliVersion.isEmpty ? "not found" : cliVersion) · panel \(TRACKS)\nseeddrill.ai",
+        string: "\(ABOUT_TAGLINE)\n\(about.detail)\nseeddrill.ai",
         attributes: [.font: NSFont.systemFont(ofSize: NSFont.smallSystemFontSize),
                      .foregroundColor: NSColor.secondaryLabelColor,
                      .paragraphStyle: centred])
     NSApp.activate(ignoringOtherApps: true)
     NSApp.orderFrontStandardAboutPanel(options: [
         .applicationName: "Cordelia",
-        .applicationVersion: APP_VERSION,
+        .applicationVersion: about.version,
         .version: "",
         .credits: credits,
     ])

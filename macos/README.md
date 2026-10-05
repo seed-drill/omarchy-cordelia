@@ -102,4 +102,4 @@ macos/app/tests/run.sh
 
 Each `.status.json` in `tests/fixtures/` is a saved `status --json`, some with a settings file or extra arguments beside them, and `tests/expected/` holds the menu the app draws for it, as text, with the `cordelia` command each row runs. After a deliberate change, `run.sh --update` rewrites the expected files; read the diff before committing it.
 
-`Cordelia.app/Contents/MacOS/Cordelia --dump-menu` prints the menu for the node on this Mac.
+`Cordelia.app/Contents/MacOS/Cordelia --dump-menu` prints the menu for the node on this Mac. `--dump-about` prints what the About window says: the node's version at the top, the menu's own beneath.
