@@ -1,0 +1,5 @@
+Cordelia
+Version 0.2.0-alpha.8
+Your AI agent's memory, in step across your machines.
+menu 0.1.0 · panel 5286109
+seeddrill.ai

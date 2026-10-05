@@ -5,6 +5,8 @@
 //       [--status-file F]          a saved `status --json` instead of the node,
 //       [--config F] [--home D]    another settings file or home directory
 //       [--node-agent S]           ok, needs-approval or absent, instead of asking macOS
+//   Cordelia --dump-about          print what the About window says and exit; with
+//       [--cli-version V]          that version instead of asking `cordelia` ("" for none)
 //   Cordelia --login-item on|off|status   open this app at login, or not
 //   Cordelia --make-iconset DIR    write the app icon's PNGs (used by build.sh)
 //   Cordelia --make-menubar-image FILE   write the menu bar mark as a PNG, enlarged, to look at
@@ -21,6 +23,20 @@ func option(_ flag: String) -> String? {
 
 if arguments.contains("--version") {
     print("Cordelia menu \(APP_VERSION) (panel \(TRACKS))")
+    exit(0)
+}
+
+if arguments.contains("--dump-about") {
+    let version: String
+    if let given = option("--cli-version") {
+        version = given
+    } else {
+        let home = option("--home") ?? NSHomeDirectory()
+        let config = Config.load(path: option("--config") ?? home + "/.config/cordelia/menubar.json", home: home)
+        version = CLI(command: config.command).version()
+    }
+    let about = aboutText(cliVersion: version)
+    print("Cordelia\nVersion \(about.version)\n\(ABOUT_TAGLINE)\n\(about.detail)\nseeddrill.ai")
     exit(0)
 }
 

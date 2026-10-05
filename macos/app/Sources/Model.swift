@@ -7,6 +7,25 @@ import Foundation
 let TRACKS = "5286109"
 let APP_VERSION = "0.1.0"
 
+// ── About ────────────────────────────────────────────────────────────────
+
+let ABOUT_TAGLINE = "Your AI agent's memory, in step across your machines."
+
+/// What the About window says under the name. To the person reading, Cordelia is
+/// one thing and its version is the node's, so that goes at the top; this menu's
+/// own number is small print. With no `cordelia` to ask, the menu's is all there is.
+struct AboutText {
+    let version: String
+    let detail: String
+}
+
+func aboutText(cliVersion: String) -> AboutText {
+    if cliVersion.isEmpty {
+        return AboutText(version: APP_VERSION, detail: "cordelia not found · panel \(TRACKS)")
+    }
+    return AboutText(version: cliVersion, detail: "menu \(APP_VERSION) · panel \(TRACKS)")
+}
+
 typealias JSON = [String: Any]
 
 // ── Settings ─────────────────────────────────────────────────────────────
