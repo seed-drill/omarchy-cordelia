@@ -2,10 +2,10 @@
   "schemaVersion": 1,
   "id": "seeddrill.cordelia",
   "name": "Cordelia",
-  "version": "0.3.0",
+  "version": "0.4.0",
   "author": "Seed Drill Labs",
   "license": "MIT",
-  "description": "Cordelia in the Omarchy bar: whether your agent's memory is in step across your devices, with what syncs, relays, devices and conflicts.",
+  "description": "Cordelia in the Omarchy bar: whether your agent's memory is in step across your devices, and what needs you, with what syncs, relays, your devices and conflicts.",
   "kinds": [
     "bar-widget"
   ],
@@ -14,7 +14,7 @@
   },
   "barWidget": {
     "displayName": "Cordelia",
-    "description": "See whether your agent's memory is in step, choose what syncs, pair devices and open conflicts.",
+    "description": "See whether your agent's memory is in step, choose which folders sync, look over your devices and open conflicts.",
     "category": "AI",
     "allowMultiple": false,
     "defaultSection": "right",
