@@ -69,7 +69,7 @@ Panel {
   }
 
   function shortKey(key) {
-    var k = String(key || "")
+    var k = cordelia.plain(key)
     return k.length > 26 ? k.substring(0, 18) + "…" + k.substring(k.length - 6) : k
   }
 
@@ -98,11 +98,12 @@ Panel {
 
   // What this device holds, in one line: its names, their entries, the size
   // of their encrypted content, and the size of its database. "" where
-  // `cordelia stats` did not say, or says it of something other than a
-  // person's device.
+  // `cordelia stats` was not run or did not say (it is run only beside a
+  // running node of the command's own version), or says it of something
+  // other than a person's device.
   function sizes() {
     var s = cordelia.stats
-    if (s === null || cordelia.role !== "personal") return ""
+    if (s === null || cordelia.role !== "personal" || !cordelia.running || cordelia.otherVersion) return ""
     if (typeof s.channels_subscribed !== "number" || typeof s.items_stored !== "number") return ""
     if (typeof s.content_bytes_stored !== "number" || typeof s.database_bytes !== "number") return ""
     return counted(s.channels_subscribed, "name", "names") + " · " + counted(s.items_stored, "entry", "entries")
@@ -112,18 +113,18 @@ Panel {
   // The command's version, the running node's, and this panel's.
   function versions() {
     var parts = []
-    if (cordelia.version !== "") parts.push("cordelia " + cordelia.version)
-    if (cordelia.nodeVersion !== "") parts.push("node " + cordelia.nodeVersion)
-    if (cordelia.pluginVersion !== "") parts.push("panel " + cordelia.pluginVersion)
+    if (cordelia.version !== "") parts.push("cordelia " + cordelia.plain(cordelia.version))
+    if (cordelia.nodeVersion !== "") parts.push("node " + cordelia.plain(cordelia.nodeVersion))
+    if (cordelia.pluginVersion !== "") parts.push("panel " + cordelia.plain(cordelia.pluginVersion))
     return parts.join(" · ")
   }
 
   // A node goes on running the version it was started as until it is
   // restarted.
   function versionSays() {
-    var node = cordelia.nodeVersion !== "" ? "The node is version " + cordelia.nodeVersion + " and"
-      : "The node is from before nodes said their version, and"
-    return node + " the command is version " + cordelia.version + ". Restart the node."
+    var node = cordelia.nodeVersion === "" ? "The node is from before nodes said their version, and"
+      : "The node is version " + cordelia.plain(cordelia.nodeVersion) + " and"
+    return node + " the command is version " + cordelia.plain(cordelia.version) + ". Restart the node."
   }
 
   function homeSays() {
@@ -132,13 +133,13 @@ Panel {
     var says = cordelia.homeEntry !== null ? cordelia.folderSays(cordelia.homeEntry) : ""
     if (says !== "") return says
     if (cordelia.staysHere) return "Stays on this machine"
-    return cordelia.homeName !== "~" ? "Syncs as " + cordelia.homeName : about
+    return cordelia.homeName !== "~" ? "Syncs as " + cordelia.plain(cordelia.homeName) : about
   }
 
   function folderDetail(entry) {
     var says = cordelia.folderSays(entry)
     if (says !== "") return says
-    return entry.cwd ? String(entry.project) : (cordelia.staysHere ? "Mapped" : "Syncing")
+    return entry.cwd ? cordelia.plain(entry.project) : (cordelia.staysHere ? "Mapped" : "Syncing")
   }
 
   // The notice of the folders that stopped syncing when only mapped folders
@@ -146,7 +147,7 @@ Panel {
   function noticeSays() {
     var says = []
     if (cordelia.stoppedSyncing.length > 0) {
-      says.push((cordelia.noticeDay !== "" ? "Since " + cordelia.noticeDay + " only" : "Only")
+      says.push((cordelia.noticeDay !== "" ? "Since " + cordelia.plain(cordelia.noticeDay) + " only" : "Only")
         + " mapped folders sync. These synced because everything found did: turn on the ones to keep.")
     } else if (cordelia.noticeNotKnown) {
       says.push("Folders stopped syncing: only mapped folders sync now.")
@@ -201,8 +202,7 @@ Panel {
 
   onOpenedChanged: if (opened) {
     if (panelFlick) panelFlick.contentY = 0
-    cordelia.refresh()
-    cordelia.readStats()
+    cordelia.panelOpened()
     Qt.callLater(function() { keyCatcher.forceActiveFocus() })
   }
 
@@ -232,7 +232,7 @@ Panel {
     foreground: root.barIconColor
     // The bar highlights red, and never amber.
     active: root.attention
-    tooltipText: cordelia.installed ? "Cordelia: " + cordelia.summary : "Cordelia"
+    tooltipText: cordelia.installed ? "Cordelia: " + cordelia.plain(cordelia.summary) : "Cordelia"
     onPressed: function(buttonCode) {
       if (buttonCode === Qt.RightButton) cordelia.refresh()
       else root.toggle()
@@ -354,6 +354,11 @@ Panel {
             text: root.versionSays()
             color: root.urgent
           }
+          // What a switch will do meanwhile, said before it is clicked.
+          Note {
+            visible: cordelia.otherVersion
+            text: "Until then changes are refused. Turning sync off still works."
+          }
 
           Note {
             visible: cordelia.actionStatus !== "" || cordelia.lastError !== ""
@@ -446,7 +451,7 @@ Panel {
                 required property var modelData
                 width: column.width
                 icon: String.fromCodePoint(0xF0026)
-                title: root.fileName(modelData)
+                title: cordelia.plain(root.fileName(modelData))
                 detail: "Two machines edited this at once. Merge it, then delete this file."
                 onActivated: cordelia.openFile(modelData)
               }
@@ -633,7 +638,7 @@ Panel {
               SwitchRow {
                 required property var modelData
                 width: column.width
-                title: modelData.cwd ? cordelia.shortPath(modelData.cwd) : String(modelData.project)
+                title: cordelia.plain(modelData.cwd ? cordelia.shortPath(modelData.cwd) : modelData.project)
                 detail: root.folderDetail(modelData)
                 checked: true
                 onToggled: cordelia.stopSyncing(modelData)
@@ -684,8 +689,7 @@ Panel {
                 title: cordelia.plain(modelData)
                 detail: "Click to copy the command that syncs a folder with it"
                 actionIcon: String.fromCodePoint(0xF018F) // copy
-                onActivated: cordelia.copyText("cordelia sync map <folder> " + cordelia.shellWord(String(modelData)),
-                  "Copied. Put the folder in and run it in a terminal.")
+                onActivated: cordelia.copyMapCommand(String(modelData))
               }
             }
           }

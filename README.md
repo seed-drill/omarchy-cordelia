@@ -18,13 +18,16 @@ step, and a panel to manage it.
 - **The head of the panel:** the node's summary. Where anything holds, every
   thing that holds is listed in its place, red first, each as the node says
   it. If the running node is not the version of the command, the panel says
-  so: restart the node.
+  so: restart the node. Until then changes are refused; turning sync off
+  still works.
 - **The switch:** memory sync on or off for this device. Below it, a switch
   for home memory.
 - **Stopped syncing:** on a machine that had synced everything it found, the
   folders that stopped when only mapped folders came to sync. Each has a
   switch to map it again where the node says it can be mapped, and the node's
-  reason where it cannot. *I have seen this* puts the notice away.
+  reason where it cannot. A folder that needs a name from you has no switch:
+  its row copies the command, for you to put the name in. No folder has a
+  switch while sync is off. *I have seen this* puts the notice away.
 - **Relays:** each relay this device is set up with, whether it is connected
   and for how long, and whether it holds the latest change of your devices.
 - **Your devices:** each device by its label and the first words of its key's
@@ -55,13 +58,14 @@ step, and a panel to manage it.
 - **Conflicts:** files two machines edited at once; click to open one.
 - **At the foot:** what this device holds (its names, their entries, the size
   of their encrypted content and of the database), and the versions of the
-  command, of the running node and of this panel.
+  command, of the running node and of this panel. The sizes are shown only
+  beside a running node of the command's own version.
 
 Keys in the panel: `s` toggles sync, `c` copies this device's key, `r`
 refreshes, Tab moves to the next panel, Esc closes.
 
-**On a Mac:** a native menu bar app that tracks this panel. See
-[`macos/`](macos/README.md) for what it shows.
+**On a Mac:** a native menu bar app, in [`macos/`](macos/README.md). It is
+behind this panel, and is brought up to it next.
 
 **In Waybar:** `cordelia status --waybar` prints text, so it keeps a Nerd Font
 glyph for every state: a brain where this panel draws the mark.
@@ -94,12 +98,15 @@ In the widget's entry in `~/.config/omarchy/shell.json`, or with
 
 The plugin holds no state. Everything it shows comes from
 `cordelia status --json`, and the sizes from `cordelia stats --json` when the
-panel opens. The level, red or amber, is the node's: the panel draws it and
-works nothing out. Everything it changes goes through the `cordelia` command
-line: sync on and off, home memory, mapping and unmapping a folder, and
-putting the notice away. A command that is refused says why in the panel.
-`Service.qml` does all of this; `Panel.qml` is the bar button and the panel,
-built from Omarchy's own panel components.
+panel opens beside a running node of the command's own version. The level,
+red or amber, is the node's: the panel draws it and works nothing out.
+Everything it changes in Cordelia goes through the `cordelia` command line:
+sync on and off, home memory, mapping and unmapping a folder, and putting the
+notice away. A command that is refused says why in the panel. *Start the
+node* is the one thing that does not go through it: it asks the service
+manager (`systemctl --user start cordelia`). `Service.qml` does all of this;
+`Panel.qml` is the bar button and the panel, built from Omarchy's own panel
+components.
 
 ## License
 

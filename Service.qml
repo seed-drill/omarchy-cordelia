@@ -150,6 +150,10 @@ Item {
   // The switch moves the moment it is clicked; the real state follows.
   // -1 follows the node, 0 or 1 is a change still being applied.
   property int _desiredSync: -1
+  // The panel has opened, and the sizes are still to be read: after the next
+  // status, or after the one that follows it (see `panelOpened`).
+  property bool _sizesWanted: false
+  property bool _readAgain: false
   readonly property bool syncOn: _desiredSync === -1 ? sync.enabled === true : _desiredSync === 1
   readonly property bool busy: actionProcess.running
 
@@ -175,31 +179,69 @@ Item {
     statusProcess.running = true
   }
 
-  // The sizes are read when the panel opens, and not with every refresh.
+  // The panel has opened: the status is read again, and the sizes once that
+  // answer is in (see `statusRead`). They are not read with every refresh.
+  function panelOpened() {
+    _sizesWanted = true
+    // An answer that was asked for before the panel opened does not count:
+    // the status is read once more after it.
+    _readAgain = statusProcess.running
+    refresh()
+  }
+
+  // A status was asked for, and `fresh` says whether its answer was read.
+  function statusRead(fresh) {
+    if (!_sizesWanted) return
+    if (_readAgain) {
+      _readAgain = false
+      Qt.callLater(function() { root.refresh() })
+      return
+    }
+    _sizesWanted = false
+    if (!panelOpen) return
+    if (fresh) readStats()
+    else stats = null
+  }
+
+  // `cordelia stats` does not ask the node. It opens the database itself, and
+  // so brings it to the command's own version. So it is run only where the
+  // status just read says that the node runs and is the version of the
+  // command: never beside a node of another version, or with none running.
+  // Where it is not run, no sizes are shown.
   function readStats() {
+    var same = status.running === true && typeof status.version === "string" && status.version !== ""
+      && status.node_version === status.version
+    if (!same) {
+      stats = null
+      return
+    }
     if (statsProcess.running) return
     statsProcess.command = [cli, "stats", "--json"]
     statsProcess.running = true
   }
 
+  // Take the answer of `cordelia status --json`, and say whether it was read.
   function applyStatus(raw) {
     var text = String(raw || "").trim()
     if (text === "") {
       status = ({})
       loaded = true
-      return
+      return true
     }
     try {
       status = JSON.parse(text)
       loaded = true
       if (_desiredSync !== -1 && (status.sync && status.sync.enabled === true) === (_desiredSync === 1)) _desiredSync = -1
+      return true
     } catch (e) {
       lastError = "Could not read cordelia status"
+      return false
     }
   }
 
-  // Which line of a finished command's output to show: "last" (the
-  // default), "first", or "none".
+  // What of a finished command's output to show: its "last" line (the
+  // default), its "first", what it "said" before its first empty line, or
+  // "none".
   property string _show: "last"
 
   // Run a cordelia command; `note` shows while it runs.
@@ -246,12 +288,14 @@ Item {
   }
   // Stop syncing a mapped folder from this device. Its files stay where they
   // are. It is unmapped by its folder, which names one mapping and no other,
-  // and by its name where the node lists no folder for it.
+  // and by its name where the node lists no folder for it. All that the
+  // command says of it is shown: it may say that this device still holds the
+  // name.
   function stopSyncing(entry) {
     var name = String(entry.project)
     var folder = ""
     for (var i = 0; i < mappings.length; i++) if (mappings[i].name === name) folder = String(mappings[i].folder || "")
-    run(["sync", "unmap", folder !== "" ? folder : name], "", "first")
+    run(["sync", "unmap", folder !== "" ? folder : name], "", "said")
   }
   // The notice of the folders that stopped syncing has been seen: the node
   // puts it away, and the next status carries none.
@@ -276,13 +320,13 @@ Item {
     if (!can) {
       var place = entry.why_not === "laid_out_by_hand" ? String(entry.folder || "") + "/memory"
         : String(entry.directory || entry.cwd || entry.folder || "")
-      out.title = shortPath(place)
+      out.title = plain(shortPath(place))
       if (says === "") says = "the node does not say whether it can be mapped"
       out.detail = sentence(joined([was, says], " · "))
       return out
     }
     var cwd = String(entry.cwd)
-    out.title = shortPath(cwd)
+    out.title = plain(shortPath(cwd))
     if (entry.home === true) {
       out.args = ["sync", "map", cwd].concat(name !== "" && name !== "~" ? [name] : [], ["--home"])
       out.detail = was !== "" ? was : "Home memory"
@@ -296,8 +340,11 @@ Item {
         out.detail = "Syncs as " + own
           + (available.indexOf(own) !== -1 ? " · your other devices sync it" : (says !== "" ? " · " + says : ""))
       } else {
-        out.command = "cordelia sync map " + shellArg(cwd) + " <name>"
-        out.detail = sentence(joined([was, says !== "" ? says : "needs a name"], " · "))
+        // A folder whose name holds a control character goes into no command.
+        var safe = copyable(cwd)
+        if (safe) out.command = "cordelia sync map " + shellArg(cwd) + " <name>"
+        out.detail = sentence(joined([was, says !== "" ? says : "needs a name",
+          safe ? "" : "its folder's name cannot be copied safely"], " · "))
       }
     } else {
       // What was found is named by its remote as it is now. What the notice
@@ -427,11 +474,20 @@ Item {
   }
 
   // Text from the node, or from another device by way of it, as one line
-  // that is safe to show: nothing in it breaks the line, or turns the
-  // direction of the text around.
+  // that is safe to show. What would break the line becomes a space. What is
+  // not seen and turns the direction of the text around, or sits in it with
+  // no width, is taken out: a label cannot reorder what is shown beside it.
   function plain(text) {
     return String(text === undefined || text === null ? "" : text)
-      .replace(/[\u0000-\u001f\u007f-\u009f\u200e\u200f\u202a-\u202e\u2066-\u2069]+/g, " ").trim()
+      .replace(/[\u061c\u200b-\u200f\u202a-\u202e\u2066-\u2069\ufeff]+/g, "")
+      .replace(/[\u0000-\u001f\u007f-\u009f\u2028\u2029]+/g, " ").trim()
+  }
+
+  // Whether `text` may go into a command to copy: it holds no control
+  // character. A shell argument is quoted, and a line break pasted into a
+  // terminal is still a line break.
+  function copyable(text) {
+    return !/[\u0000-\u001f\u007f]/.test(String(text))
   }
 
   // The same, with a capital to begin with.
@@ -474,23 +530,43 @@ Item {
 
   // Adding a device is done at a terminal, where it asks a yes. This puts the
   // command on the clipboard, with the other device's key in it where the
-  // clipboard held one (and not this device's own), and says which it did.
-  // It runs nothing of Cordelia.
+  // clipboard held one, and says which key went in. It runs nothing of
+  // Cordelia.
+  //
+  // What the clipboard holds is a key only as a whole: its two ends are
+  // trimmed, and nothing in it is joined across a space or a line. It is
+  // matched in the C locale, where a to z are those letters and no others.
+  // This device's own key is not taken for the other's.
   function copyAddDevice() {
     if (clipProcess.running) return
     lastError = ""
     clipProcess.command = ["bash", "-c",
-      "key=\"$(wl-paste -n 2>/dev/null | tr -d '[:space:]')\"\n" +
+      "LC_ALL=C\n" +
+      "key=\"$(wl-paste -n 2>/dev/null | tr '\\0' '\\n')\"\n" +
+      "key=\"${key#\"${key%%[![:space:]]*}\"}\"\n" +
+      "key=\"${key%\"${key##*[![:space:]]}\"}\"\n" +
       "command='cordelia add-device <key> --name <label>'\n" +
       "note='Copied. Put the key of the other device and a name in, and run it in a terminal.'\n" +
       "if [[ \"$key\" =~ ^cordelia_pk1[a-z0-9]+$ && \"$key\" != \"$1\" ]]; then\n" +
       "  command=\"cordelia add-device $key --name <label>\"\n" +
-      "  note='Copied, with the key from the clipboard. Put a name in and run it in a terminal.'\n" +
+      "  shown=\"$key\"\n" +
+      "  [ \"${#key}\" -gt 22 ] && shown=\"${key:0:16}…${key: -6}\"\n" +
+      "  note=\"Copied, with the key $shown from the clipboard. Put a name in and run it in a terminal.\"\n" +
       "fi\n" +
       "printf %s \"$command\" | wl-copy 2>/dev/null || exit 1\n" +
       "echo \"$note\"",
       "copy", deviceKey]
     clipProcess.running = true
+  }
+
+  // The command that syncs a folder here with a name the other devices sync,
+  // for a terminal.
+  function copyMapCommand(name) {
+    if (!copyable(name)) {
+      flash("This name cannot be copied safely")
+      return
+    }
+    copyText("cordelia sync map <folder> " + shellWord(name), "Copied. Put the folder in and run it in a terminal.")
   }
 
   // Removing a device asks for the recovery phrase, at a terminal: the
@@ -505,14 +581,32 @@ Item {
     Quickshell.execDetached(["omarchy-launch-editor", String(path)])
   }
 
+  // Say `text` for a while: for longer where there is more to read.
   function flash(text) {
-    actionStatus = text
+    actionStatus = plain(text)
+    clearStatus.interval = Math.max(4000, actionStatus.length * 60)
     clearStatus.restart()
   }
 
   function elide(text) {
-    var value = String(text || "").replace(/\s+/g, " ").trim()
-    return value.length > 160 ? value.substring(0, 157) + "…" : value
+    return cut(text, 160)
+  }
+
+  // `text` as one line that is safe to show, cut at `most` characters.
+  function cut(text, most) {
+    var value = plain(text).replace(/\s+/g, " ")
+    return value.length > most ? value.substring(0, most - 1) + "…" : value
+  }
+
+  // What a command printed before its first empty line.
+  function firstParagraph(text) {
+    var lines = String(text || "").split("\n")
+    var out = []
+    for (var i = 0; i < lines.length; i++) {
+      if (lines[i].trim() !== "") out.push(lines[i])
+      else if (out.length > 0) break
+    }
+    return out.join("\n")
   }
 
   // The first line of what a command printed that says anything.
@@ -566,12 +660,14 @@ Item {
     command: []
     stdout: StdioCollector { id: statusOut; waitForEnd: true }
     onExited: function(exitCode) {
-      if (exitCode === 0) root.applyStatus(statusOut.text)
+      var fresh = true
+      if (exitCode === 0) fresh = root.applyStatus(statusOut.text)
       else {
         // No cordelia on this machine: nothing to show.
         root.status = ({})
         root.loaded = true
       }
+      root.statusRead(fresh)
     }
   }
 
@@ -623,6 +719,7 @@ Item {
         root.lastError = ""
         var lines = out.trim().split("\n")
         if (root._show === "first") root.flash(root.elide(lines[0]))
+        else if (root._show === "said") root.flash(root.cut(root.firstParagraph(out), 300))
         else if (root._show === "last") root.flash(root.elide(lines[lines.length - 1]))
         else root.actionStatus = ""
       }
