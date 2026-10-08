@@ -9,36 +9,70 @@ step, and a panel to manage it.
 
 - **The icon:** Cordelia's mark while memory is in step, and dimmed while
   sync is off, the node is stopped or Cordelia is not set up. It gives way to
-  a glyph while sending, while offline, and when something needs attention (a
-  conflict to merge, or an error), which the bar highlights. The mark is
+  a glyph while sending and while offline, and for the level the node gives.
+  Red is for what to act on now (a conflict to merge, an error, a machine not
+  added yet): a warning sign, which the bar highlights. Amber is for what to
+  know of (a device added and not yet cleared, a relay without the latest
+  change): the same sign in outline, in a milder colour. The mark is
   `assets/cordelia-mark.svg`, drawn in the bar's own colour.
+- **The head of the panel:** the node's summary. Where anything holds, every
+  thing that holds is listed in its place, red first, each as the node says
+  it. If the running node is not the version of the command, the panel says
+  so: restart the node. Until then changes are refused; turning sync off
+  still works.
 - **The switch:** memory sync on or off for this device. Below it, a switch
-  for home memory and one for syncing everything Claude Code has memory for.
-- **Relays:** which are connected, and for how long.
-- **Your devices:** click this device to copy its key; add another device from
-  a key on the clipboard; remove one (it asks twice, then changes the keys).
+  for home memory.
+- **Stopped syncing:** on a machine that had synced everything it found, the
+  folders that stopped when only mapped folders came to sync. Each has a
+  switch to map it again where the node says it can be mapped, and the node's
+  reason where it cannot. A folder that needs a name from you has no switch:
+  its row copies the command, for you to put the name in. No folder has a
+  switch while sync is off. *I have seen this* puts the notice away.
+- **Relays:** each relay this device is set up with, whether it is connected
+  and for how long, and whether it holds the latest change of your devices.
+- **Your devices:** each device by its label and the first words of its key's
+  fingerprint, the devices added since the last change, the removed keys, and
+  what this device has to tell you. Cordelia adds and removes a device at a
+  terminal, where it asks before it acts, so the panel copies each command and
+  runs none of them:
+  - click this device to copy its key;
+  - click another device to copy `cordelia remove-device` with its key;
+  - *Add a device* copies `cordelia add-device <key> --name <label>`, with the
+    key filled in when the clipboard holds one (`cordelia id` prints it on the
+    other machine);
+  - *Clear these notices* copies `cordelia devices --clear`.
+
+  On a machine with no recovery phrase yet, it shows the two ways on, each to
+  copy: `cordelia phrase`, on the machine whose memory is the most up to date,
+  or `cordelia accept <key>`, after `cordelia add-device` on a machine that
+  has the phrase.
 - **Syncing:** each folder that syncs and the name it syncs under, with a
-  switch to stop syncing it from this device.
+  switch to stop syncing it from this device. Only mapped folders sync.
 - **Found on this machine:** folders Claude Code has memory for that do not
-  sync, each with a switch to start. A git project syncs under its remote, so
-  the same project on another machine joins it; any other folder syncs under
-  its own name.
+  sync. One has a switch only where the node says `cordelia sync map` would
+  sync it; otherwise it shows the node's reason. A git project syncs under
+  its remote, so the same project on another machine joins it; any other
+  folder syncs under its own name.
 - **On your other devices:** names your other devices sync that have no folder
   here. Click one to copy the command that syncs a folder with it.
 - **Conflicts:** files two machines edited at once; click to open one.
+- **At the foot:** what this device holds (its names, their entries, the size
+  of their encrypted content and of the database), and the versions of the
+  command, of the running node and of this panel. The sizes are shown only
+  beside a running node of the command's own version.
 
 Keys in the panel: `s` toggles sync, `c` copies this device's key, `r`
 refreshes, Tab moves to the next panel, Esc closes.
 
-**On a Mac:** the same panel as a native menu bar app. See
-[`macos/`](macos/README.md).
+**On a Mac:** a native menu bar app, in [`macos/`](macos/README.md). It is
+behind this panel, and is brought up to it next.
 
 **In Waybar:** `cordelia status --waybar` prints text, so it keeps a Nerd Font
 glyph for every state: a brain where this panel draws the mark.
 
 ## Install
 
-Needs Cordelia `v0.2.0-alpha.3` or later (`cordelia status --json`).
+Needs Cordelia `v0.2.0-alpha.9` or later.
 
 ```bash
 omarchy plugin add https://github.com/seed-drill/omarchy-cordelia.git --enable
@@ -63,9 +97,16 @@ In the widget's entry in `~/.config/omarchy/shell.json`, or with
 ## How it works
 
 The plugin holds no state. Everything it shows comes from
-`cordelia status --json`, and everything it changes goes through the `cordelia`
-command line. `Service.qml` does both; `Panel.qml` is the bar button and the
-panel, built from Omarchy's own panel components.
+`cordelia status --json`, and the sizes from `cordelia stats --json` when the
+panel opens beside a running node of the command's own version. The level,
+red or amber, is the node's: the panel draws it and works nothing out.
+Everything it changes in Cordelia goes through the `cordelia` command line:
+sync on and off, home memory, mapping and unmapping a folder, and putting the
+notice away. A command that is refused says why in the panel. *Start the
+node* is the one thing that does not go through it: it asks the service
+manager (`systemctl --user start cordelia`). `Service.qml` does all of this;
+`Panel.qml` is the bar button and the panel, built from Omarchy's own panel
+components.
 
 ## License
 
