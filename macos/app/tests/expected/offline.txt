@@ -1,36 +1,56 @@
-icon: icloud.slash
+icon: icloud.slash dimmed
 tooltip: Cordelia: no relay connected
 
     Status: No relay connected   {info, disabled}
-        tip: cordelia 0.2.0-alpha.3 · panel 5286109
 [x] Sync Memory on This Mac   {-> sync off}
         runs: cordelia sync off
         tip: Click to stop syncing memory on this device
 ────
-    Nothing syncs yet   {info, disabled}
+[x] ~/work/app   {-> stop ~/work/app}
+        runs: cordelia sync unmap /Users/alex/work/app
+        tip: Syncs as github.com/example/app. Click to stop syncing it here.
+    Waiting to send: 2   {info, disabled}
     Sync Another Folder   {submenu}
+        ~/work/site  |  github.com/example/site   {-> map ~/work/site as github.com/example/site}
+            runs: cordelia sync map /Users/alex/work/site
+            tip: Asks first.
+        ~/Client Work  |  Syncs as client-work · needs a name (not a git project)   {-> map ~/Client Work as client-work}
+            runs: cordelia sync map /Users/alex/Client Work client-work
+            tip: Asks first.
+        ~/client-work/acme  |  github.com/your-company/acme   {-> map ~/client-work/acme as github.com/your-company/acme}
+            runs: cordelia sync map /Users/alex/client-work/acme
+            tip: Asks first.
         Home Memory   {-> home on}
             runs: cordelia sync home on
-            tip: What Claude remembers outside any project
+            tip: Your other devices sync it
     ────
-    [ ] Everything Found   {-> all on}
-            runs: cordelia sync claude --all
-            tip: Off: only the folders you turn on
+        On Your Other Devices   {info, disabled}
+        github.com/example/notes   {-> copy}
+            copies: cordelia sync map <folder> github.com/example/notes
+            says: Copied. Put the folder in and run it in a terminal.
+            tip: Click to copy the command that syncs a folder with it
+    ────
+        Found Here, Cannot Be Mapped: 2   {submenu}
+            ~/.claude/projects/-Users-alex  |  Its directory is not known   {info, disabled}
+            /opt/outside  |  Outside your home directory: it cannot be mapped   {info, disabled}
 ────
-    Devices: 2   {submenu}
-        cordelia_pk1thisma…qqqqqq  (this device)   {-> copy-key}
+    Your Devices: 2   {submenu}
+        macbook  (this device)  |  amber lake quiet stone   {-> copy-key}
             tip: Click to copy this device's key
-        studio  |  cordelia_pk1studio…qqqqqq   {submenu}
-            tip: cordelia_pk1studioqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq
-            Remove This Device…   {-> remove-device cordelia_pk1studio…qqqqqq}
-                runs: cordelia remove-device cordelia_pk1studioqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq
-                tip: Asks twice, then changes the keys on every channel
+        studio  |  river maple candle north   {submenu}
+            Copy the Command That Removes It   {-> copy}
+                copies: cordelia remove-device cordelia_pk1studio…qqqqqq
+                says: Copied. Run it in a terminal: it asks for the phrase.
+                tip: Runs nothing: the command is for a terminal, and asks for the recovery phrase
     ────
-        Add a Device from the Clipboard…   {-> add-device}
-            tip: Copy the other device's key (cordelia id), then click
+        Add a Device  |  Copies the command, with a key from the clipboard   {-> copy-add-device}
+            tip: Copy the other device's key (cordelia id) first. Runs nothing: the command is for a terminal.
     Relays: none connected   {urgent, submenu}
-        Changes wait here until one is   {info, disabled}
+        No relay connected. Changes wait here until one is.   {info, disabled}
+        relay1.example.net:9474  |  Unreachable: connection refused · has not said whether it holds the latest change   {urgent, disabled}
+        relay2.example.net:9474  |  Connecting · has not said whether it holds the latest change   {urgent, disabled}
 ────
+    cordelia 0.2.0-alpha.9 · node 0.2.0-alpha.9 · menu 0.2.0   {info, disabled}
     About Cordelia   {-> about}
     Quit Cordelia Menu   {-> quit}
         tip: The node keeps running and memory keeps syncing

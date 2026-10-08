@@ -1,32 +1,23 @@
 {
-  "device": "cordelia_pk1thismacqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq",
-  "version": "0.2.0-alpha.3",
+  "device": "cordelia_pk1thismacqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq",
+  "version": "0.2.0-alpha.9",
+  "node_version": "0.2.0-alpha.9",
   "role": "personal",
   "running": true,
   "state": "off",
   "summary": "sync is off",
+  "level": null,
+  "holds": [],
   "outbox_waiting": 0,
-  "devices": [
-    {
-      "key": "cordelia_pk1thismacqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq",
-      "this_device": true,
-      "in_personal_channel": true,
-      "explicitly_trusted": false
-    },
-    {
-      "key": "cordelia_pk1studioqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq",
-      "name": "studio",
-      "this_device": false,
-      "in_personal_channel": true,
-      "explicitly_trusted": true
-    }
-  ],
+  "outbox_refused": [],
+  "no_relay_secs": null,
+  "uptime_secs": 86400,
   "peers": {
     "hot": 2,
     "warm": 0,
     "list": [
       {
-        "key": "cordelia_pk1relayoneqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq",
+        "key": "cordelia_pk1relayoneqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq",
         "role": "relay",
         "state": "hot",
         "address": "203.0.113.10:9474",
@@ -34,12 +25,76 @@
         "idle_secs": 0
       },
       {
-        "key": "cordelia_pk1relaytwoqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq",
+        "key": "cordelia_pk1relaytwoqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq",
         "role": "relay",
         "state": "hot",
         "address": "198.51.100.20:9474",
         "connected_secs": 95,
         "idle_secs": 2
+      }
+    ],
+    "relays": [
+      {
+        "host": "relay1.example.net:9474",
+        "key": "cordelia_pk1relayoneqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq",
+        "state": "connected",
+        "error": null,
+        "last_tried_secs": null,
+        "unreachable_secs": null
+      },
+      {
+        "host": "relay2.example.net:9474",
+        "key": "cordelia_pk1relaytwoqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq",
+        "state": "connected",
+        "error": null,
+        "last_tried_secs": null,
+        "unreachable_secs": null
+      }
+    ]
+  },
+  "person": {
+    "state": "applied",
+    "short": null,
+    "change": 3,
+    "may_add": true,
+    "cannot_go_on": null,
+    "devices": [
+      {
+        "key": "cordelia_pk1thismacqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq",
+        "label": "macbook",
+        "words": "amber lake quiet stone",
+        "this_device": true,
+        "left": false,
+        "maker": true,
+        "applied": 3,
+        "sent": true
+      },
+      {
+        "key": "cordelia_pk1studioqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq",
+        "label": "studio",
+        "words": "river maple candle north",
+        "this_device": false,
+        "left": false,
+        "maker": false,
+        "applied": 3,
+        "sent": true
+      }
+    ],
+    "added": [],
+    "removed": [],
+    "notices": [],
+    "relays": [
+      {
+        "relay": "relay1.example.net:9474",
+        "holds_latest": true,
+        "connected_secs": 4740,
+        "no_room": null
+      },
+      {
+        "relay": "relay2.example.net:9474",
+        "holds_latest": true,
+        "connected_secs": 95,
+        "no_room": null
       }
     ]
   },
@@ -47,50 +102,68 @@
     "enabled": false,
     "all": false,
     "home": false,
+    "home_name": null,
+    "dir": "/Users/alex/.claude",
+    "stands": "applied",
+    "publishes_nothing": null,
+    "notice": null,
+    "moved_on": true,
     "available": [
       "~",
       "github.com/example/notes"
     ],
     "conflicts": [],
-    "exclude": [],
     "errors": [],
-    "projects": [
+    "exclude": [],
+    "excluded": [],
+    "folders": 1,
+    "projects_waiting": 0,
+    "mappings": [
       {
-        "project": "github.com/example/app",
-        "cwd": "/Users/alex/work/app",
-        "mapped": true,
-        "error": null,
-        "waiting": false,
-        "channel": "grp_00000000-0000-0000-0000-000000000000",
-        "conflicts": []
+        "folder": "/Users/alex/work/app",
+        "name": "github.com/example/app"
       }
     ],
+    "projects": [],
     "unmapped": [
       {
         "cwd": null,
         "folder": "/Users/alex/.claude/projects/-Users-alex",
-        "name": null
+        "name": null,
+        "mappable": false,
+        "says": "its directory is not known",
+        "why_not": "no_directory"
       },
       {
         "cwd": "/Users/alex/work/site",
-        "folder": "x",
-        "name": "github.com/example/site"
+        "folder": "/Users/alex/.claude/projects/-Users-alex-work-site",
+        "name": "github.com/example/site",
+        "mappable": true
       },
       {
         "cwd": "/Users/alex/Client Work",
-        "folder": "x",
-        "name": null
+        "folder": "/Users/alex/.claude/projects/-Users-alex-Client-Work",
+        "name": null,
+        "mappable": true,
+        "needs_name": true,
+        "says": "needs a name (not a git project)"
       },
       {
         "cwd": "/Users/alex/client-work/acme",
-        "folder": "x",
-        "name": "github.com/your-company/acme"
+        "folder": "/Users/alex/.claude/projects/-Users-alex-client-work-acme",
+        "name": "github.com/your-company/acme",
+        "mappable": true
       },
       {
-        "cwd": "/opt/outside",
-        "folder": "x",
-        "name": null
+        "cwd": null,
+        "directory": "/opt/outside",
+        "folder": "/Users/alex/.claude/projects/-opt-outside",
+        "name": null,
+        "mappable": false,
+        "says": "outside your home directory: it cannot be mapped",
+        "why_not": "outside_home"
       }
-    ]
+    ],
+    "unsynced": []
   }
 }

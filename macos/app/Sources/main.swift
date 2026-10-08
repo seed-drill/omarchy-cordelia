@@ -7,6 +7,8 @@
 //       [--node-agent S]           ok, needs-approval or absent, instead of asking macOS
 //   Cordelia --dump-about          print what the About window says and exit; with
 //       [--cli-version V]          that version instead of asking `cordelia` ("" for none)
+//   Cordelia --dump-add-device     print the command "Add a Device" would copy and what it
+//       --clipboard TEXT --own KEY   would say, for that clipboard and that key of this device
 //   Cordelia --login-item on|off|status   open this app at login, or not
 //   Cordelia --make-iconset DIR    write the app icon's PNGs (used by build.sh)
 //   Cordelia --make-menubar-image FILE   write the menu bar mark as a PNG, enlarged, to look at
@@ -37,6 +39,12 @@ if arguments.contains("--dump-about") {
     }
     let about = aboutText(cliVersion: version)
     print("Cordelia\nVersion \(about.version)\n\(ABOUT_TAGLINE)\n\(about.detail)\nseeddrill.ai")
+    exit(0)
+}
+
+if arguments.contains("--dump-add-device") {
+    let made = addDeviceCommand(clipboard: option("--clipboard") ?? "", own: option("--own") ?? "")
+    print("copies: \(made.command)\nsays: \(made.note)")
     exit(0)
 }
 

@@ -1,0 +1,2 @@
+copies: cordelia add-device cordelia_pk1studioqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq --name <label>
+says: Copied, with the key cordelia_pk1stud…qqqqqq from the clipboard. Put a name in and run it in a terminal.
