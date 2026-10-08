@@ -2,41 +2,45 @@ icon: exclamationmark.triangle.fill urgent
 tooltip: Cordelia: memory synced
 
     Status: Memory synced   {info, disabled}
-        tip: cordelia 0.2.0-alpha.3 · panel 5286109
     Never-sync, but syncing: github.com/example/app   {urgent, disabled}
     menubar.json can't be read: everything counts as never-sync   {urgent, disabled}
 [x] Sync Memory on This Mac   {-> sync off}
         runs: cordelia sync off
         tip: Click to stop syncing memory on this device
 ────
-[x] ~/work/app   {-> stop github.com/example/app mapped}
-        runs: cordelia sync unmap github.com/example/app
+[x] ~/work/app   {-> stop ~/work/app}
+        runs: cordelia sync unmap /Users/alex/work/app
         tip: Syncs as github.com/example/app. Click to stop syncing it here.
     Sync Another Folder   {submenu}
     ────
         On Your Other Devices   {info, disabled}
-        github.com/example/notes   {-> copy (cordelia sync map <folder> github.com/example/notes)}
+        github.com/example/notes   {-> copy}
+            copies: cordelia sync map <folder> github.com/example/notes
+            says: Copied. Put the folder in and run it in a terminal.
             tip: Click to copy the command that syncs a folder with it
+    ────
+        Found Here, Cannot Be Mapped: 2   {submenu}
+            ~/.claude/projects/-Users-alex  |  Its directory is not known   {info, disabled}
+            /opt/outside  |  Outside your home directory: it cannot be mapped   {info, disabled}
     ────
         3 on your never-sync list, not shown   {info, disabled}
 ────
-    Devices: 2   {submenu}
-        cordelia_pk1thisma…qqqqqq  (this device)   {-> copy-key}
+    Your Devices: 2   {submenu}
+        macbook  (this device)  |  amber lake quiet stone   {-> copy-key}
             tip: Click to copy this device's key
-        studio  |  cordelia_pk1studio…qqqqqq   {submenu}
-            tip: cordelia_pk1studioqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq
-            Remove This Device…   {-> remove-device cordelia_pk1studio…qqqqqq}
-                runs: cordelia remove-device cordelia_pk1studioqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq
-                tip: Asks twice, then changes the keys on every channel
+        studio  |  river maple candle north   {submenu}
+            Copy the Command That Removes It   {-> copy}
+                copies: cordelia remove-device cordelia_pk1studio…qqqqqq
+                says: Copied. Run it in a terminal: it asks for the phrase.
+                tip: Runs nothing: the command is for a terminal, and asks for the recovery phrase
     ────
-        Add a Device from the Clipboard…   {-> add-device}
-            tip: Copy the other device's key (cordelia id), then click
+        Add a Device  |  Copies the command, with a key from the clipboard   {-> copy-add-device}
+            tip: Copy the other device's key (cordelia id) first. Runs nothing: the command is for a terminal.
     Relays: 2 connected   {submenu}
-        cordelia_pk1relayo…qqqqqq  |  203.0.113.10:9474 · connected 1h 19m   {-> copy (relay key)}
-            tip: Click to copy this relay's key
-        cordelia_pk1relayt…qqqqqq  |  198.51.100.20:9474 · connected 1m   {-> copy (relay key)}
-            tip: Click to copy this relay's key
+        relay1.example.net:9474  |  Connected 1h 19m · holds the latest change   {info, disabled}
+        relay2.example.net:9474  |  Connected 1m · holds the latest change   {info, disabled}
 ────
+    cordelia 0.2.0-alpha.9 · node 0.2.0-alpha.9 · menu 0.2.0   {info, disabled}
     About Cordelia   {-> about}
     Quit Cordelia Menu   {-> quit}
         tip: The node keeps running and memory keeps syncing

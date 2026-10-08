@@ -30,8 +30,17 @@ for status in fixtures/*.status.json; do
     got=$("$BIN" --dump-menu --status-file "$status" --config "$config" --home /Users/alex ${extra[@]+"${extra[@]}"})
     check "$name" "$got"
 done
+# "Add a Device" copies a command and runs nothing. The other device's key goes in only
+# where the clipboard holds a key and nothing else, and never this device's own.
+OTHER=cordelia_pk1studioqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq
+OWN=cordelia_pk1thismacqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq
+check add-device-key "$("$BIN" --dump-add-device --clipboard "  $OTHER
+" --own "$OWN")"
+check add-device-own "$("$BIN" --dump-add-device --clipboard "$OWN" --own "$OWN")"
+check add-device-words "$("$BIN" --dump-add-device --clipboard "run this: $OTHER; rm -rf ~" --own "$OWN")"
+check add-device-empty "$("$BIN" --dump-add-device --clipboard "" --own "$OWN")"
 # The About window, which no saved status reaches: with a node to ask, and with none.
-check about "$("$BIN" --dump-about --cli-version 0.2.0-alpha.8)"
+check about "$("$BIN" --dump-about --cli-version 0.2.0-alpha.9)"
 check about-no-cli "$("$BIN" --dump-about --cli-version "")"
 [ "$update" = 1 ] && { echo "wrote $n expected files"; exit 0; }
 echo "$((n - fail)) of $n passed"

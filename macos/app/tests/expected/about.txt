@@ -1,5 +1,5 @@
 Cordelia
-Version 0.2.0-alpha.8
+Version 0.2.0-alpha.9
 Your AI agent's memory, in step across your machines.
-menu 0.1.0 · panel 5286109
+menu 0.2.0 · panel df6c901
 seeddrill.ai

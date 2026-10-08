@@ -66,6 +66,8 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate, UNUser
         // Cordelia's own mark while memory is in step, and an SF Symbol for the passing states.
         let image = tree.symbol == MARK ? cordeliaMarkImage()
             : NSImage(systemSymbolName: tree.symbol, accessibilityDescription: "Cordelia") ?? cordeliaMarkImage()
+        // Red is highlighted. Amber is the alert in outline, and is not: it
+        // is drawn as the bar draws any other item.
         if tree.urgent, let red = image.withSymbolConfiguration(.init(paletteColors: [.systemRed])) {
             red.isTemplate = false
             button.image = red
@@ -99,10 +101,12 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate, UNUser
                     item.title = title
                 }
             }
-            if row.tone == .urgent {
+            // Red for what to act on now, and amber for what to know of.
+            if row.tone == .urgent || row.tone == .amber {
                 item.attributedTitle = NSAttributedString(
                     string: title,
-                    attributes: [.foregroundColor: NSColor.systemRed, .font: NSFont.menuFont(ofSize: 0)])
+                    attributes: [.foregroundColor: row.tone == .urgent ? NSColor.systemRed : NSColor.systemOrange,
+                                 .font: NSFont.menuFont(ofSize: 0)])
             }
             if let checked = row.checked { item.state = checked ? .on : .off }
             item.toolTip = row.tip

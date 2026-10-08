@@ -2,8 +2,10 @@
   "state": "stopped",
   "summary": "the node is not running",
   "running": false,
-  "device": "cordelia_pk1thismacqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq",
-  "version": "0.2.0-alpha.3",
-  "devices": [],
+  "device": "cordelia_pk1thismacqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq",
+  "version": "0.2.0-alpha.9",
+  "node_version": null,
+  "level": null,
+  "holds": [],
   "sync": {}
 }

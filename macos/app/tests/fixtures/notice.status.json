@@ -4,34 +4,56 @@
   "node_version": "0.2.0-alpha.9",
   "role": "personal",
   "running": true,
-  "state": "offline",
-  "summary": "no relay connected",
-  "level": null,
-  "holds": [],
-  "outbox_waiting": 2,
+  "state": "synced",
+  "summary": "3 folders stopped syncing",
+  "level": "amber",
+  "holds": [
+    {
+      "level": "amber",
+      "says": "3 folders stopped syncing: only mapped folders sync now"
+    }
+  ],
+  "outbox_waiting": 0,
   "outbox_refused": [],
-  "no_relay_secs": 620,
+  "no_relay_secs": null,
   "uptime_secs": 86400,
   "peers": {
-    "hot": 0,
+    "hot": 2,
     "warm": 0,
-    "list": [],
+    "list": [
+      {
+        "key": "cordelia_pk1relayoneqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq",
+        "role": "relay",
+        "state": "hot",
+        "address": "203.0.113.10:9474",
+        "connected_secs": 4740,
+        "idle_secs": 0
+      },
+      {
+        "key": "cordelia_pk1relaytwoqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq",
+        "role": "relay",
+        "state": "hot",
+        "address": "198.51.100.20:9474",
+        "connected_secs": 95,
+        "idle_secs": 2
+      }
+    ],
     "relays": [
       {
         "host": "relay1.example.net:9474",
         "key": "cordelia_pk1relayoneqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq",
-        "state": "unreachable",
-        "error": "connection refused",
-        "last_tried_secs": 12,
-        "unreachable_secs": 620
+        "state": "connected",
+        "error": null,
+        "last_tried_secs": null,
+        "unreachable_secs": null
       },
       {
         "host": "relay2.example.net:9474",
         "key": "cordelia_pk1relaytwoqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq",
-        "state": "connecting",
+        "state": "connected",
         "error": null,
-        "last_tried_secs": 3,
-        "unreachable_secs": 620
+        "last_tried_secs": null,
+        "unreachable_secs": null
       }
     ]
   },
@@ -69,14 +91,14 @@
     "relays": [
       {
         "relay": "relay1.example.net:9474",
-        "holds_latest": null,
-        "connected_secs": null,
+        "holds_latest": true,
+        "connected_secs": 4740,
         "no_room": null
       },
       {
         "relay": "relay2.example.net:9474",
-        "holds_latest": null,
-        "connected_secs": null,
+        "holds_latest": true,
+        "connected_secs": 95,
         "no_room": null
       }
     ]
@@ -89,7 +111,49 @@
     "dir": "/Users/alex/.claude",
     "stands": "applied",
     "publishes_nothing": null,
-    "notice": null,
+    "notice": {
+      "not_known": true,
+      "records": [
+        {
+          "at": "2026-10-08T11:53:02Z",
+          "folders": 3
+        }
+      ],
+      "folders": [
+        {
+          "cwd": "/Users/alex/work/site",
+          "folder": "/Users/alex/.claude/projects/-Users-alex-work-site",
+          "name": "github.com/example/site",
+          "mappable": true,
+          "mapped": false
+        },
+        {
+          "cwd": "/Users/alex/Client Work",
+          "folder": "/Users/alex/.claude/projects/-Users-alex-Client-Work",
+          "name": "client-work",
+          "mappable": true,
+          "needs_name": true,
+          "mapped": false,
+          "says": "needs a name (not a git project)"
+        },
+        {
+          "cwd": null,
+          "folder": "/Users/alex/.claude/projects/-Users-alex-old",
+          "name": "github.com/example/old",
+          "mappable": false,
+          "mapped": false,
+          "says": "its directory is not known",
+          "why_not": "no_directory"
+        },
+        {
+          "cwd": "/Users/alex/work/app",
+          "folder": "/Users/alex/.claude/projects/-Users-alex-work-app",
+          "name": "github.com/example/app",
+          "mappable": true,
+          "mapped": true
+        }
+      ]
+    },
     "moved_on": true,
     "available": [
       "~",
@@ -132,35 +196,6 @@
         "mappable": false,
         "says": "its directory is not known",
         "why_not": "no_directory"
-      },
-      {
-        "cwd": "/Users/alex/work/site",
-        "folder": "/Users/alex/.claude/projects/-Users-alex-work-site",
-        "name": "github.com/example/site",
-        "mappable": true
-      },
-      {
-        "cwd": "/Users/alex/Client Work",
-        "folder": "/Users/alex/.claude/projects/-Users-alex-Client-Work",
-        "name": null,
-        "mappable": true,
-        "needs_name": true,
-        "says": "needs a name (not a git project)"
-      },
-      {
-        "cwd": "/Users/alex/client-work/acme",
-        "folder": "/Users/alex/.claude/projects/-Users-alex-client-work-acme",
-        "name": "github.com/your-company/acme",
-        "mappable": true
-      },
-      {
-        "cwd": null,
-        "directory": "/opt/outside",
-        "folder": "/Users/alex/.claude/projects/-opt-outside",
-        "name": null,
-        "mappable": false,
-        "says": "outside your home directory: it cannot be mapped",
-        "why_not": "outside_home"
       }
     ],
     "unsynced": []

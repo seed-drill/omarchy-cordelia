@@ -1,0 +1,2 @@
+copies: cordelia add-device <key> --name <label>
+says: Copied. Put the key of the other device and a name in, and run it in a terminal.

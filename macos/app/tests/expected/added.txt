@@ -1,9 +1,7 @@
-icon: exclamationmark.triangle.fill urgent
-tooltip: Cordelia: memory synced
+icon: exclamationmark.triangle amber
+tooltip: Cordelia: a device was added: travel
 
-    Status: Memory synced   {info, disabled}
-    Allow Cordelia to Start at Login…   {urgent, -> open-login-items}
-        tip: macOS has the node's background item switched off, so memory stops syncing at the next login. Click to open Login Items, then switch “cordelia” on.
+    A device was added: travel   {amber, disabled}
 [x] Sync Memory on This Mac   {-> sync off}
         runs: cordelia sync off
         tip: Click to stop syncing memory on this device
@@ -35,7 +33,7 @@ tooltip: Cordelia: memory synced
             ~/.claude/projects/-Users-alex  |  Its directory is not known   {info, disabled}
             /opt/outside  |  Outside your home directory: it cannot be mapped   {info, disabled}
 ────
-    Your Devices: 2   {submenu}
+    Your Devices: 4   {submenu}
         macbook  (this device)  |  amber lake quiet stone   {-> copy-key}
             tip: Click to copy this device's key
         studio  |  river maple candle north   {submenu}
@@ -43,6 +41,25 @@ tooltip: Cordelia: memory synced
                 copies: cordelia remove-device cordelia_pk1studio…qqqqqq
                 says: Copied. Run it in a terminal: it asks for the phrase.
                 tip: Runs nothing: the command is for a terminal, and asks for the recovery phrase
+        Added Since the Last Change   {info, disabled}
+        travel  |  copper window tiger salt · added from macbook   {submenu}
+            Copy the Command That Removes It   {-> copy}
+                copies: cordelia remove-device cordelia_pk1travel…qqqqqq
+                says: Copied. Run it in a terminal: it asks for the phrase.
+                tip: Runs nothing: the command is for a terminal, and asks for the recovery phrase
+        cordelia_pk1tablet…qqqqqq  |  garden pencil orbit flame · has left · added from studio   {submenu}
+            Copy the Command That Removes It   {-> copy}
+                copies: cordelia remove-device cordelia_pk1tablet…qqqqqq
+                says: Copied. Run it in a terminal: it asks for the phrase.
+                tip: Runs nothing: the command is for a terminal, and asks for the recovery phrase
+        Not counted: it has not accepted yet.   {info, disabled}
+        old-laptop · velvet harbor seven moon  |  removed   {info, disabled}
+    ────
+        A device was added from macbook on 8 October: travel.   {amber, disabled}
+        Clear These Notices  |  Copies cordelia devices --clear, for a terminal   {-> copy}
+            copies: cordelia devices --clear
+            says: Copied. Run it in a terminal.
+            tip: Runs nothing: the command asks of each, at a terminal
     ────
         Add a Device  |  Copies the command, with a key from the clipboard   {-> copy-add-device}
             tip: Copy the other device's key (cordelia id) first. Runs nothing: the command is for a terminal.

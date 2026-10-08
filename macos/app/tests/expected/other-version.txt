@@ -1,9 +1,9 @@
-icon: exclamationmark.triangle.fill urgent
+icon: cordelia
 tooltip: Cordelia: memory synced
 
     Status: Memory synced   {info, disabled}
-    Allow Cordelia to Start at Login…   {urgent, -> open-login-items}
-        tip: macOS has the node's background item switched off, so memory stops syncing at the next login. Click to open Login Items, then switch “cordelia” on.
+    The node is version 0.2.0-alpha.8 and the command is version 0.2.0-alpha.9. Restart the node.   {urgent, disabled}
+    Until then changes are refused. Turning sync off still works.   {info, disabled}
 [x] Sync Memory on This Mac   {-> sync off}
         runs: cordelia sync off
         tip: Click to stop syncing memory on this device
@@ -50,7 +50,7 @@ tooltip: Cordelia: memory synced
         relay1.example.net:9474  |  Connected 1h 19m · holds the latest change   {info, disabled}
         relay2.example.net:9474  |  Connected 1m · holds the latest change   {info, disabled}
 ────
-    cordelia 0.2.0-alpha.9 · node 0.2.0-alpha.9 · menu 0.2.0   {info, disabled}
+    cordelia 0.2.0-alpha.9 · node 0.2.0-alpha.8 · menu 0.2.0   {info, disabled}
     About Cordelia   {-> about}
     Quit Cordelia Menu   {-> quit}
         tip: The node keeps running and memory keeps syncing

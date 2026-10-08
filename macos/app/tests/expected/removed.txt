@@ -1,16 +1,15 @@
 icon: exclamationmark.triangle.fill urgent
-tooltip: Cordelia: memory synced
+tooltip: Cordelia: this device was removed
 
-    Status: Memory synced   {info, disabled}
-    Allow Cordelia to Start at Login…   {urgent, -> open-login-items}
-        tip: macOS has the node's background item switched off, so memory stops syncing at the next login. Click to open Login Items, then switch “cordelia” on.
+    This device was removed   {urgent, disabled}
 [x] Sync Memory on This Mac   {-> sync off}
         runs: cordelia sync off
         tip: Click to stop syncing memory on this device
 ────
+    Nothing is sent from this device. These stay on this machine.   {info, disabled}
 [x] ~/work/app   {-> stop ~/work/app}
         runs: cordelia sync unmap /Users/alex/work/app
-        tip: Syncs as github.com/example/app. Click to stop syncing it here.
+        tip: Mapped as github.com/example/app. Click to stop syncing it here.
     Sync Another Folder   {submenu}
         ~/work/site  |  github.com/example/site   {-> map ~/work/site as github.com/example/site}
             runs: cordelia sync map /Users/alex/work/site
@@ -35,17 +34,14 @@ tooltip: Cordelia: memory synced
             ~/.claude/projects/-Users-alex  |  Its directory is not known   {info, disabled}
             /opt/outside  |  Outside your home directory: it cannot be mapped   {info, disabled}
 ────
-    Your Devices: 2   {submenu}
-        macbook  (this device)  |  amber lake quiet stone   {-> copy-key}
-            tip: Click to copy this device's key
+    Your Devices: 1   {submenu}
+        This device was removed by change 4: it syncs nothing until it is added again under a new key.   {urgent, disabled}
         studio  |  river maple candle north   {submenu}
             Copy the Command That Removes It   {-> copy}
                 copies: cordelia remove-device cordelia_pk1studio…qqqqqq
                 says: Copied. Run it in a terminal: it asks for the phrase.
                 tip: Runs nothing: the command is for a terminal, and asks for the recovery phrase
-    ────
-        Add a Device  |  Copies the command, with a key from the clipboard   {-> copy-add-device}
-            tip: Copy the other device's key (cordelia id) first. Runs nothing: the command is for a terminal.
+        macbook · amber lake quiet stone  |  removed   {info, disabled}
     Relays: 2 connected   {submenu}
         relay1.example.net:9474  |  Connected 1h 19m · holds the latest change   {info, disabled}
         relay2.example.net:9474  |  Connected 1m · holds the latest change   {info, disabled}

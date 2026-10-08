@@ -1,6 +1,8 @@
 // Everything the menu changes goes through the cordelia command line, as
-// Service.qml's command functions do. Anything that widens what syncs, or
-// adds or removes a device, asks first.
+// Service.qml's command functions do. Anything that widens what syncs asks
+// first. What Cordelia does only at a terminal (the recovery phrase, adding,
+// accepting and removing a device, clearing a notice) is never run from here:
+// its command is copied.
 
 import AppKit
 import UserNotifications
@@ -87,8 +89,8 @@ enum Notifier {
         }
     }
 
-    static func post(_ text: String) {
-        let body = elide(text)
+    static func post(_ text: String, most: Int = 160) {
+        let body = cut(text, most)
         guard !body.isEmpty else { return }
         if allowed {
             let content = UNMutableNotificationContent()
@@ -139,17 +141,25 @@ final class Actions {
         self.config = config
     }
 
-    private enum Show { case first, last, none }
+    /// What of a finished command's output to show: its first line, its
+    /// last, what it said before its first empty line, or nothing.
+    private enum Show { case first, last, said, none }
 
     /// Reports a finished command the way the panel does: the error, or the
-    /// first or last line of its output.
+    /// part of its output that was asked for. A command that was refused says
+    /// why, and nothing is shown as done.
     private func finish(_ r: CLI.Result, show: Show = .last) {
         let lines = { (s: String) in s.trimmingCharacters(in: .whitespacesAndNewlines).split(separator: "\n").map(String.init) }
         logAction("  exit \(r.code): \(lines(r.err.isEmpty ? r.out : r.err).first ?? "")")
         if r.code != 0 {
-            Notifier.post(!r.err.isEmpty ? r.err : (!r.out.isEmpty ? r.out : "The command failed"))
-        } else if let text = show == .first ? lines(r.out).first : show == .last ? lines(r.out).last : nil {
-            Notifier.post(text)
+            Notifier.post(lines(r.err).first ?? lines(r.out).first ?? "The command failed")
+        } else {
+            switch show {
+            case .first: if let text = lines(r.out).first { Notifier.post(text) }
+            case .last: if let text = lines(r.out).last { Notifier.post(text) }
+            case .said: Notifier.post(firstParagraph(r.out), most: 300)
+            case .none: break
+            }
         }
         DispatchQueue.main.async { self.changed() }
     }
@@ -179,37 +189,27 @@ final class Actions {
                               ok: "Sync Home Memory") { return }
             run(command(for: act)!)
 
-        case .all(let on):
-            if on && !never.isEmpty {
-                return Notifier.post("Everything Found stays off while a never-sync list is set")
+        case .map(let args, let cwd, let under, let title):
+            guard !args.isEmpty else { return }
+            if onNever(never, name: under, cwd: cwd, home: home) {
+                return Notifier.post("\(title) is on your never-sync list")
             }
-            if on && !confirm("Sync everything found?",
-                              detail: "Home memory and every git project on this Mac, now and later.",
-                              ok: "Sync Everything") { return }
-            run(command(for: act)!, show: .none)
-
-        case .map(let cwd, let name, _):
-            guard !cwd.isEmpty, !name.isEmpty else { return }
-            let folder = shortPath(cwd, home: home)
-            if onNever(never, name: name, cwd: cwd, home: home) {
-                return Notifier.post("\(folder) is on your never-sync list")
-            }
-            guard confirm("Start syncing \(folder) as \(name)?",
+            guard confirm("Start syncing \(title)" + (under.isEmpty ? "?" : " as \(label(under))?"),
                           detail: "Claude's memory for it will go to all your devices.",
                           ok: "Start Syncing") else { return }
-            run(command(for: act)!, show: .first)
+            run(args, show: .first)
 
-        case .stop(let project, let mapped, let title):
-            guard confirm("Stop syncing \(title.isEmpty ? project : title) on this Mac?",
+        // All that the command says of it is shown: it may say that this
+        // device still holds the name.
+        case .stop(_, let title):
+            guard confirm("Stop syncing \(title) on this Mac?",
                           detail: "Its files stay where they are.",
                           ok: "Stop Syncing") else { return }
-            run(command(for: act)!, show: mapped ? .first : .last)
+            run(command(for: act)!, show: .said)
 
-        case .include(let name):
-            if onNever(never, name: name, home: home) {
-                return Notifier.post("\(name) is on your never-sync list")
-            }
-            run(command(for: act)!)
+        // The node puts the notice away, and the next status carries none.
+        case .noticeSeen:
+            run(command(for: act)!, show: .none)
 
         case .copyKey:
             work.async {
@@ -223,43 +223,16 @@ final class Actions {
 
         case .copyText(let text, let note):
             copyToClipboard(text)
-            Notifier.post(note == "relay key" ? "The relay's key is on the clipboard" : "Copied: \(text)")
+            Notifier.post(note)
 
-        case .addDevice:
-            // Pairing takes one key copied in each direction. The other device's key
-            // comes from the clipboard; the command it must run goes back onto it.
-            let key = (NSPasteboard.general.string(forType: .string) ?? "").filter { !$0.isWhitespace }
-            guard key.hasPrefix("cordelia_pk1") else {
-                return Notifier.post("The clipboard does not hold a device key (cordelia_pk1…)")
-            }
-            guard confirm("Add \(shortKey(key)) as one of your devices?",
-                          detail: "It will receive the memory this Mac syncs.",
-                          ok: "Add Device") else { return }
-            work.async {
-                let r = cli.run(["add-device", key])
-                logAction("  exit \(r.code)")
-                guard r.code == 0 else {
-                    Notifier.post(!r.err.isEmpty ? r.err : (!r.out.isEmpty ? r.out : "Adding the device failed"))
-                    return
-                }
-                let accept = r.out.split(separator: "\n")
-                    .map { $0.trimmingCharacters(in: .whitespaces) }
-                    .first { $0.hasPrefix("cordelia accept ") }
-                DispatchQueue.main.async {
-                    if let accept = accept { copyToClipboard(accept) }
-                    Notifier.post("Added. The command for the other device is on the clipboard.")
-                    self.changed()
-                }
-            }
-
-        case .removeDevice(let key):
-            guard !key.isEmpty else { return }
-            guard confirm("Remove \(shortKey(key))?", detail: "It stops receiving memory.", ok: "Continue") else { return }
-            guard confirm("Remove \(shortKey(key)) for good?",
-                          detail: "This changes the keys on every channel.",
-                          ok: "Remove", destructive: true) else { return }
-            Notifier.post("Removing the device and changing keys…")
-            run(command(for: act)!, timeout: 180)
+        // Adding a device is done at a terminal, where it asks a yes. This
+        // puts the command on the clipboard, with the other device's key in
+        // it where the clipboard held one, and says which key went in. It
+        // runs nothing of Cordelia.
+        case .copyAddDevice(let own):
+            let made = addDeviceCommand(clipboard: NSPasteboard.general.string(forType: .string) ?? "", own: own)
+            copyToClipboard(made.command)
+            Notifier.post(made.note)
 
         case .open(let path):
             guard !path.isEmpty else { return }
@@ -291,6 +264,16 @@ final class Actions {
             NSApp.terminate(nil)
         }
     }
+}
+
+/// What a command printed before its first empty line.
+func firstParagraph(_ text: String) -> String {
+    var out: [String] = []
+    for line in text.components(separatedBy: "\n") {
+        if !line.trimmingCharacters(in: .whitespaces).isEmpty { out.append(line) }
+        else if !out.isEmpty { break }
+    }
+    return out.joined(separator: "\n")
 }
 
 func copyToClipboard(_ text: String) {
