@@ -48,15 +48,17 @@ step, and a panel to manage it.
 
   On a machine with no recovery phrase yet, it shows the three ways on, each
   to copy:
-  - `cordelia phrase`, if you have no phrase yet, on your most up to date
-    machine;
+  - `cordelia phrase`, only if you have never made a phrase. After an
+    upgrade, run it on your most up to date machine;
   - `cordelia accept <key>`, after `cordelia add-device` on a machine that
     has the phrase;
   - `cordelia recover`, if you have lost every device. Do not make a new
     phrase first.
 - **Syncing:** home memory first, with a switch of its own. Then each folder
   that syncs and the name it syncs under, with a switch to stop syncing it
-  from this device. Only mapped folders sync.
+  from this device. The last line is what waits to be sent, where anything
+  does. Only mapped folders sync. On a machine that sends nothing yet, the
+  heading is "Mapped".
 - **Found on this machine:** folders Claude Code has memory for that do not
   sync. One has a switch only where the node says `cordelia sync map` would
   sync it; otherwise it shows the node's reason. A git project syncs under
@@ -68,8 +70,9 @@ step, and a panel to manage it.
   and for how long, and whether it holds the latest change of your devices.
 - **At the foot:** one line. The version of Cordelia, the version of this
   panel, and how much memory this device stores. If the running node is not
-  the command's version, both versions are shown. The amount is shown only
-  beside a running node of the command's own version.
+  the command's version, or does not say its version, the foot names the
+  command's and the node's apart. The amount is shown only beside a running
+  node of the command's own version.
 
 Keys in the panel: `s` toggles sync, `c` copies this device's key, `r`
 refreshes, Tab moves to the next panel, Esc closes.

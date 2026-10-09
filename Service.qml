@@ -8,8 +8,9 @@ import Quickshell.Io
 // beyond the last answers.
 //
 // What Cordelia does only at a terminal is never run from here: making the
-// recovery phrase, adding, accepting and removing a device, clearing a notice.
-// For each of those a command is copied, for a person to paste into a terminal.
+// recovery phrase, adding and accepting a device, clearing a notice. For each
+// of those a command is copied, for a person to paste into a terminal.
+// Removing a device is not offered: no command for it is copied.
 Item {
   id: root
 

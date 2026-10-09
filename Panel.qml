@@ -8,9 +8,9 @@ import qs.Ui
 
 // Cordelia in the bar: one icon that says whether your agent's memory is in
 // step, and a panel with the switch, what syncs, relays, your devices and
-// conflicts. What Cordelia does only at a terminal (the recovery phrase,
-// adding and removing a device, clearing a notice) is shown as a command to
-// copy, and is never run from here.
+// conflicts. What Cordelia does only at a terminal is never run from here.
+// The recovery phrase, adding a device and clearing a notice are each shown
+// as a command to copy. Removing a device is not offered at all.
 Panel {
   id: root
   moduleName: "seeddrill.cordelia"
@@ -103,14 +103,15 @@ Panel {
     return bytes(s.content_bytes_stored) + " of memory stored"
   }
 
-  // The version of Cordelia and of this panel. The command's version and the
-  // running node's are both said only where they differ: the head of the
-  // panel then says to restart the node.
+  // The version of Cordelia and of this panel. One version is said where
+  // the running node is the command's, or no node runs. Where the node is
+  // another version, or does not say its own, each is named for what it is:
+  // the head of the panel then says to restart the node.
   function versions() {
     var parts = []
     var command = cordelia.plain(cordelia.version)
     var node = cordelia.plain(cordelia.nodeVersion)
-    if (command !== "" && (node === "" || node === command)) {
+    if (command !== "" && !cordelia.otherVersion) {
       parts.push("Cordelia " + command)
     } else {
       if (command !== "") parts.push("command " + command)
@@ -471,7 +472,7 @@ Panel {
               width: parent.width
               icon: String.fromCodePoint(0xF018D) // console
               title: "cordelia phrase"
-              detail: "No phrase yet: on your most up to date machine"
+              detail: "Only if you have never made a phrase"
               actionIcon: String.fromCodePoint(0xF018F) // copy
               onActivated: cordelia.copyText("cordelia phrase", "Copied. Run it in a terminal.")
             }
@@ -490,7 +491,7 @@ Panel {
               width: parent.width
               icon: String.fromCodePoint(0xF018D) // console
               title: "cordelia recover"
-              detail: "You lost every device: do not make a new phrase"
+              detail: "If you lost every device. Do not make a new phrase."
               actionIcon: String.fromCodePoint(0xF018F) // copy
               onActivated: cordelia.copyText("cordelia recover",
                 "Copied. Run it in a terminal. It asks for your twelve words.")
@@ -592,7 +593,7 @@ Panel {
               fontFamily: root.fontFamily
             }
             Note {
-              visible: cordelia.staysHere
+              visible: cordelia.staysHere && cordelia.projects.length > 0
               text: "This device sends nothing. These stay on this machine."
             }
             SwitchRow {
@@ -742,7 +743,7 @@ Panel {
     MouseArea {
       id: rowMouse
       anchors.fill: parent
-      enabled: actionRow.acts
+      visible: actionRow.acts
       hoverEnabled: true
       cursorShape: Qt.PointingHandCursor
       onClicked: actionRow.activated()
