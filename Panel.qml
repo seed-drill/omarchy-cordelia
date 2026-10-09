@@ -92,31 +92,37 @@ Panel {
     return b > 1048576 ? (b / 1048576).toFixed(1) + " MB" : (b / 1024).toFixed(1) + " KB"
   }
 
-  function counted(n, one, many) {
-    return n + " " + (n === 1 ? one : many)
-  }
-
-  // What this device holds, in one line: its names, their entries, the size
-  // of their encrypted content, and the size of its database. "" where
-  // `cordelia stats` was not run or did not say (it is run only beside a
-  // running node of the command's own version), or says it of something
-  // other than a person's device.
-  function sizes() {
+  // How much memory this device stores: the size of its encrypted content.
+  // "" where `cordelia stats` was not run or did not say (it is run only
+  // beside a running node of the command's own version), or says it of
+  // something other than a person's device.
+  function stored() {
     var s = cordelia.stats
     if (s === null || cordelia.role !== "personal" || !cordelia.running || cordelia.otherVersion) return ""
-    if (typeof s.channels_subscribed !== "number" || typeof s.items_stored !== "number") return ""
-    if (typeof s.content_bytes_stored !== "number" || typeof s.database_bytes !== "number") return ""
-    return counted(s.channels_subscribed, "name", "names") + " · " + counted(s.items_stored, "entry", "entries")
-      + " · " + bytes(s.content_bytes_stored) + " encrypted · database " + bytes(s.database_bytes)
+    if (typeof s.content_bytes_stored !== "number") return ""
+    return bytes(s.content_bytes_stored) + " of memory stored"
   }
 
-  // The command's version, the running node's, and this panel's.
+  // The version of Cordelia and of this panel. The command's version and the
+  // running node's are both said only where they differ: the head of the
+  // panel then says to restart the node.
   function versions() {
     var parts = []
-    if (cordelia.version !== "") parts.push("cordelia " + cordelia.plain(cordelia.version))
-    if (cordelia.nodeVersion !== "") parts.push("node " + cordelia.plain(cordelia.nodeVersion))
+    var command = cordelia.plain(cordelia.version)
+    var node = cordelia.plain(cordelia.nodeVersion)
+    if (command !== "" && (node === "" || node === command)) {
+      parts.push("Cordelia " + command)
+    } else {
+      if (command !== "") parts.push("command " + command)
+      if (node !== "") parts.push("node " + node)
+    }
     if (cordelia.pluginVersion !== "") parts.push("panel " + cordelia.plain(cordelia.pluginVersion))
     return parts.join(" · ")
+  }
+
+  // The foot of the panel, in one line.
+  function foot() {
+    return cordelia.joined([versions(), stored()], " · ")
   }
 
   // A node goes on running the version it was started as until it is
@@ -699,23 +705,16 @@ Panel {
             }
           }
 
-          // ── Sizes and versions ──────────────────────────────────
+          // ── The foot: versions, and how much is stored ──────────
           Column {
-            visible: sizesNote.text !== "" || versionsNote.text !== ""
+            visible: footNote.text !== ""
             width: parent.width
             spacing: Style.space(4)
 
             PanelSeparator { foreground: root.foreground }
             Note {
-              id: sizesNote
-              visible: text !== ""
-              text: root.sizes()
-              font.pixelSize: Style.font.caption
-            }
-            Note {
-              id: versionsNote
-              visible: text !== ""
-              text: root.versions()
+              id: footNote
+              text: root.foot()
               font.pixelSize: Style.font.caption
             }
           }

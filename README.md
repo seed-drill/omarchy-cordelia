@@ -60,9 +60,9 @@ step, and a panel to manage it.
   here. Click one to copy the command that syncs it to a folder.
 - **Relays:** each relay this device is set up with, whether it is connected
   and for how long, and whether it holds the latest change of your devices.
-- **At the foot:** what this device holds (its names, their entries, the size
-  of their encrypted content and of the database), and the versions of the
-  command, of the running node and of this panel. The sizes are shown only
+- **At the foot:** one line. The version of Cordelia, the version of this
+  panel, and how much memory this device stores. If the running node is not
+  the command's version, both versions are shown. The amount is shown only
   beside a running node of the command's own version.
 
 Keys in the panel: `s` toggles sync, `c` copies this device's key, `r`
