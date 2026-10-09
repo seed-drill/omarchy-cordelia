@@ -216,14 +216,14 @@ func maySize(_ m: Model) -> Bool {
     m.running && !m.version.isEmpty && m.nodeVersion == m.version && m.role == "personal"
 }
 
-/// The foot of the menu: how much memory this device stores, or "" where
-/// that is not known. The panel's foot also names the version of Cordelia.
-/// This menu does not (CEO, 2026-10-09): a Mac app has its About window for
-/// that, which the panel has not. A node of another version than the command
-/// is still said at the head of the menu, because that asks to be acted on.
-func foot(_ m: Model, storedBytes: Int?) -> String {
-    guard let stored = storedBytes, maySize(m) else { return "" }
-    return bytes(stored) + " memory"
+/// How much memory this device stores, as the first line says it while
+/// memory is in step: "(221.2 KB)". "" where that is not known, or where the
+/// node is not simply in step. The panel says the size in its foot, beside the
+/// version of Cordelia. This menu has no foot (CEO, 2026-10-09): a Mac app has
+/// its About window for the version, and the size sits with the summary.
+func stored(_ m: Model, storedBytes: Int?) -> String {
+    guard m.state == "synced", let n = storedBytes, maySize(m) else { return "" }
+    return " (" + bytes(n) + ")"
 }
 
 func buildMenu(_ m: Model, config: Config, home: String, cliVersion: String = "",
@@ -241,8 +241,6 @@ func buildMenu(_ m: Model, config: Config, home: String, cliVersion: String = ""
     var rows: [Row] = []
 
     var tail: [Row] = [.line]
-    let last = foot(m, storedBytes: storedBytes)
-    if !last.isEmpty { tail.append(Row(title: last, tone: .info)) }
     tail.append(Row(title: "About Cordelia", act: .about))
     tail.append(Row(title: "Quit Cordelia Menu", act: .quit, tip: "The node keeps running and memory keeps syncing"))
     func tree(_ rows: [Row]) -> MenuTree {
@@ -262,10 +260,11 @@ func buildMenu(_ m: Model, config: Config, home: String, cliVersion: String = ""
     }
 
     // The node's summary, as the panel's header shows it: in the node's own
-    // words, with no label before them. Where anything holds, each is listed
-    // in its place, red first, as the node says it.
+    // words, with no label before them, and with how much memory this device
+    // stores after them while memory is in step. Where anything holds, each
+    // is listed in its place, red first, as the node says it.
     if m.holds.isEmpty {
-        rows.append(note(sentence(m.summary.isEmpty ? m.state : m.summary)))
+        rows.append(note(sentence(m.summary.isEmpty ? m.state : m.summary) + stored(m, storedBytes: storedBytes)))
     } else {
         for h in m.holds { rows.append(note(sentence(h.says), h.level == "red" ? .urgent : .amber)) }
     }

@@ -5,7 +5,7 @@ The macOS twin of the Omarchy panel: a small native app that puts one icon in th
 ## What it shows
 
 - **The icon** is Cordelia's mark, a brain seen from above, while memory is in step. It changes to turning arrows while syncing and a crossed cloud when no relay can be reached. A red warning triangle is for what to act on now: what the node calls red (a conflict, an error, a device with no recovery phrase yet), something on your never-sync list that syncs anyway, or a node that macOS will not start at the next login. The same triangle in outline, not coloured, is the node's amber: something to know of, such as a device that was added. The icon is dimmed where nothing is being passed on: sync off, the node stopped, or no relay connected. The mark is our own drawing (`assets/cordelia-mark.svg`), and the app icon is drawn from it: Apple's terms keep SF Symbols out of app icons and logos. The passing states use SF Symbols, as any menu may.
-- **The first line** is the node's own summary, in its words. Where anything holds, each thing is listed in its place as the node says it, red first, then amber.
+- **The first line** is the node's own summary, in its words. While memory is in step it also says how much memory this device stores: `Memory synced (221.2 KB)`. Where anything holds, each thing is listed in its place as the node says it, red first, then amber.
 - **A node of another version than the command** is said in red, with what to do: restart the node.
 - **Allow Cordelia to Start at Login…** appears, in red, when macOS has the node's background item switched off in Login Items. The node can be running now, because an installer started it by hand, and still not be started at the next login; memory then stops syncing without a word. Click the row to open Login Items, and switch `cordelia` on. This is the one thing the menu shows that the node cannot report itself.
 - **Sync Memory on This Mac** is the switch, like the panel's header.
@@ -27,7 +27,7 @@ The rest is in the order of what matters most: your devices, then what syncs, th
   - names your other devices sync. Click one to copy the command to sync it to a folder here;
   - *Found Here, Cannot Be Mapped*: the rest, each with the node's reason.
 - **Relays** lists each relay by name with whether it is connected, for how long, and whether it holds the latest change of your devices. A relay that is not connected shows in red.
-- **The last line** says how much memory this device stores. The version is in *About Cordelia*, not in the menu.
+- **About Cordelia** has the version. The menu does not show it.
 - **Quit Cordelia Menu** closes the menu bar app only. The node keeps running and memory keeps syncing.
 
 Hover over any row to see what it does. Each action shows a notification. Every click and its outcome are logged to `~/.cordelia/logs/menubar.log`, so a click that did nothing can be seen.
@@ -99,7 +99,7 @@ Neither widget holds any logic of its own about state. The icon, the summary and
 
 The size of stored memory comes from `cordelia stats --json`. `stats` opens the database itself, so the app runs it as the panel does: only when the menu opens, and only where the status just read says that a node runs, on a person's device, at the command's own version.
 
-Two things differ from the panel on purpose. The menu does not show the version: a Mac app has its About window for that. And the never-sync list, below, is this app's alone.
+Three things differ from the panel on purpose. The menu does not show the version: a Mac app has its About window for that. With no version line there is no foot, so the size sits with the summary in the first line. And the never-sync list, below, is this app's alone.
 
 ## Tests
 
