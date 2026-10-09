@@ -68,8 +68,17 @@ Item {
   readonly property bool home: homeMapping !== null
   readonly property string homeName: home ? String(homeMapping.name) : ""
   // Every folder that syncs, as the last cycle reported it, home memory
-  // among them.
-  readonly property var syncing: sync.projects instanceof Array ? sync.projects : []
+  // among them. A folder that the report marks as not mapped is left out: it
+  // does not sync on this version. Only a report that an earlier version
+  // wrote has one, and the node gives that report until its first cycle on
+  // this version has written its own (a node that is held at its first start
+  // goes on giving it).
+  readonly property var syncing: {
+    var all = sync.projects instanceof Array ? sync.projects : []
+    var out = []
+    for (var i = 0; i < all.length; i++) if (all[i].mapped !== false) out.push(all[i])
+    return out
+  }
   readonly property var homeEntry: {
     for (var i = 0; home && i < syncing.length; i++) if (syncing[i].project === homeName) return syncing[i]
     return null
