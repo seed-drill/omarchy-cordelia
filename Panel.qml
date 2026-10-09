@@ -800,8 +800,9 @@ Panel {
   }
 
   // One of this person's devices, by its label and the first words of its
-  // key's fingerprint. A click copies, and runs nothing: this device's key,
-  // or the command that removes another, for a terminal.
+  // key's fingerprint. A click copies the device's key, and nothing else: a
+  // device is removed only at a terminal, and the panel offers no row that
+  // looks as if it removed one.
   component DeviceRow: ActionRow {
     id: deviceRow
     property var device: ({})
@@ -812,10 +813,10 @@ Panel {
     title: root.deviceName(deviceRow.device) + (deviceRow.mine ? "  (this device)" : "")
     detail: cordelia.joined([cordelia.plain(deviceRow.device.words), deviceRow.device.left === true ? "has left" : "",
       deviceRow.note], " · ")
-    actionIcon: deviceRow.mine ? String.fromCodePoint(0xF018F) : String.fromCodePoint(0xF0A7A) // copy / trash
+    actionIcon: String.fromCodePoint(0xF018F) // copy
     onActivated: {
       if (deviceRow.mine) cordelia.copyKey()
-      else cordelia.copyRemoveDevice(String(deviceRow.device.key || ""))
+      else cordelia.copyDeviceKey(String(deviceRow.device.key || ""), root.deviceName(deviceRow.device))
     }
   }
 

@@ -568,11 +568,13 @@ Item {
     copyText("cordelia sync map <folder> " + shellWord(name), "Copied. Put the folder in and run it in a terminal.")
   }
 
-  // Removing a device asks for the recovery phrase, at a terminal: the
-  // command is copied, and not run.
-  function copyRemoveDevice(key) {
+  // Another device's key, by the name the panel shows it under. Removing a
+  // device is done only at a terminal (`cordelia remove-device <key>`), where
+  // it asks for the recovery phrase: the panel copies the key, and names no
+  // command that removes.
+  function copyDeviceKey(key, name) {
     if (!isKey(key)) return
-    copyText("cordelia remove-device " + key, "Copied. Run it in a terminal: it asks for the phrase.")
+    copyText(key, "Copied the key of " + plain(name))
   }
 
   function openFile(path) {
