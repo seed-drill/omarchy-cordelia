@@ -3,9 +3,9 @@
 // which is what the tests compare.
 //
 // What Cordelia does only at a terminal is never run from here: making the
-// recovery phrase, adding, accepting and removing a device, clearing a
-// notice. For each of those a command is copied, for a person to paste into
-// a terminal.
+// recovery phrase, adding and accepting a device, clearing a notice. For each
+// of those a command is copied, for a person to paste into a terminal.
+// Removing a device is not offered: no command for it is copied.
 
 import Foundation
 
@@ -101,6 +101,10 @@ enum Tone: String {
     case normal
     /// A line that only informs, greyed as a Mac menu greys it.
     case info
+    /// A row that says something and does nothing, drawn as text and not
+    /// greyed: it has no highlight, so it does not look as if a click did
+    /// something.
+    case plain
     /// What to know of: the node's amber.
     case amber
     /// What to act on now: the node's red, and what only this menu knows.
@@ -196,23 +200,34 @@ func relaySays(_ r: Relay) -> String {
 
 /// A node goes on running the version it was started as until it is restarted.
 func versionSays(_ m: Model) -> String {
-    let node = m.nodeVersion.isEmpty ? "The node is from before nodes said their version, and"
+    let node = m.nodeVersion.isEmpty ? "The node is older than the command, and"
         : "The node is version " + plain(m.nodeVersion) + " and"
     return node + " the command is version " + plain(m.version) + ". Restart the node."
 }
 
-/// The command's version, the running node's, and this menu's.
-func versions(_ m: Model, cliVersion: String) -> String {
-    let version = m.version.isEmpty ? cliVersion : m.version
-    var parts: [String] = []
-    if !version.isEmpty { parts.append("cordelia " + plain(version)) }
-    if !m.nodeVersion.isEmpty { parts.append("node " + plain(m.nodeVersion)) }
-    parts.append("menu " + APP_VERSION)
-    return parts.joined(separator: " · ")
+/// `1.5 MB`, `12.0 KB`, as `cordelia stats` writes a size.
+func bytes(_ n: Int) -> String {
+    n > 1_048_576 ? String(format: "%.1f MB", Double(n) / 1_048_576) : String(format: "%.1f KB", Double(n) / 1024)
+}
+
+/// Whether `cordelia stats` may be run: only beside a running node of the
+/// command's own version, on a person's device. It opens the database itself.
+func maySize(_ m: Model) -> Bool {
+    m.running && !m.version.isEmpty && m.nodeVersion == m.version && m.role == "personal"
+}
+
+/// How much memory this device stores, as the first line says it while
+/// memory is in step: "(221.2 KB)". "" where that is not known, or where the
+/// node is not simply in step. The panel says the size in its foot, beside the
+/// version of Cordelia. This menu has no foot (CEO, 2026-10-09): a Mac app has
+/// its About window for the version, and the size sits with the summary.
+func stored(_ m: Model, storedBytes: Int?) -> String {
+    guard m.state == "synced", let n = storedBytes, maySize(m) else { return "" }
+    return " (" + bytes(n) + ")"
 }
 
 func buildMenu(_ m: Model, config: Config, home: String, cliVersion: String = "",
-               nodeAgent: NodeAgent = .ok) -> MenuTree {
+               nodeAgent: NodeAgent = .ok, storedBytes: Int? = nil) -> MenuTree {
     let never = config.never
     let bad = violations(m, never: never, home: home)
     // The node runs now and will not be started at the next login.
@@ -226,7 +241,6 @@ func buildMenu(_ m: Model, config: Config, home: String, cliVersion: String = ""
     var rows: [Row] = []
 
     var tail: [Row] = [.line]
-    if m.installed { tail.append(Row(title: versions(m, cliVersion: cliVersion), tone: .info)) }
     tail.append(Row(title: "About Cordelia", act: .about))
     tail.append(Row(title: "Quit Cordelia Menu", act: .quit, tip: "The node keeps running and memory keeps syncing"))
     func tree(_ rows: [Row]) -> MenuTree {
@@ -239,23 +253,25 @@ func buildMenu(_ m: Model, config: Config, home: String, cliVersion: String = ""
     }
 
     if !m.installed {
-        rows.append(Row(title: "Status: Not installed", tone: .info))
+        rows.append(Row(title: "Not set up on this Mac", tone: .info))
         rows.append(.line)
         rows.append(Row(title: "Install Cordelia…", act: .openURL("https://seeddrill.ai/install")))
         return tree(rows)
     }
 
-    // The status line, as the panel's header shows it. Where anything holds,
-    // each is listed in its place, red first, as the node says it.
+    // The node's summary, as the panel's header shows it: in the node's own
+    // words, with no label before them, and with how much memory this device
+    // stores after them while memory is in step. Where anything holds, each
+    // is listed in its place, red first, as the node says it.
     if m.holds.isEmpty {
-        rows.append(note("Status: " + sentence(m.summary.isEmpty ? m.state : m.summary)))
+        rows.append(note(sentence(m.summary.isEmpty ? m.state : m.summary) + stored(m, storedBytes: storedBytes)))
     } else {
         for h in m.holds { rows.append(note(sentence(h.says), h.level == "red" ? .urgent : .amber)) }
     }
     // The node is not the version of the command: it is to be restarted.
     if m.otherVersion {
         rows.append(note(versionSays(m), .urgent))
-        rows.append(note("Until then changes are refused. Turning sync off still works."))
+        rows.append(note("Until then, the node refuses changes. You can still turn sync off."))
     }
     for v in bad {
         rows.append(Row(title: "Never-sync, but syncing: \(v)", tone: .urgent))
@@ -281,6 +297,8 @@ func buildMenu(_ m: Model, config: Config, home: String, cliVersion: String = ""
                     tip: m.syncOn ? "Click to stop syncing memory on this device"
                                   : "Click to sync Claude Code's memory"))
 
+    // Conflicts and the notice stay above the devices: they show only when
+    // something needs you.
     if !m.conflicts.isEmpty {
         let n = m.conflicts.count
         rows.append(Row(title: n == 1 ? "1 Conflict to Merge" : "\(n) Conflicts to Merge", tone: .urgent,
@@ -310,7 +328,7 @@ func buildMenu(_ m: Model, config: Config, home: String, cliVersion: String = ""
         if !f.command.isEmpty {
             return Row(title: title, subtitle: detail,
                        act: .copyText(f.command, note: "Copied. Put a name in and run it in a terminal."),
-                       tip: "Click to copy the command, for a terminal." + whole)
+                       tip: "Click to copy the command. Run it in a terminal." + whole)
         }
         return Row(title: title, subtitle: detail, tip: long ? f.title : nil, tone: .info)
     }
@@ -320,7 +338,7 @@ func buildMenu(_ m: Model, config: Config, home: String, cliVersion: String = ""
         var stopped: [Row] = []
         if !m.stoppedSyncing.isEmpty {
             stopped.append(note((m.noticeDay.isEmpty ? "Only" : "Since " + plain(m.noticeDay) + " only") + " mapped folders sync."))
-            stopped.append(note("These synced because everything found did: turn on the ones to keep."))
+            stopped.append(note("These synced before. Turn on the ones you want to keep."))
         } else if m.noticeNotKnown {
             stopped.append(note("Folders stopped syncing: only mapped folders sync now."))
         } else {
@@ -334,11 +352,86 @@ func buildMenu(_ m: Model, config: Config, home: String, cliVersion: String = ""
         rows.append(Row(title: "Folders Stopped Syncing", children: stopped))
     }
 
-    if m.syncOn {
-        // ── What syncs ──
+    // The order below is by what matters most to a person: your devices,
+    // then what syncs, then the relays.
+
+    // ── Your devices ──
+    if m.hasPerson || !m.deviceKey.isEmpty {
         rows.append(.line)
-        if m.staysHere && (m.home || !m.projects.isEmpty) {
-            rows.append(note("Nothing is sent from this device. These stay on this machine."))
+        var devices: [Row] = []
+        // No recovery phrase yet: nothing syncs, and there are three ways on,
+        // as the node names them. Each is run at a terminal, so each is a
+        // command to copy. The third is for a person who has lost every
+        // device: a new phrase made first would be in the way of the recovery.
+        if m.noPhrase {
+            devices.append(note(sentence(m.personShort.isEmpty ? m.summary : m.personShort) + ". Memory stays on this machine."))
+            devices.append(note("To go on, run one of these in a terminal:"))
+            devices.append(Row(title: "cordelia phrase", subtitle: "Only if you have never made a phrase",
+                               act: .copyText("cordelia phrase", note: "Copied. Run it in a terminal."),
+                               tip: "Click to copy the command"))
+            devices.append(Row(title: "cordelia accept <key>", subtitle: "After add-device on a machine that has the phrase",
+                               act: .copyText("cordelia accept <key>",
+                                              note: "Copied. Put in the key that add-device printed, and run it in a terminal."),
+                               tip: "Click to copy the command"))
+            devices.append(Row(title: "cordelia recover", subtitle: "If you lost every device. Do not make a new phrase.",
+                               act: .copyText("cordelia recover",
+                                              note: "Copied. Run it in a terminal. It asks for your twelve words."),
+                               tip: "Click to copy the command"))
+        }
+        if !m.deviceKey.isEmpty && (m.noPhrase || !m.hasPerson) {
+            devices.append(Row(title: "This Device's Key",
+                               subtitle: shortKey(m.deviceKey) + (m.noPhrase ? " · for add-device there" : ""),
+                               act: .copyKey, tip: "Click to copy this device's key"))
+        }
+        // Under a phrase: the devices of the last change and those added
+        // since, as the node lists them. A removed key is not listed: a
+        // removal that has not reached every device holds in amber at the head
+        // of the menu, and `cordelia devices` lists the removed keys.
+        if !m.cannotGoOn.isEmpty { devices.append(note(m.cannotGoOn, .urgent)) }
+        // Only this device's own row is a row to click: it copies its key,
+        // which another machine needs to add it or to be added from it.
+        // Another device's row does nothing. A device is removed only at a
+        // terminal, and the menu offers no row that looks as if it removed one.
+        func deviceItem(_ d: PersonDevice) -> Row {
+            let name = d.label.isEmpty ? shortKey(d.key) : d.label
+            let detail = joined([d.words, d.left ? "has left" : "", d.note], " · ")
+            if d.thisDevice {
+                return Row(title: name + "  (this device)", subtitle: detail.isEmpty ? nil : detail,
+                           act: .copyKey, tip: "Click to copy this device's key")
+            }
+            return Row(title: name, subtitle: detail.isEmpty ? nil : detail, tone: .plain)
+        }
+        devices += m.devices.map(deviceItem)
+        if !m.added.isEmpty {
+            devices.append(Row(title: "Added Since the Last Change", tone: .info))
+            for d in m.added {
+                devices.append(deviceItem(d))
+                if !d.counted { devices.append(note(whole(joined(["Not counted", d.whyNot], ": ")))) }
+            }
+        }
+        // What this device has to tell its person. It is cleared at a
+        // terminal, which asks of each.
+        if !m.notices.isEmpty {
+            devices.append(.line)
+            devices += m.notices.map { note(whole($0), .amber) }
+            devices.append(Row(title: "Clear These Notices", subtitle: "Click to copy the command. Run it in a terminal.",
+                               act: .copyText("cordelia devices --clear", note: "Copied. Run it in a terminal.")))
+        }
+        if m.mayAdd {
+            devices.append(.line)
+            devices.append(Row(title: "Add a Device", subtitle: "Copy the new machine's key first, then click here",
+                               act: .copyAddDevice(own: m.deviceKey),
+                               tip: "The menu copies the command and runs nothing. Run it in a terminal."))
+        }
+        let count = m.devices.count + m.added.count
+        rows.append(Row(title: m.noPhrase || count == 0 ? "Your Devices" : "Your Devices: \(count)", children: devices))
+    }
+
+    // ── What syncs: home memory first, then each folder, then what waits to be sent ──
+    if m.syncOn {
+        rows.append(.line)
+        if m.staysHere && !m.projects.isEmpty {
+            rows.append(note("This device sends nothing. These stay on this machine."))
         }
         if m.projects.isEmpty && !m.home {
             rows.append(Row(title: "Nothing syncs yet", tone: .info))
@@ -347,6 +440,9 @@ func buildMenu(_ m: Model, config: Config, home: String, cliVersion: String = ""
             rows.append(Row(title: "Home Memory", checked: true, act: .home(on: false),
                             tip: whole(homeSays(m)) + " Click to stop syncing it here.",
                             tone: m.homeEntry?.error == nil ? .normal : .urgent))
+        } else if !onNever(never, name: "~", home: home) {
+            rows.append(Row(title: "Home Memory", checked: false, act: .home(on: true),
+                            tip: whole(homeSays(m)) + " Click to sync it. Asks first."))
         }
         for p in m.projects {
             let title = plain(p.cwd.map { shortPath($0, home: home) } ?? p.name)
@@ -362,21 +458,17 @@ func buildMenu(_ m: Model, config: Config, home: String, cliVersion: String = ""
             rows.append(Row(title: "Waiting to send: \(m.waiting)", tone: .info))
         }
 
-        // ── Turning more on ──
+        // ── Turning more on: found here, and on the other devices ──
         // What is on the never-sync list is not offered, and not named.
         let visible = m.found.filter { !onNever(never, name: $0.under, cwd: $0.cwd, home: home) }
         let hidden = m.found.count - visible.count
         let listed = visible.map(folderItem)
         let offer = listed.filter { $0.act != nil }
         let reasons = listed.filter { $0.act == nil }
-        let homeOffer = !m.home && !onNever(never, name: "~", home: home)
-        if !listed.isEmpty || !m.elsewhere.isEmpty || homeOffer {
+        if !listed.isEmpty || !m.elsewhere.isEmpty {
             var more: [Row] = offer
-            if homeOffer {
-                more.append(Row(title: "Home Memory", act: .home(on: true), tip: homeSays(m)))
-            }
             if !m.elsewhere.isEmpty {
-                more.append(.line)
+                if !more.isEmpty { more.append(.line) }
                 more.append(Row(title: "On Your Other Devices", tone: .info))
                 for n in m.elsewhere {
                     guard copyable(n) else {
@@ -386,93 +478,24 @@ func buildMenu(_ m: Model, config: Config, home: String, cliVersion: String = ""
                     more.append(Row(title: plain(n),
                                     act: .copyText("cordelia sync map <folder> " + shellWord(n),
                                                    note: "Copied. Put the folder in and run it in a terminal."),
-                                    tip: "Click to copy the command that syncs a folder with it"))
+                                    tip: "Click to copy the command to sync it to a folder here"))
                 }
             }
             // Found here, each with the node's reason why it cannot be mapped.
             if !reasons.isEmpty {
-                more.append(.line)
+                if !more.isEmpty { more.append(.line) }
                 more.append(Row(title: "Found Here, Cannot Be Mapped: \(reasons.count)", children: reasons))
             }
             if hidden > 0 {
-                more.append(.line)
+                if !more.isEmpty { more.append(.line) }
                 more.append(Row(title: "\(hidden) on your never-sync list, not shown", tone: .info))
             }
             rows.append(Row(title: "Sync Another Folder", children: more))
         }
     }
 
-    // ── Your devices and the relays, one row each ──
+    // ── Relays ──
     rows.append(.line)
-    if m.hasPerson || !m.deviceKey.isEmpty {
-        var devices: [Row] = []
-        // No recovery phrase yet: nothing syncs, and there are two ways on.
-        // Each is run at a terminal, so each is a command to copy.
-        if m.noPhrase {
-            devices.append(note(sentence(m.personShort.isEmpty ? m.summary : m.personShort) + ". Memory stays on this machine."))
-            devices.append(note("Two ways on, each run in a terminal:"))
-            devices.append(Row(title: "cordelia phrase", subtitle: "On the machine whose memory is the most up to date",
-                               act: .copyText("cordelia phrase", note: "Copied. Run it in a terminal."),
-                               tip: "Click to copy the command"))
-            devices.append(Row(title: "cordelia accept <key>", subtitle: "After add-device on a machine that has the phrase",
-                               act: .copyText("cordelia accept <key>",
-                                              note: "Copied. Put in the key that add-device printed, and run it in a terminal."),
-                               tip: "Click to copy the command"))
-        }
-        if !m.deviceKey.isEmpty && (m.noPhrase || !m.hasPerson) {
-            devices.append(Row(title: "This Device's Key",
-                               subtitle: shortKey(m.deviceKey) + (m.noPhrase ? " · for add-device there" : ""),
-                               act: .copyKey, tip: "Click to copy this device's key"))
-        }
-        // Under a phrase: the devices of the last change, those added since
-        // and the removed keys, as the node lists them.
-        if !m.cannotGoOn.isEmpty { devices.append(note(m.cannotGoOn, .urgent)) }
-        func deviceItem(_ d: PersonDevice) -> Row {
-            let name = d.label.isEmpty ? shortKey(d.key) : d.label
-            let detail = joined([d.words, d.left ? "has left" : "", d.note], " · ")
-            if d.thisDevice {
-                return Row(title: name + "  (this device)", subtitle: detail.isEmpty ? nil : detail,
-                           act: .copyKey, tip: "Click to copy this device's key")
-            }
-            // Removing a device asks for the recovery phrase, at a terminal:
-            // the command is copied, and not run.
-            guard isKey(d.key) else { return Row(title: name, subtitle: detail.isEmpty ? nil : detail, tone: .info) }
-            return Row(title: name, subtitle: detail.isEmpty ? nil : detail,
-                       children: [Row(title: "Copy the Command That Removes It",
-                                      act: .copyText("cordelia remove-device " + d.key,
-                                                     note: "Copied. Run it in a terminal: it asks for the phrase."),
-                                      tip: "Runs nothing: the command is for a terminal, and asks for the recovery phrase")])
-        }
-        devices += m.devices.map(deviceItem)
-        if !m.added.isEmpty {
-            devices.append(Row(title: "Added Since the Last Change", tone: .info))
-            for d in m.added {
-                devices.append(deviceItem(d))
-                if !d.counted { devices.append(note(whole(joined(["Not counted", d.whyNot], ": ")))) }
-            }
-        }
-        for r in m.removed {
-            devices.append(Row(title: joined([r.label, r.words], " · "), subtitle: "removed", tone: .info))
-        }
-        // What this device has to tell its person. It is cleared at a
-        // terminal, which asks of each.
-        if !m.notices.isEmpty {
-            devices.append(.line)
-            devices += m.notices.map { note(whole($0), .amber) }
-            devices.append(Row(title: "Clear These Notices", subtitle: "Copies cordelia devices --clear, for a terminal",
-                               act: .copyText("cordelia devices --clear", note: "Copied. Run it in a terminal."),
-                               tip: "Runs nothing: the command asks of each, at a terminal"))
-        }
-        if m.mayAdd {
-            devices.append(.line)
-            devices.append(Row(title: "Add a Device", subtitle: "Copies the command, with a key from the clipboard",
-                               act: .copyAddDevice(own: m.deviceKey),
-                               tip: "Copy the other device's key (cordelia id) first. Runs nothing: the command is for a terminal."))
-        }
-        let count = m.devices.count + m.added.count
-        rows.append(Row(title: m.noPhrase || count == 0 ? "Your Devices" : "Your Devices: \(count)", children: devices))
-    }
-
     let up = m.relays.filter { $0.connected }.count
     let relayTitle: String
     if up == 0 {
@@ -484,7 +507,7 @@ func buildMenu(_ m: Model, config: Config, home: String, cliVersion: String = ""
     }
     var relays: [Row] = m.relays.map {
         let name = plain($0.name)
-        return Row(title: name.isEmpty ? "A relay" : name, subtitle: relaySays($0), tone: $0.connected ? .info : .urgent)
+        return Row(title: name.isEmpty ? "A relay" : name, subtitle: relaySays($0), tone: $0.connected ? .plain : .urgent)
     }
     if m.noRelay {
         relays.insert(note("No relay connected. Changes wait here until one is."), at: 0)

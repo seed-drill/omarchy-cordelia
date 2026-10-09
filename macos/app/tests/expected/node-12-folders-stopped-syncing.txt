@@ -1,0 +1,56 @@
+icon: exclamationmark.triangle.fill urgent
+tooltip: Cordelia: memory: 1 folder stopped syncing
+
+    Memory: 1 folder stopped syncing   {urgent, disabled}
+    Memory: 1 device added, not yet cleared   {amber, disabled}
+[x] Sync Memory on This Mac   {-> sync off}
+        runs: cordelia sync off
+        tip: Click to stop syncing memory on this device
+    Folders Stopped Syncing   {submenu}
+        Since 2026-10-09 only mapped folders sync.   {info, disabled}
+        These synced before. Turn on the ones you want to keep.   {info, disabled}
+        ~/work/tools  |  Synced as github.com/seed-drill/cordelia-node   {-> map ~/work/tools as github.com/seed-drill/cordelia-node}
+            runs: cordelia sync map /tmp/.tmpQ05CLj/home/work/tools github.com/seed-drill/cordelia-node
+            tip: Asks first.
+    ────
+        I Have Seen This   {-> notice-seen}
+            runs: cordelia sync status --seen
+            tip: Puts this notice away
+────
+    Your Devices: 2   {submenu}
+        desktop  |  young maid vocal biology   {plain, disabled}
+        Added Since the Last Change   {info, disabled}
+        laptop  (this device)  |  exit motion peace meat · added from desktop   {-> copy-key}
+            tip: Click to copy this device's key
+    ────
+        This device was added from (young maid vocal biology) "desktop".   {amber, disabled}
+        Clear These Notices  |  Click to copy the command. Run it in a terminal.   {-> copy}
+            copies: cordelia devices --clear
+            says: Copied. Run it in a terminal.
+    ────
+        Add a Device  |  Copy the new machine's key first, then click here   {-> copy-add-device}
+            tip: The menu copies the command and runs nothing. Run it in a terminal.
+────
+[ ] Home Memory   {-> home on}
+        runs: cordelia sync home on
+        tip: What Claude remembers outside any project. Click to sync it. Asks first.
+[x] ~/work/lab   {-> stop ~/work/lab}
+        runs: cordelia sync unmap /tmp/.tmpQ05CLj/home/work/lab
+        tip: Syncs as lab. Click to stop syncing it here.
+    Sync Another Folder   {submenu}
+        ~/deep/notes  |  Syncs as notes · needs a name (not a git project)   {-> map ~/deep/notes as notes}
+            runs: cordelia sync map /tmp/.tmpQ05CLj/home/deep/notes notes
+            tip: Asks first.
+        ~/work/tools  |  github.com/seed-drill/cordelia-node · your other devices sync it   {-> map ~/work/tools as github.com/seed-drill/cordelia-node}
+            runs: cordelia sync map /tmp/.tmpQ05CLj/home/work/tools
+            tip: Asks first.
+    ────
+        Found Here, Cannot Be Mapped: 1   {submenu}
+            ~/.claude/projects/workspace/memory  |  This layout cannot be mapped: Claude Code did not name the folder after its directory   {info, disabled}
+────
+    Relays: 1 connected   {submenu}
+        127.0.0.1:24740  |  Connected 1s · has not said whether it holds the latest change   {plain, disabled}
+────
+    About Cordelia   {-> about}
+    Quit Cordelia Menu   {-> quit}
+        tip: The node keeps running and memory keeps syncing

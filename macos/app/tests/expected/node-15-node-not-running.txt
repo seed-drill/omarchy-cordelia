@@ -1,0 +1,11 @@
+icon: cordelia dimmed
+tooltip: Cordelia: memory: node stopped
+
+    Memory: node stopped   {info, disabled}
+────
+    Start Cordelia   {-> start-node}
+        tip: It runs in the background and keeps memory in step
+────
+    About Cordelia   {-> about}
+    Quit Cordelia Menu   {-> quit}
+        tip: The node keeps running and memory keeps syncing

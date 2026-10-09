@@ -1,14 +1,13 @@
 icon: exclamationmark.triangle.fill urgent
 tooltip: Cordelia: the node is not running
 
-    Status: The node is not running   {info, disabled}
+    The node is not running   {info, disabled}
     Allow Cordelia to Start at Login…   {urgent, -> open-login-items}
         tip: macOS has the node's background item switched off, so memory stops syncing at the next login. Click to open Login Items, then switch “cordelia” on.
 ────
     Start Cordelia   {-> start-node}
         tip: It runs in the background and keeps memory in step
 ────
-    cordelia 0.2.0-alpha.9 · menu 0.2.0   {info, disabled}
     About Cordelia   {-> about}
     Quit Cordelia Menu   {-> quit}
         tip: The node keeps running and memory keeps syncing

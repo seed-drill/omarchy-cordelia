@@ -1,7 +1,7 @@
 icon: cordelia dimmed
 tooltip: Cordelia: sync is off
 
-    Status: Sync is off   {info, disabled}
+    Sync is off   {info, disabled}
 [ ] Sync Memory on This Mac   {-> sync on}
         runs: cordelia sync claude
         tip: Click to sync Claude Code's memory
@@ -9,19 +9,15 @@ tooltip: Cordelia: sync is off
     Your Devices: 2   {submenu}
         macbook  (this device)  |  amber lake quiet stone   {-> copy-key}
             tip: Click to copy this device's key
-        studio  |  river maple candle north   {submenu}
-            Copy the Command That Removes It   {-> copy}
-                copies: cordelia remove-device cordelia_pk1studio…qqqqqq
-                says: Copied. Run it in a terminal: it asks for the phrase.
-                tip: Runs nothing: the command is for a terminal, and asks for the recovery phrase
+        studio  |  river maple candle north   {plain, disabled}
     ────
-        Add a Device  |  Copies the command, with a key from the clipboard   {-> copy-add-device}
-            tip: Copy the other device's key (cordelia id) first. Runs nothing: the command is for a terminal.
-    Relays: 2 connected   {submenu}
-        relay1.example.net:9474  |  Connected 1h 19m · holds the latest change   {info, disabled}
-        relay2.example.net:9474  |  Connected 1m · holds the latest change   {info, disabled}
+        Add a Device  |  Copy the new machine's key first, then click here   {-> copy-add-device}
+            tip: The menu copies the command and runs nothing. Run it in a terminal.
 ────
-    cordelia 0.2.0-alpha.9 · node 0.2.0-alpha.9 · menu 0.2.0   {info, disabled}
+    Relays: 2 connected   {submenu}
+        relay1.example.net:9474  |  Connected 1h 19m · holds the latest change   {plain, disabled}
+        relay2.example.net:9474  |  Connected 1m · holds the latest change   {plain, disabled}
+────
     About Cordelia   {-> about}
     Quit Cordelia Menu   {-> quit}
         tip: The node keeps running and memory keeps syncing

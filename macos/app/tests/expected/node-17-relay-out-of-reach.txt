@@ -1,0 +1,33 @@
+icon: exclamationmark.triangle amber
+tooltip: Cordelia: memory: 1 device added, not yet cleared
+
+    Memory: 1 device added, not yet cleared   {amber, disabled}
+[x] Sync Memory on This Mac   {-> sync off}
+        runs: cordelia sync off
+        tip: Click to stop syncing memory on this device
+────
+    Your Devices: 2   {submenu}
+        desktop  |  worth ghost decide live   {plain, disabled}
+        Added Since the Last Change   {info, disabled}
+        b  (this device)  |  room muffin pink reject · added from desktop   {-> copy-key}
+            tip: Click to copy this device's key
+    ────
+        This device was added from (worth ghost decide live) "desktop".   {amber, disabled}
+        Clear These Notices  |  Click to copy the command. Run it in a terminal.   {-> copy}
+            copies: cordelia devices --clear
+            says: Copied. Run it in a terminal.
+    ────
+        Add a Device  |  Copy the new machine's key first, then click here   {-> copy-add-device}
+            tip: The menu copies the command and runs nothing. Run it in a terminal.
+────
+[x] Home Memory   {-> home off}
+        runs: cordelia sync home off
+        tip: What Claude remembers outside any project. Click to stop syncing it here.
+────
+    Relays: none connected   {urgent, submenu}
+        No relay connected. Changes wait here until one is.   {info, disabled}
+        127.0.0.1:29986  |  Unreachable: QUIC connection error: timed out · holds the latest change   {urgent, disabled}
+────
+    About Cordelia   {-> about}
+    Quit Cordelia Menu   {-> quit}
+        tip: The node keeps running and memory keeps syncing

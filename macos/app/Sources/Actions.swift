@@ -48,6 +48,18 @@ struct CLI {
         return (try? JSONSerialization.jsonObject(with: data)) as? JSON ?? [:]
     }
 
+    /// How much memory this device stores: the size of its encrypted content,
+    /// from `cordelia stats --json`; nil where it failed or does not say.
+    /// `stats` opens the database itself, so the caller runs this only where
+    /// `maySize` allows: beside a running node of the command's own version.
+    func storedBytes() -> Int? {
+        let r = run(["stats", "--json"], timeout: 5)
+        guard r.code == 0, let data = r.out.data(using: .utf8),
+              let stats = (try? JSONSerialization.jsonObject(with: data)) as? JSON,
+              let n = stats["content_bytes_stored"] as? NSNumber, CFGetTypeID(n) != CFBooleanGetTypeID() else { return nil }
+        return Int(n.doubleValue)
+    }
+
     /// "0.2.0-alpha.3", from `cordelia --version`; "" if it can't be run.
     func version() -> String {
         let r = run(["--version"], timeout: 5)

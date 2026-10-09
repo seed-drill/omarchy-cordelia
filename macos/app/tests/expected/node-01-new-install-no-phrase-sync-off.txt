@@ -1,0 +1,33 @@
+icon: cordelia dimmed
+tooltip: Cordelia: memory stays here: no recovery phrase yet
+
+    Memory stays here: no recovery phrase yet   {info, disabled}
+[ ] Sync Memory on This Mac   {-> sync on}
+        runs: cordelia sync claude
+        tip: Click to sync Claude Code's memory
+────
+    Your Devices   {submenu}
+        No recovery phrase yet. Memory stays on this machine.   {info, disabled}
+        To go on, run one of these in a terminal:   {info, disabled}
+        cordelia phrase  |  Only if you have never made a phrase   {-> copy}
+            copies: cordelia phrase
+            says: Copied. Run it in a terminal.
+            tip: Click to copy the command
+        cordelia accept <key>  |  After add-device on a machine that has the phrase   {-> copy}
+            copies: cordelia accept <key>
+            says: Copied. Put in the key that add-device printed, and run it in a terminal.
+            tip: Click to copy the command
+        cordelia recover  |  If you lost every device. Do not make a new phrase.   {-> copy}
+            copies: cordelia recover
+            says: Copied. Run it in a terminal. It asks for your twelve words.
+            tip: Click to copy the command
+        This Device's Key  |  cordelia_pk1s7a52z…3vjc5s · for add-device there   {-> copy-key}
+            tip: Click to copy this device's key
+────
+    Relays: 1 of 2 connected   {urgent, submenu}
+        127.0.0.1:29904  |  Connected 9s   {plain, disabled}
+        127.0.0.1:29906  |  Unreachable: QUIC connection error: timed out   {urgent, disabled}
+────
+    About Cordelia   {-> about}
+    Quit Cordelia Menu   {-> quit}
+        tip: The node keeps running and memory keeps syncing

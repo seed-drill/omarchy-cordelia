@@ -43,12 +43,16 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate, UNUser
         timer = t
     }
 
-    /// The menu as the node describes it now.
-    private func tree(timeout: TimeInterval) -> MenuTree {
+    /// The menu as the node describes it now. The size of what this device
+    /// stores is read only when the menu opens, and only where the status
+    /// just read allows it (see `maySize`).
+    private func tree(timeout: TimeInterval, sizes: Bool = false) -> MenuTree {
         let cfg = config()
-        let status = CLI(command: cfg.command).status(timeout: timeout)
-        return buildMenu(Model(status: status, home: home), config: cfg, home: home, cliVersion: cliVersion,
-                         nodeAgent: nodeAgentState(home: home))
+        let cli = CLI(command: cfg.command)
+        let model = Model(status: cli.status(timeout: timeout), home: home)
+        let stored = sizes && maySize(model) ? cli.storedBytes() : nil
+        return buildMenu(model, config: cfg, home: home, cliVersion: cliVersion,
+                         nodeAgent: nodeAgentState(home: home), storedBytes: stored)
     }
 
     /// Asks the node off the main thread and redraws the icon.
@@ -82,7 +86,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate, UNUser
     // The status call takes about 10 ms, so the menu is filled as it opens.
     func menuNeedsUpdate(_ menu: NSMenu) {
         guard menu === self.menu else { return }
-        let tree = self.tree(timeout: 2)
+        let tree = self.tree(timeout: 2, sizes: true)
         draw(tree)
         menu.removeAllItems()
         items(tree.rows).forEach(menu.addItem)
@@ -101,12 +105,14 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate, UNUser
                     item.title = title
                 }
             }
-            // Red for what to act on now, and amber for what to know of.
-            if row.tone == .urgent || row.tone == .amber {
+            // Red for what to act on now, and amber for what to know of. A
+            // plain row does nothing and is still drawn as text: a row that
+            // cannot be clicked would otherwise be greyed like a note.
+            if row.tone == .urgent || row.tone == .amber || row.tone == .plain {
+                let colour: NSColor = row.tone == .urgent ? .systemRed : (row.tone == .amber ? .systemOrange : .labelColor)
                 item.attributedTitle = NSAttributedString(
                     string: title,
-                    attributes: [.foregroundColor: row.tone == .urgent ? NSColor.systemRed : NSColor.systemOrange,
-                                 .font: NSFont.menuFont(ofSize: 0)])
+                    attributes: [.foregroundColor: colour, .font: NSFont.menuFont(ofSize: 0)])
             }
             if let checked = row.checked { item.state = checked ? .on : .off }
             item.toolTip = row.tip

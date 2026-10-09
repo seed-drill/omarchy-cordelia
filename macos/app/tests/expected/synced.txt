@@ -1,11 +1,22 @@
 icon: cordelia
 tooltip: Cordelia: memory synced
 
-    Status: Memory synced   {info, disabled}
+    Memory synced (221.2 KB)   {info, disabled}
 [x] Sync Memory on This Mac   {-> sync off}
         runs: cordelia sync off
         tip: Click to stop syncing memory on this device
 ────
+    Your Devices: 2   {submenu}
+        macbook  (this device)  |  amber lake quiet stone   {-> copy-key}
+            tip: Click to copy this device's key
+        studio  |  river maple candle north   {plain, disabled}
+    ────
+        Add a Device  |  Copy the new machine's key first, then click here   {-> copy-add-device}
+            tip: The menu copies the command and runs nothing. Run it in a terminal.
+────
+[ ] Home Memory   {-> home on}
+        runs: cordelia sync home on
+        tip: Your other devices sync it. Click to sync it. Asks first.
 [x] ~/work/app   {-> stop ~/work/app}
         runs: cordelia sync unmap /Users/alex/work/app
         tip: Syncs as github.com/example/app. Click to stop syncing it here.
@@ -19,36 +30,21 @@ tooltip: Cordelia: memory synced
         ~/client-work/acme  |  github.com/your-company/acme   {-> map ~/client-work/acme as github.com/your-company/acme}
             runs: cordelia sync map /Users/alex/client-work/acme
             tip: Asks first.
-        Home Memory   {-> home on}
-            runs: cordelia sync home on
-            tip: Your other devices sync it
     ────
         On Your Other Devices   {info, disabled}
         github.com/example/notes   {-> copy}
             copies: cordelia sync map <folder> github.com/example/notes
             says: Copied. Put the folder in and run it in a terminal.
-            tip: Click to copy the command that syncs a folder with it
+            tip: Click to copy the command to sync it to a folder here
     ────
         Found Here, Cannot Be Mapped: 2   {submenu}
             ~/.claude/projects/-Users-alex  |  Its directory is not known   {info, disabled}
             /opt/outside  |  Outside your home directory: it cannot be mapped   {info, disabled}
 ────
-    Your Devices: 2   {submenu}
-        macbook  (this device)  |  amber lake quiet stone   {-> copy-key}
-            tip: Click to copy this device's key
-        studio  |  river maple candle north   {submenu}
-            Copy the Command That Removes It   {-> copy}
-                copies: cordelia remove-device cordelia_pk1studio…qqqqqq
-                says: Copied. Run it in a terminal: it asks for the phrase.
-                tip: Runs nothing: the command is for a terminal, and asks for the recovery phrase
-    ────
-        Add a Device  |  Copies the command, with a key from the clipboard   {-> copy-add-device}
-            tip: Copy the other device's key (cordelia id) first. Runs nothing: the command is for a terminal.
     Relays: 2 connected   {submenu}
-        relay1.example.net:9474  |  Connected 1h 19m · holds the latest change   {info, disabled}
-        relay2.example.net:9474  |  Connected 1m · holds the latest change   {info, disabled}
+        relay1.example.net:9474  |  Connected 1h 19m · holds the latest change   {plain, disabled}
+        relay2.example.net:9474  |  Connected 1m · holds the latest change   {plain, disabled}
 ────
-    cordelia 0.2.0-alpha.9 · node 0.2.0-alpha.9 · menu 0.2.0   {info, disabled}
     About Cordelia   {-> about}
     Quit Cordelia Menu   {-> quit}
         tip: The node keeps running and memory keeps syncing

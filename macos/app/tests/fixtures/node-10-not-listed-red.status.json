@@ -1,0 +1,201 @@
+{
+  "device": "cordelia_pk1hcekk7v9gqfe33hd39rt0tjeethxu86q5z3te2txxk24rcmwhenqvp3aka",
+  "holds": [
+    {
+      "level": "red",
+      "says": "memory not syncing: not in the last change",
+      "what": "stopped"
+    },
+    {
+      "level": "amber",
+      "says": "memory: 2 devices added, not yet cleared",
+      "what": "added"
+    }
+  ],
+  "level": "red",
+  "no_relay_secs": null,
+  "node_version": "0.2.0-alpha.10",
+  "outbox_refused": [],
+  "outbox_waiting": 0,
+  "peers": {
+    "hot": 1,
+    "list": [
+      {
+        "address": "127.0.0.1:21013",
+        "connected_secs": 19,
+        "idle_secs": 0,
+        "key": "cordelia_pk1xmlw09umtj54jsdlqngla6s6p5k2telaampw6y45j6atqh2w7wwq65mu94",
+        "role": "relay",
+        "state": "hot"
+      }
+    ],
+    "relays": [
+      {
+        "error": null,
+        "host": "127.0.0.1:21013",
+        "key": null,
+        "last_tried_secs": null,
+        "state": "connected",
+        "unreachable_secs": null
+      }
+    ],
+    "warm": 0
+  },
+  "person": {
+    "accepting": [
+      {
+        "asking": false,
+        "key": "cordelia_pk18ej6zd42vs6u0jfvtln9ss6vtpf8jydmnq35p5xv0aypd72gqxeqdk33cg",
+        "said": "this device has joined: it follows the recovery phrase of the device whose key was typed, and has applied change 1",
+        "taken": true,
+        "taken_at": 1791521924,
+        "typed_at": 1791521924,
+        "until": 1791525524,
+        "words": "eye drill top immense"
+      }
+    ],
+    "added": [
+      {
+        "applied": 1,
+        "at": 1791521922,
+        "by": {
+          "key": "cordelia_pk1tczk7w4nasvqv43knhe4s5h3gnh08ql0a3800y4wveqtz6yl3yes304fuu",
+          "label": "laptop",
+          "words": "quit argue arrow opera"
+        },
+        "counted": true,
+        "key": "cordelia_pk18ej6zd42vs6u0jfvtln9ss6vtpf8jydmnq35p5xv0aypd72gqxeqdk33cg",
+        "label": "desktop",
+        "left": false,
+        "sent": true,
+        "this_device": false,
+        "why_not": null,
+        "words": "eye drill top immense"
+      },
+      {
+        "applied": 1,
+        "at": 1791521924,
+        "by": {
+          "key": "cordelia_pk18ej6zd42vs6u0jfvtln9ss6vtpf8jydmnq35p5xv0aypd72gqxeqdk33cg",
+          "label": "desktop",
+          "words": "eye drill top immense"
+        },
+        "counted": true,
+        "key": "cordelia_pk1hcekk7v9gqfe33hd39rt0tjeethxu86q5z3te2txxk24rcmwhenqvp3aka",
+        "label": "tablet",
+        "left": false,
+        "sent": true,
+        "this_device": true,
+        "why_not": null,
+        "words": "various tobacco inch hazard"
+      }
+    ],
+    "among": "stopped",
+    "apart": null,
+    "applied_at": null,
+    "cannot_go_on": "this device is not in a change made on (quit argue arrow opera) \"laptop\": if it is yours, add it again from a device that is",
+    "change": 1,
+    "devices": [
+      {
+        "applied": 1,
+        "key": "cordelia_pk1tczk7w4nasvqv43knhe4s5h3gnh08ql0a3800y4wveqtz6yl3yes304fuu",
+        "label": "laptop",
+        "left": false,
+        "maker": true,
+        "sent": true,
+        "this_device": false,
+        "words": "quit argue arrow opera"
+      }
+    ],
+    "folders": 0,
+    "latest": "540503d725924b5fbea23667691bf41c88ad8911b7ef1cbbce0e8efbb0b940e7",
+    "left_out": [],
+    "may_add": false,
+    "names": {
+      "carried_to_go": [],
+      "carried_to_go_since": null,
+      "sent": [],
+      "to_go": [],
+      "to_go_since": null
+    },
+    "names_not_listed": [],
+    "names_not_shown": 0,
+    "not_carried": [],
+    "not_reached": [],
+    "notices": [
+      {
+        "id": "d4e2472799c0ba0d683cecf3541ab918b4100eab69c37ae8f0f642673ee82ca1",
+        "kind": "added",
+        "says": "new device: (eye drill top immense) \"desktop\", added from (quit argue arrow opera) \"laptop\""
+      },
+      {
+        "id": "95cd8d0c23abc921074dc4c6f450adfdfa4e616ca5d12236cd3d6514525ae3b2",
+        "kind": "added",
+        "says": "this device was added from (eye drill top immense) \"desktop\""
+      }
+    ],
+    "others": 0,
+    "phrase_words": "lonely mystery awesome panda",
+    "relays": [
+      {
+        "another_form": 0,
+        "connected_secs": 18,
+        "heard_since_woke": true,
+        "holds_latest": null,
+        "no_room": null,
+        "no_room_at": null,
+        "refuses": null,
+        "relay": "127.0.0.1:21013"
+      }
+    ],
+    "removed": [],
+    "removed_a_key": false,
+    "says": [
+      "this device is not in a change made on (quit argue arrow opera) \"laptop\": if it is yours, add it again from a device that is",
+      "new device: (eye drill top immense) \"desktop\", added from (quit argue arrow opera) \"laptop\"",
+      "this device was added from (eye drill top immense) \"desktop\""
+    ],
+    "short": "this device is not in the last change",
+    "state": "not_listed",
+    "statements_left": null,
+    "sync_on": false,
+    "this_device": "cordelia_pk1hcekk7v9gqfe33hd39rt0tjeethxu86q5z3te2txxk24rcmwhenqvp3aka",
+    "waiting": [
+      {
+        "name": null,
+        "relay": "127.0.0.1:21013",
+        "waits": 0
+      }
+    ]
+  },
+  "role": "personal",
+  "running": true,
+  "state": "attention",
+  "summary": "memory not syncing: not in the last change",
+  "sync": {
+    "all": false,
+    "available": null,
+    "conflicts": [],
+    "dir": null,
+    "enabled": false,
+    "errors": [],
+    "exclude": [],
+    "excluded": null,
+    "folders": 0,
+    "home": true,
+    "home_name": null,
+    "last_change_at": null,
+    "last_cycle_at": null,
+    "mappings": [],
+    "moved_on": false,
+    "notice": null,
+    "projects": [],
+    "projects_waiting": 0,
+    "publishes_nothing": null,
+    "stands": "not_listed",
+    "unmapped": null,
+    "unsynced": null
+  },
+  "uptime_secs": 20,
+  "version": "0.2.0-alpha.10"
+}

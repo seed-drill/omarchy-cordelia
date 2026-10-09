@@ -1,0 +1,43 @@
+icon: exclamationmark.triangle.fill urgent
+tooltip: Cordelia: memory: 1 conflict
+
+    Memory: 1 conflict   {urgent, disabled}
+[x] Sync Memory on This Mac   {-> sync off}
+        runs: cordelia sync off
+        tip: Click to stop syncing memory on this device
+    1 Conflict to Merge   {urgent, submenu}
+        decision.conflict-0123abcd.md   {-> open /tmp/.tmp3HhudO/home/.claude/projects/-tmp--tmp3HhudO-home-Work-cordelia-node/memory/decision.conflict-0123abcd.md}
+            tip: Two machines edited this at once. Merge it, then delete this file.
+────
+    Your Devices: 2   {submenu}
+        desktop  (this device)  |  later super when city   {-> copy-key}
+            tip: Click to copy this device's key
+        Added Since the Last Change   {info, disabled}
+        b  |  produce equip idle logic · added from desktop   {plain, disabled}
+    ────
+        Add a Device  |  Copy the new machine's key first, then click here   {-> copy-add-device}
+            tip: The menu copies the command and runs nothing. Run it in a terminal.
+────
+[x] Home Memory   {-> home off}
+        runs: cordelia sync home off
+        tip: What Claude remembers outside any project. Click to stop syncing it here.
+[x] ~/Work/cordelia-node   {-> stop ~/Work/cordelia-node}
+        runs: cordelia sync unmap /tmp/.tmp3HhudO/home/Work/cordelia-node
+        tip: Syncs as github.com/seed-drill/cordelia-node. Click to stop syncing it here.
+    Sync Another Folder   {submenu}
+        ~/notes  |  Syncs as notes · needs a name (not a git project)   {-> map ~/notes as notes}
+            runs: cordelia sync map /tmp/.tmp3HhudO/home/notes notes
+            tip: Asks first.
+    ────
+        On Your Other Devices   {info, disabled}
+        lab-notes   {-> copy}
+            copies: cordelia sync map <folder> lab-notes
+            says: Copied. Put the folder in and run it in a terminal.
+            tip: Click to copy the command to sync it to a folder here
+────
+    Relays: 1 connected   {submenu}
+        127.0.0.1:29952  |  Connected 1m · holds the latest change   {plain, disabled}
+────
+    About Cordelia   {-> about}
+    Quit Cordelia Menu   {-> quit}
+        tip: The node keeps running and memory keeps syncing

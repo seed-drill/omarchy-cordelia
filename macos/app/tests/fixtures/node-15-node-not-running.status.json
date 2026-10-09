@@ -1,0 +1,10 @@
+{
+  "device": "cordelia_pk1g85ewzkxgwgrrsa4y6s6npr46dx2wtxeq6shfknr8gyuesql6j2scy7mx7",
+  "holds": [],
+  "level": null,
+  "role": "personal",
+  "running": false,
+  "state": "stopped",
+  "summary": "memory: node stopped",
+  "version": "0.2.0-alpha.10"
+}

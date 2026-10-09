@@ -1,0 +1,23 @@
+icon: cordelia dimmed
+tooltip: Cordelia: memory sync off
+
+    Memory sync off   {info, disabled}
+[ ] Sync Memory on This Mac   {-> sync on}
+        runs: cordelia sync claude
+        tip: Click to sync Claude Code's memory
+────
+    Your Devices: 2   {submenu}
+        desktop  (this device)  |  later super when city   {-> copy-key}
+            tip: Click to copy this device's key
+        Added Since the Last Change   {info, disabled}
+        b  |  produce equip idle logic · added from desktop   {plain, disabled}
+    ────
+        Add a Device  |  Copy the new machine's key first, then click here   {-> copy-add-device}
+            tip: The menu copies the command and runs nothing. Run it in a terminal.
+────
+    Relays: 1 connected   {submenu}
+        127.0.0.1:29952  |  Connected 44s · holds the latest change   {plain, disabled}
+────
+    About Cordelia   {-> about}
+    Quit Cordelia Menu   {-> quit}
+        tip: The node keeps running and memory keeps syncing

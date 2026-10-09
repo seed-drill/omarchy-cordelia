@@ -1,0 +1,31 @@
+icon: exclamationmark.triangle.fill urgent
+tooltip: Cordelia: memory not syncing: this device was removed
+
+    Memory not syncing: this device was removed   {urgent, disabled}
+    Memory: 2 devices added, not yet cleared   {amber, disabled}
+[ ] Sync Memory on This Mac   {-> sync on}
+        runs: cordelia sync claude
+        tip: Click to sync Claude Code's memory
+────
+    Your Devices: 3   {submenu}
+        This device was removed. `cordelia init --new-key` gives it a new key; it is then added as a ne…   {urgent, disabled}
+            tip: This device was removed. `cordelia init --new-key` gives it a new key; it is then added as a new device.
+        laptop  |  gun average pony upset   {plain, disabled}
+        Added Since the Last Change   {info, disabled}
+        desktop  (this device)  |  arch actress nominee task · added from laptop   {-> copy-key}
+            tip: Click to copy this device's key
+        tablet  |  squeeze nice wait olive · added from desktop   {plain, disabled}
+    ────
+        This device was added from (gun average pony upset) "laptop".   {amber, disabled}
+        New device: (squeeze nice wait olive) "tablet", added from (arch actress nominee task) "desktop…   {amber, disabled}
+            tip: New device: (squeeze nice wait olive) "tablet", added from (arch actress nominee task) "desktop".
+        Clear These Notices  |  Click to copy the command. Run it in a terminal.   {-> copy}
+            copies: cordelia devices --clear
+            says: Copied. Run it in a terminal.
+────
+    Relays: 1 connected   {submenu}
+        127.0.0.1:21012  |  Connected 25s · has not said whether it holds the latest change   {plain, disabled}
+────
+    About Cordelia   {-> about}
+    Quit Cordelia Menu   {-> quit}
+        tip: The node keeps running and memory keeps syncing

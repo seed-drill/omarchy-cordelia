@@ -1,0 +1,142 @@
+{
+  "device": "cordelia_pk1d9jx7cdpxpvwg8l7sped4k00ag78q3f8gh35dhpyyq4mfzlzzy6q5m35kh",
+  "holds": [
+    {
+      "level": "red",
+      "says": "memory: not added yet",
+      "what": "no_phrase"
+    }
+  ],
+  "key_files_in_place": 1,
+  "level": "red",
+  "no_relay_secs": 0,
+  "node_version": "0.2.0-alpha.10",
+  "outbox_refused": [],
+  "outbox_waiting": 0,
+  "peers": {
+    "hot": 1,
+    "list": [
+      {
+        "address": "127.0.0.1:24697",
+        "connected_secs": 0,
+        "idle_secs": 0,
+        "key": "cordelia_pk1x0tf8es93pcwh0r9a3l2cvzrgxsch028ua2gg0vx74y5uq5udw4sf7h869",
+        "role": "relay",
+        "state": "hot"
+      }
+    ],
+    "relays": [
+      {
+        "error": null,
+        "host": "127.0.0.1:24697",
+        "key": null,
+        "last_tried_secs": 0,
+        "state": "connecting",
+        "unreachable_secs": null
+      }
+    ],
+    "warm": 0
+  },
+  "person": {
+    "accepting": [],
+    "added": [],
+    "among": "no_phrase",
+    "apart": null,
+    "applied_at": null,
+    "cannot_go_on": null,
+    "change": null,
+    "devices": [],
+    "folders": 1,
+    "latest": null,
+    "left_out": [],
+    "may_add": false,
+    "names": {
+      "carried_to_go": [],
+      "carried_to_go_since": null,
+      "sent": [],
+      "to_go": [],
+      "to_go_since": null
+    },
+    "names_not_listed": [],
+    "names_not_shown": 0,
+    "not_carried": [],
+    "not_reached": [],
+    "notices": [],
+    "others": 0,
+    "phrase_words": null,
+    "relays": [],
+    "removed": [],
+    "removed_a_key": false,
+    "says": [
+      "not added yet: this device has taken a version of Cordelia in which every device is added again, and memory stays on this machine until it is.",
+      "  - No machine has a phrase yet: make it on the one whose memory is the most up to date (`cordelia phrase`).",
+      "  - Another machine has the phrase: add this one from it (`cordelia add-device` there, `cordelia accept` here).",
+      "  - Every device that has the phrase is lost: recover here with it (`cordelia recover`). Do not make a new phrase first."
+    ],
+    "short": "not added yet",
+    "state": "no_phrase",
+    "statements_left": null,
+    "sync_on": true,
+    "this_device": "cordelia_pk1d9jx7cdpxpvwg8l7sped4k00ag78q3f8gh35dhpyyq4mfzlzzy6q5m35kh",
+    "waiting": [
+      {
+        "name": null,
+        "relay": "127.0.0.1:24697",
+        "waits": 0
+      }
+    ]
+  },
+  "role": "personal",
+  "running": true,
+  "state": "attention",
+  "summary": "memory: not added yet",
+  "sync": {
+    "all": false,
+    "available": [],
+    "conflicts": [],
+    "dir": "/tmp/.tmppKCNpQ/home/.claude",
+    "enabled": true,
+    "errors": [],
+    "exclude": [
+      "github.com/sam/private"
+    ],
+    "excluded": [],
+    "folders": 1,
+    "home": false,
+    "home_name": "~",
+    "last_change_at": null,
+    "last_cycle_at": "2026-10-09T04:50:22.063437062+00:00",
+    "mappings": [
+      {
+        "folder": "/tmp/.tmppKCNpQ/home/work/lab",
+        "name": "lab"
+      }
+    ],
+    "moved_on": true,
+    "notice": null,
+    "projects": [
+      {
+        "channel": null,
+        "conflicts": [],
+        "cwd": "/tmp/.tmppKCNpQ/home/work/lab",
+        "error": null,
+        "failed": [],
+        "failed_more": 0,
+        "folder": "/tmp/.tmppKCNpQ/home/.claude/projects/-tmp--tmppKCNpQ-home-work-lab",
+        "last_published_at": null,
+        "last_pulled_at": null,
+        "mapped": true,
+        "project": "lab",
+        "too_large": [],
+        "waiting": false
+      }
+    ],
+    "projects_waiting": 0,
+    "publishes_nothing": "not added yet: this device has taken a version of Cordelia in which every device is added again, and memory stays on this machine until it is.\n  - No machine has a phrase yet: make it on the one whose memory is the most up to date (`cordelia phrase`).\n  - Another machine has the phrase: add this one from it (`cordelia add-device` there, `cordelia accept` here).\n  - Every device that has the phrase is lost: recover here with it (`cordelia recover`). Do not make a new phrase first.",
+    "stands": "no_phrase",
+    "unmapped": [],
+    "unsynced": []
+  },
+  "uptime_secs": 0,
+  "version": "0.2.0-alpha.10"
+}

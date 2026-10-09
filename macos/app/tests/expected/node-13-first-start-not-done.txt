@@ -1,0 +1,57 @@
+icon: exclamationmark.triangle.fill urgent
+tooltip: Cordelia: memory not syncing: the first start on this version is not done
+
+    Memory not syncing: the first start on this version is not done   {urgent, disabled}
+    Memory stays here: no recovery phrase yet   {urgent, disabled}
+[x] Sync Memory on This Mac   {-> sync off}
+        runs: cordelia sync off
+        tip: Click to stop syncing memory on this device
+────
+    Your Devices   {submenu}
+        No recovery phrase yet. Memory stays on this machine.   {info, disabled}
+        To go on, run one of these in a terminal:   {info, disabled}
+        cordelia phrase  |  Only if you have never made a phrase   {-> copy}
+            copies: cordelia phrase
+            says: Copied. Run it in a terminal.
+            tip: Click to copy the command
+        cordelia accept <key>  |  After add-device on a machine that has the phrase   {-> copy}
+            copies: cordelia accept <key>
+            says: Copied. Put in the key that add-device printed, and run it in a terminal.
+            tip: Click to copy the command
+        cordelia recover  |  If you lost every device. Do not make a new phrase.   {-> copy}
+            copies: cordelia recover
+            says: Copied. Run it in a terminal. It asks for your twelve words.
+            tip: Click to copy the command
+        This Device's Key  |  cordelia_pk10uykkf…xtf3e3 · for add-device there   {-> copy-key}
+            tip: Click to copy this device's key
+────
+    This device sends nothing. These stay on this machine.   {info, disabled}
+[ ] Home Memory   {-> home on}
+        runs: cordelia sync home on
+        tip: What Claude remembers outside any project. Click to sync it. Asks first.
+[x] /home/sam/work/lab   {-> stop /home/sam/work/lab}
+        runs: cordelia sync unmap github.com/sam/lab
+        tip: Mapped as github.com/sam/lab. Click to stop syncing it here.
+[x] /home/sam/work/tools   {-> stop /home/sam/work/tools}
+        runs: cordelia sync unmap github.com/sam/tools
+        tip: Mapped as github.com/sam/tools. Click to stop syncing it here.
+[x] /home/sam   {-> stop /home/sam}
+        runs: cordelia sync unmap ~
+        tip: Waiting for its channel to be fetched from a relay. Click to stop syncing it here.
+    Sync Another Folder   {submenu}
+        On Your Other Devices   {info, disabled}
+        github.com/sam/site   {-> copy}
+            copies: cordelia sync map <folder> github.com/sam/site
+            says: Copied. Put the folder in and run it in a terminal.
+            tip: Click to copy the command to sync it to a folder here
+    ────
+        Found Here, Cannot Be Mapped: 1   {submenu}
+            /home/sam/scratch  |  The node does not say whether it can be mapped   {info, disabled}
+────
+    Relays: none connected   {urgent, submenu}
+        No relay connected. Changes wait here until one is.   {info, disabled}
+        127.0.0.1:9  |  Connecting   {urgent, disabled}
+────
+    About Cordelia   {-> about}
+    Quit Cordelia Menu   {-> quit}
+        tip: The node keeps running and memory keeps syncing

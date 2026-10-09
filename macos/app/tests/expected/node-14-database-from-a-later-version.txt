@@ -1,0 +1,19 @@
+icon: exclamationmark.triangle.fill urgent
+tooltip: Cordelia: memory not syncing: the database is from a later version
+
+    Memory not syncing: the database is from a later version   {urgent, disabled}
+[ ] Sync Memory on This Mac   {-> sync on}
+        runs: cordelia sync claude
+        tip: Click to sync Claude Code's memory
+────
+    Your Devices   {submenu}
+        This Device's Key  |  cordelia_pk1ejed3s…0449n4   {-> copy-key}
+            tip: Click to copy this device's key
+────
+    Relays: none connected   {urgent, submenu}
+        No relay connected. Changes wait here until one is.   {info, disabled}
+        127.0.0.1:9  |  Connecting   {urgent, disabled}
+────
+    About Cordelia   {-> about}
+    Quit Cordelia Menu   {-> quit}
+        tip: The node keeps running and memory keeps syncing
