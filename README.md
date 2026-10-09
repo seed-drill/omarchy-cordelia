@@ -58,7 +58,7 @@ step, and a panel to manage it.
   its remote, so the same project on another machine joins it; any other
   folder syncs under its own name.
 - **On your other devices:** names your other devices sync that have no folder
-  here. Click one to copy the command that syncs a folder with it.
+  here. Click one to copy the command that syncs it to a folder.
 - **Conflicts:** files two machines edited at once; click to open one.
 - **At the foot:** what this device holds (its names, their entries, the size
   of their encrypted content and of the database), and the versions of the

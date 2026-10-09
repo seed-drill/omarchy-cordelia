@@ -122,7 +122,7 @@ Panel {
   // A node goes on running the version it was started as until it is
   // restarted.
   function versionSays() {
-    var node = cordelia.nodeVersion === "" ? "The node is from before nodes said their version, and"
+    var node = cordelia.nodeVersion === "" ? "The node is older than the command, and"
       : "The node is version " + cordelia.plain(cordelia.nodeVersion) + " and"
     return node + " the command is version " + cordelia.plain(cordelia.version) + ". Restart the node."
   }
@@ -148,7 +148,7 @@ Panel {
     var says = []
     if (cordelia.stoppedSyncing.length > 0) {
       says.push((cordelia.noticeDay !== "" ? "Since " + cordelia.plain(cordelia.noticeDay) + " only" : "Only")
-        + " mapped folders sync. These synced because everything found did: turn on the ones to keep.")
+        + " mapped folders sync. These synced before. Turn on the ones you want to keep.")
     } else if (cordelia.noticeNotKnown) {
       says.push("Folders stopped syncing: only mapped folders sync now.")
     } else {
@@ -178,7 +178,7 @@ Panel {
   // a new install.
   function noPhraseSays() {
     var few = cordelia.person !== null && cordelia.person.short ? cordelia.person.short : cordelia.summary
-    return cordelia.sentence(few) + ". Memory stays on this machine. Three ways on, each run in a terminal:"
+    return cordelia.sentence(few) + ". Memory stays on this machine. To go on, run one of these in a terminal:"
   }
 
   // Why this device cannot go on, where it cannot, as the node says it.
@@ -357,7 +357,7 @@ Panel {
           // What a switch will do meanwhile, said before it is clicked.
           Note {
             visible: cordelia.otherVersion
-            text: "Until then changes are refused. Turning sync off still works."
+            text: "Until then, the node refuses changes. You can still turn sync off."
           }
 
           Note {
@@ -595,7 +595,7 @@ Panel {
             }
             Note {
               visible: cordelia.devices.length + cordelia.added.length > 0
-              text: "A click copies: this device's key, or the command that removes another."
+              text: "Click this device to copy its key. Click another to copy the command to remove it."
             }
 
             // What this device has to tell its person. It is cleared at a
@@ -614,7 +614,7 @@ Panel {
               width: parent.width
               icon: String.fromCodePoint(0xF018D) // console
               title: "Clear these notices"
-              detail: "Copies cordelia devices --clear, for a terminal"
+              detail: "Click to copy the command. Run it in a terminal."
               actionIcon: String.fromCodePoint(0xF018F) // copy
               onActivated: cordelia.copyText("cordelia devices --clear", "Copied. Run it in a terminal.")
             }
@@ -624,7 +624,7 @@ Panel {
               width: parent.width
               icon: String.fromCodePoint(0xF0415) // plus
               title: "Add a device"
-              detail: "Copies the command, with a key from the clipboard"
+              detail: "Copy the new machine's key first, then click here"
               actionIcon: String.fromCodePoint(0xF018F) // copy
               onActivated: cordelia.copyAddDevice()
             }
@@ -644,7 +644,7 @@ Panel {
             }
             Note {
               visible: cordelia.staysHere
-              text: "Nothing is sent from this device. These stay on this machine."
+              text: "This device sends nothing. These stay on this machine."
             }
             Repeater {
               model: cordelia.projects
@@ -700,7 +700,7 @@ Panel {
                 width: column.width
                 icon: String.fromCodePoint(0xF0322) // laptop
                 title: cordelia.plain(modelData)
-                detail: "Click to copy the command that syncs a folder with it"
+                detail: "Click to copy the command to sync it to a folder here"
                 actionIcon: String.fromCodePoint(0xF018F) // copy
                 onActivated: cordelia.copyMapCommand(String(modelData))
               }
