@@ -100,7 +100,7 @@ Panel {
     var s = cordelia.stats
     if (s === null || cordelia.role !== "personal" || !cordelia.running || cordelia.otherVersion) return ""
     if (typeof s.content_bytes_stored !== "number") return ""
-    return bytes(s.content_bytes_stored) + " of memory stored"
+    return bytes(s.content_bytes_stored) + " memory"
   }
 
   // The version of Cordelia and of this panel. One version is said where
