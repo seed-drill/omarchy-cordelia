@@ -8,8 +8,9 @@ import Quickshell.Io
 // beyond the last answers.
 //
 // What Cordelia does only at a terminal is never run from here: making the
-// recovery phrase, adding, accepting and removing a device, clearing a notice.
-// For each of those a command is copied, for a person to paste into a terminal.
+// recovery phrase, adding and accepting a device, clearing a notice. For each
+// of those a command is copied, for a person to paste into a terminal.
+// Removing a device is not offered: no command for it is copied.
 Item {
   id: root
 
@@ -130,11 +131,10 @@ Item {
   // This device follows no recovery phrase yet: it syncs nothing until it
   // has one.
   readonly property bool noPhrase: person !== null && person.state === "no_phrase"
-  // The devices of the last change, those added since, and the removed keys,
-  // as the node lists them.
+  // The devices of the last change and those added since, as the node lists
+  // them.
   readonly property var devices: person !== null && person.devices instanceof Array ? person.devices : []
   readonly property var added: person !== null && person.added instanceof Array ? person.added : []
-  readonly property var removed: person !== null && person.removed instanceof Array ? person.removed : []
   // What this device has to tell its person, until it is cleared at a
   // terminal.
   readonly property var notices: person !== null && person.notices instanceof Array ? person.notices : []
@@ -509,11 +509,6 @@ Item {
     return out.join(separator)
   }
 
-  // A device's key, as the node writes one.
-  function isKey(key) {
-    return /^cordelia_pk1[a-z0-9]+$/.test(String(key || ""))
-  }
-
   function copyText(text, note) {
     Quickshell.execDetached(["bash", "-c", "printf %s \"$1\" | wl-copy", "copy", String(text)])
     flash(note)
@@ -567,13 +562,6 @@ Item {
       return
     }
     copyText("cordelia sync map <folder> " + shellWord(name), "Copied. Put the folder in and run it in a terminal.")
-  }
-
-  // Removing a device asks for the recovery phrase, at a terminal: the
-  // command is copied, and not run.
-  function copyRemoveDevice(key) {
-    if (!isKey(key)) return
-    copyText("cordelia remove-device " + key, "Copied. Run it in a terminal: it asks for the phrase.")
   }
 
   function openFile(path) {

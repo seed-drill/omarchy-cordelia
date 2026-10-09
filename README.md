@@ -20,46 +20,59 @@ step, and a panel to manage it.
   it. If the running node is not the version of the command, the panel says
   so: restart the node. Until then changes are refused; turning sync off
   still works.
-- **The switch:** memory sync on or off for this device. Below it, a switch
-  for home memory.
+- **The switch:** memory sync on or off for this device.
 - **Stopped syncing:** on a machine that had synced everything it found, the
   folders that stopped when only mapped folders came to sync. Each has a
   switch to map it again where the node says it can be mapped, and the node's
   reason where it cannot. A folder that needs a name from you has no switch:
   its row copies the command, for you to put the name in. No folder has a
   switch while sync is off. *I have seen this* puts the notice away.
-- **Relays:** each relay this device is set up with, whether it is connected
-  and for how long, and whether it holds the latest change of your devices.
+- **Conflicts:** files two machines edited at once; click to open one.
 - **Your devices:** each device by its label and the first words of its key's
-  fingerprint, the devices added since the last change, the removed keys, and
-  what this device has to tell you. Cordelia adds and removes a device at a
-  terminal, where it asks before it acts, so the panel copies each command and
-  runs none of them:
-  - click this device to copy its key;
-  - click another device to copy `cordelia remove-device` with its key;
+  fingerprint, the devices added since the last change, and what this device
+  has to tell you. A device that you removed is no longer listed:
+  `cordelia devices` lists the removed keys. Cordelia adds a device at a
+  terminal, where it asks before it acts, so the panel copies a command and
+  runs none:
+  - click this device to copy its key (another machine needs it to add this
+    one, or to be added from it);
   - *Add a device* copies `cordelia add-device <key> --name <label>`, with the
     key filled in when the clipboard holds one (`cordelia id` prints it on the
     other machine);
   - *Clear these notices* copies `cordelia devices --clear`.
 
-  On a machine with no recovery phrase yet, it shows the two ways on, each to
-  copy: `cordelia phrase`, on the machine whose memory is the most up to date,
-  or `cordelia accept <key>`, after `cordelia add-device` on a machine that
-  has the phrase.
-- **Syncing:** each folder that syncs and the name it syncs under, with a
-  switch to stop syncing it from this device. Only mapped folders sync.
+  Your other devices are listed, and a click on one does nothing. The panel
+  does not remove a device, and does not copy the command that does. To
+  remove one, run `cordelia remove-device <key>` in a terminal. It asks for
+  your recovery phrase. `cordelia devices` lists each device's key.
+
+  On a machine with no recovery phrase yet, it shows the three ways on, each
+  to copy:
+  - `cordelia phrase`, only if you have never made a phrase. After an
+    upgrade, run it on your most up to date machine;
+  - `cordelia accept <key>`, after `cordelia add-device` on a machine that
+    has the phrase;
+  - `cordelia recover`, if you have lost every device. Do not make a new
+    phrase first.
+- **Syncing:** home memory first, with a switch of its own. Then each folder
+  that syncs and the name it syncs under, with a switch to stop syncing it
+  from this device. The last line is what waits to be sent, where anything
+  does. Only mapped folders sync. On a machine that sends nothing yet, the
+  heading is "Mapped".
 - **Found on this machine:** folders Claude Code has memory for that do not
   sync. One has a switch only where the node says `cordelia sync map` would
   sync it; otherwise it shows the node's reason. A git project syncs under
   its remote, so the same project on another machine joins it; any other
   folder syncs under its own name.
 - **On your other devices:** names your other devices sync that have no folder
-  here. Click one to copy the command that syncs a folder with it.
-- **Conflicts:** files two machines edited at once; click to open one.
-- **At the foot:** what this device holds (its names, their entries, the size
-  of their encrypted content and of the database), and the versions of the
-  command, of the running node and of this panel. The sizes are shown only
-  beside a running node of the command's own version.
+  here. Click one to copy the command that syncs it to a folder.
+- **Relays:** each relay this device is set up with, whether it is connected
+  and for how long, and whether it holds the latest change of your devices.
+- **At the foot:** one line. The version of Cordelia, the version of this
+  panel, and how much memory this device stores. If the running node is not
+  the command's version, or does not say its version, the foot names the
+  command's and the node's apart. The amount is shown only beside a running
+  node of the command's own version.
 
 Keys in the panel: `s` toggles sync, `c` copies this device's key, `r`
 refreshes, Tab moves to the next panel, Esc closes.

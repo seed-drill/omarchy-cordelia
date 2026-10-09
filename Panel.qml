@@ -8,9 +8,9 @@ import qs.Ui
 
 // Cordelia in the bar: one icon that says whether your agent's memory is in
 // step, and a panel with the switch, what syncs, relays, your devices and
-// conflicts. What Cordelia does only at a terminal (the recovery phrase,
-// adding and removing a device, clearing a notice) is shown as a command to
-// copy, and is never run from here.
+// conflicts. What Cordelia does only at a terminal is never run from here.
+// The recovery phrase, adding a device and clearing a notice are each shown
+// as a command to copy. Removing a device is not offered at all.
 Panel {
   id: root
   moduleName: "seeddrill.cordelia"
@@ -92,37 +92,44 @@ Panel {
     return b > 1048576 ? (b / 1048576).toFixed(1) + " MB" : (b / 1024).toFixed(1) + " KB"
   }
 
-  function counted(n, one, many) {
-    return n + " " + (n === 1 ? one : many)
-  }
-
-  // What this device holds, in one line: its names, their entries, the size
-  // of their encrypted content, and the size of its database. "" where
-  // `cordelia stats` was not run or did not say (it is run only beside a
-  // running node of the command's own version), or says it of something
-  // other than a person's device.
-  function sizes() {
+  // How much memory this device stores: the size of its encrypted content.
+  // "" where `cordelia stats` was not run or did not say (it is run only
+  // beside a running node of the command's own version), or says it of
+  // something other than a person's device.
+  function stored() {
     var s = cordelia.stats
     if (s === null || cordelia.role !== "personal" || !cordelia.running || cordelia.otherVersion) return ""
-    if (typeof s.channels_subscribed !== "number" || typeof s.items_stored !== "number") return ""
-    if (typeof s.content_bytes_stored !== "number" || typeof s.database_bytes !== "number") return ""
-    return counted(s.channels_subscribed, "name", "names") + " · " + counted(s.items_stored, "entry", "entries")
-      + " · " + bytes(s.content_bytes_stored) + " encrypted · database " + bytes(s.database_bytes)
+    if (typeof s.content_bytes_stored !== "number") return ""
+    return bytes(s.content_bytes_stored) + " of memory stored"
   }
 
-  // The command's version, the running node's, and this panel's.
+  // The version of Cordelia and of this panel. One version is said where
+  // the running node is the command's, or no node runs. Where the node is
+  // another version, or does not say its own, each is named for what it is:
+  // the head of the panel then says to restart the node.
   function versions() {
     var parts = []
-    if (cordelia.version !== "") parts.push("cordelia " + cordelia.plain(cordelia.version))
-    if (cordelia.nodeVersion !== "") parts.push("node " + cordelia.plain(cordelia.nodeVersion))
+    var command = cordelia.plain(cordelia.version)
+    var node = cordelia.plain(cordelia.nodeVersion)
+    if (command !== "" && !cordelia.otherVersion) {
+      parts.push("Cordelia " + command)
+    } else {
+      if (command !== "") parts.push("command " + command)
+      if (node !== "") parts.push("node " + node)
+    }
     if (cordelia.pluginVersion !== "") parts.push("panel " + cordelia.plain(cordelia.pluginVersion))
     return parts.join(" · ")
+  }
+
+  // The foot of the panel, in one line.
+  function foot() {
+    return cordelia.joined([versions(), stored()], " · ")
   }
 
   // A node goes on running the version it was started as until it is
   // restarted.
   function versionSays() {
-    var node = cordelia.nodeVersion === "" ? "The node is from before nodes said their version, and"
+    var node = cordelia.nodeVersion === "" ? "The node is older than the command, and"
       : "The node is version " + cordelia.plain(cordelia.nodeVersion) + " and"
     return node + " the command is version " + cordelia.plain(cordelia.version) + ". Restart the node."
   }
@@ -148,7 +155,7 @@ Panel {
     var says = []
     if (cordelia.stoppedSyncing.length > 0) {
       says.push((cordelia.noticeDay !== "" ? "Since " + cordelia.plain(cordelia.noticeDay) + " only" : "Only")
-        + " mapped folders sync. These synced because everything found did: turn on the ones to keep.")
+        + " mapped folders sync. These synced before. Turn on the ones you want to keep.")
     } else if (cordelia.noticeNotKnown) {
       says.push("Folders stopped syncing: only mapped folders sync now.")
     } else {
@@ -178,7 +185,7 @@ Panel {
   // a new install.
   function noPhraseSays() {
     var few = cordelia.person !== null && cordelia.person.short ? cordelia.person.short : cordelia.summary
-    return cordelia.sentence(few) + ". Memory stays on this machine. Two ways on, each run in a terminal:"
+    return cordelia.sentence(few) + ". Memory stays on this machine. To go on, run one of these in a terminal:"
   }
 
   // Why this device cannot go on, where it cannot, as the node says it.
@@ -357,7 +364,7 @@ Panel {
           // What a switch will do meanwhile, said before it is clicked.
           Note {
             visible: cordelia.otherVersion
-            text: "Until then changes are refused. Turning sync off still works."
+            text: "Until then, the node refuses changes. You can still turn sync off."
           }
 
           Note {
@@ -380,27 +387,6 @@ Panel {
             title: "Start the node"
             detail: "It runs in the background and keeps memory in step"
             onActivated: cordelia.startNode()
-          }
-
-          // ── Sync ────────────────────────────────────────────────
-          Column {
-            visible: cordelia.running && cordelia.syncOn
-            width: parent.width
-            spacing: Style.space(8)
-
-            SwitchRow {
-              width: parent.width
-              title: "Home memory"
-              detail: root.homeSays()
-              checked: cordelia.home
-              onToggled: cordelia.setHome(!cordelia.home)
-            }
-
-            InfoPair {
-              visible: cordelia.waiting > 0
-              label: "Waiting to send"
-              value: String(cordelia.waiting)
-            }
           }
 
           // ── Folders that stopped syncing ────────────────────────
@@ -458,33 +444,6 @@ Panel {
             }
           }
 
-          // ── Relays ──────────────────────────────────────────────
-          Column {
-            visible: cordelia.running
-            width: parent.width
-            spacing: Style.space(6)
-
-            PanelSeparator { foreground: root.foreground }
-            PanelSectionHeader {
-              text: "RELAYS"
-              foreground: root.foreground
-              fontFamily: root.fontFamily
-            }
-            Note {
-              visible: cordelia.noRelay
-              text: "No relay connected. Changes wait here until one is."
-            }
-            Repeater {
-              model: cordelia.relays
-              NoteRow {
-                required property var modelData
-                width: column.width
-                title: cordelia.plain(modelData.name)
-                detail: root.relaySays(modelData)
-              }
-            }
-          }
-
           // ── Your devices ────────────────────────────────────────
           Column {
             visible: cordelia.running && (cordelia.person !== null || cordelia.deviceKey !== "")
@@ -498,8 +457,11 @@ Panel {
               fontFamily: root.fontFamily
             }
 
-            // No recovery phrase yet: nothing syncs, and there are two ways
-            // on. Each is run at a terminal, so each is a command to copy.
+            // No recovery phrase yet: nothing syncs, and there are three
+            // ways on, as the node names them. Each is run at a terminal, so
+            // each is a command to copy. The third is for a person who has
+            // lost every device: a new phrase made first would be in the way
+            // of the recovery.
             Note {
               visible: cordelia.noPhrase
               text: root.noPhraseSays()
@@ -510,7 +472,7 @@ Panel {
               width: parent.width
               icon: String.fromCodePoint(0xF018D) // console
               title: "cordelia phrase"
-              detail: "On the machine whose memory is the most up to date"
+              detail: "Only if you have never made a phrase"
               actionIcon: String.fromCodePoint(0xF018F) // copy
               onActivated: cordelia.copyText("cordelia phrase", "Copied. Run it in a terminal.")
             }
@@ -525,6 +487,16 @@ Panel {
                 "Copied. Put in the key that add-device printed, and run it in a terminal.")
             }
             ActionRow {
+              visible: cordelia.noPhrase
+              width: parent.width
+              icon: String.fromCodePoint(0xF018D) // console
+              title: "cordelia recover"
+              detail: "If you lost every device. Do not make a new phrase."
+              actionIcon: String.fromCodePoint(0xF018F) // copy
+              onActivated: cordelia.copyText("cordelia recover",
+                "Copied. Run it in a terminal. It asks for your twelve words.")
+            }
+            ActionRow {
               visible: cordelia.deviceKey !== "" && (cordelia.noPhrase || cordelia.person === null)
               width: parent.width
               icon: String.fromCodePoint(0xF0379) // monitor
@@ -534,8 +506,10 @@ Panel {
               onActivated: cordelia.copyKey()
             }
 
-            // Under a phrase: the devices of the last change, those added
-            // since and the removed keys, as the node lists them.
+            // Under a phrase: the devices of the last change and those added
+            // since, as the node lists them. A removed key is not listed: a
+            // removal that has not reached every device holds in amber at the
+            // head of the panel, and `cordelia devices` lists the removed keys.
             Note {
               visible: text !== ""
               text: root.cannotGoOn()
@@ -572,18 +546,6 @@ Panel {
                 }
               }
             }
-            Repeater {
-              model: cordelia.removed
-              InfoPair {
-                required property var modelData
-                label: cordelia.joined([cordelia.plain(modelData.label), cordelia.plain(modelData.words)], " · ")
-                value: "removed"
-              }
-            }
-            Note {
-              visible: cordelia.devices.length + cordelia.added.length > 0
-              text: "A click copies: this device's key, or the command that removes another."
-            }
 
             // What this device has to tell its person. It is cleared at a
             // terminal, which asks of each.
@@ -601,7 +563,7 @@ Panel {
               width: parent.width
               icon: String.fromCodePoint(0xF018D) // console
               title: "Clear these notices"
-              detail: "Copies cordelia devices --clear, for a terminal"
+              detail: "Click to copy the command. Run it in a terminal."
               actionIcon: String.fromCodePoint(0xF018F) // copy
               onActivated: cordelia.copyText("cordelia devices --clear", "Copied. Run it in a terminal.")
             }
@@ -611,15 +573,16 @@ Panel {
               width: parent.width
               icon: String.fromCodePoint(0xF0415) // plus
               title: "Add a device"
-              detail: "Copies the command, with a key from the clipboard"
+              detail: "Copy the new machine's key first, then click here"
               actionIcon: String.fromCodePoint(0xF018F) // copy
               onActivated: cordelia.copyAddDevice()
             }
           }
 
           // ── What syncs ──────────────────────────────────────────
+          // Home memory first, then each folder, then what waits to be sent.
           Column {
-            visible: cordelia.running && cordelia.syncOn && cordelia.projects.length > 0
+            visible: cordelia.running && cordelia.syncOn
             width: parent.width
             spacing: Style.space(6)
 
@@ -630,8 +593,15 @@ Panel {
               fontFamily: root.fontFamily
             }
             Note {
-              visible: cordelia.staysHere
-              text: "Nothing is sent from this device. These stay on this machine."
+              visible: cordelia.staysHere && cordelia.projects.length > 0
+              text: "This device sends nothing. These stay on this machine."
+            }
+            SwitchRow {
+              width: parent.width
+              title: "Home memory"
+              detail: root.homeSays()
+              checked: cordelia.home
+              onToggled: cordelia.setHome(!cordelia.home)
             }
             Repeater {
               model: cordelia.projects
@@ -643,6 +613,11 @@ Panel {
                 checked: true
                 onToggled: cordelia.stopSyncing(modelData)
               }
+            }
+            InfoPair {
+              visible: cordelia.waiting > 0
+              label: "Waiting to send"
+              value: String(cordelia.waiting)
             }
           }
 
@@ -687,30 +662,50 @@ Panel {
                 width: column.width
                 icon: String.fromCodePoint(0xF0322) // laptop
                 title: cordelia.plain(modelData)
-                detail: "Click to copy the command that syncs a folder with it"
+                detail: "Click to copy the command to sync it to a folder here"
                 actionIcon: String.fromCodePoint(0xF018F) // copy
                 onActivated: cordelia.copyMapCommand(String(modelData))
               }
             }
           }
 
-          // ── Sizes and versions ──────────────────────────────────
+          // ── Relays ──────────────────────────────────────────────
           Column {
-            visible: sizesNote.text !== "" || versionsNote.text !== ""
+            visible: cordelia.running
+            width: parent.width
+            spacing: Style.space(6)
+
+            PanelSeparator { foreground: root.foreground }
+            PanelSectionHeader {
+              text: "RELAYS"
+              foreground: root.foreground
+              fontFamily: root.fontFamily
+            }
+            Note {
+              visible: cordelia.noRelay
+              text: "No relay connected. Changes wait here until one is."
+            }
+            Repeater {
+              model: cordelia.relays
+              NoteRow {
+                required property var modelData
+                width: column.width
+                title: cordelia.plain(modelData.name)
+                detail: root.relaySays(modelData)
+              }
+            }
+          }
+
+          // ── The foot: versions, and how much is stored ──────────
+          Column {
+            visible: footNote.text !== ""
             width: parent.width
             spacing: Style.space(4)
 
             PanelSeparator { foreground: root.foreground }
             Note {
-              id: sizesNote
-              visible: text !== ""
-              text: root.sizes()
-              font.pixelSize: Style.font.caption
-            }
-            Note {
-              id: versionsNote
-              visible: text !== ""
-              text: root.versions()
+              id: footNote
+              text: root.foot()
               font.pixelSize: Style.font.caption
             }
           }
@@ -729,22 +724,26 @@ Panel {
     wrapMode: Text.WordWrap
   }
 
-  // A row that does one thing when clicked.
+  // A row that does one thing when clicked. One that is given `acts: false`
+  // does nothing: it has no highlight, no pointing hand and no icon at its
+  // end, so that it does not look as if a click did something.
   component ActionRow: CursorSurface {
     id: actionRow
     property string icon: ""
     property string title: ""
     property string detail: ""
     property string actionIcon: ""
+    property bool acts: true
     signal activated()
 
-    hasCursor: rowMouse.containsMouse
+    hasCursor: actionRow.acts && rowMouse.containsMouse
     foreground: root.foreground
     implicitHeight: rowContent.implicitHeight + Style.spacing.rowPaddingX
 
     MouseArea {
       id: rowMouse
       anchors.fill: parent
+      visible: actionRow.acts
       hoverEnabled: true
       cursorShape: Qt.PointingHandCursor
       onClicked: actionRow.activated()
@@ -795,7 +794,7 @@ Panel {
 
       Text {
         textFormat: Text.PlainText
-        visible: actionRow.actionIcon !== ""
+        visible: actionRow.acts && actionRow.actionIcon !== ""
         text: actionRow.actionIcon
         color: root.dim
         font.family: root.fontFamily
@@ -806,8 +805,10 @@ Panel {
   }
 
   // One of this person's devices, by its label and the first words of its
-  // key's fingerprint. A click copies, and runs nothing: this device's key,
-  // or the command that removes another, for a terminal.
+  // key's fingerprint. A click on this device's own row copies its key, which
+  // another machine needs to add it or to be added from it. Another device's
+  // row does nothing: a device is removed only at a terminal, and the panel
+  // offers no row that looks as if it removed one.
   component DeviceRow: ActionRow {
     id: deviceRow
     property var device: ({})
@@ -818,11 +819,9 @@ Panel {
     title: root.deviceName(deviceRow.device) + (deviceRow.mine ? "  (this device)" : "")
     detail: cordelia.joined([cordelia.plain(deviceRow.device.words), deviceRow.device.left === true ? "has left" : "",
       deviceRow.note], " · ")
-    actionIcon: deviceRow.mine ? String.fromCodePoint(0xF018F) : String.fromCodePoint(0xF0A7A) // copy / trash
-    onActivated: {
-      if (deviceRow.mine) cordelia.copyKey()
-      else cordelia.copyRemoveDevice(String(deviceRow.device.key || ""))
-    }
+    acts: deviceRow.mine
+    actionIcon: String.fromCodePoint(0xF018F) // copy
+    onActivated: cordelia.copyKey()
   }
 
   // A labelled switch.
