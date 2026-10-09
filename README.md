@@ -29,10 +29,11 @@ step, and a panel to manage it.
   switch while sync is off. *I have seen this* puts the notice away.
 - **Conflicts:** files two machines edited at once; click to open one.
 - **Your devices:** each device by its label and the first words of its key's
-  fingerprint, the devices added since the last change, the removed keys, and
-  what this device has to tell you. Cordelia adds and removes a device at a
-  terminal, where it asks before it acts, so the panel copies each command and
-  runs none of them:
+  fingerprint, the devices added since the last change, and what this device
+  has to tell you. A device that you removed is no longer listed:
+  `cordelia devices` lists the removed keys. Cordelia adds and removes a
+  device at a terminal, where it asks before it acts, so the panel copies
+  each command and runs none of them:
   - click this device to copy its key;
   - click another device to copy `cordelia remove-device` with its key;
   - *Add a device* copies `cordelia add-device <key> --name <label>`, with the

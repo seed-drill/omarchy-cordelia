@@ -505,8 +505,10 @@ Panel {
               onActivated: cordelia.copyKey()
             }
 
-            // Under a phrase: the devices of the last change, those added
-            // since and the removed keys, as the node lists them.
+            // Under a phrase: the devices of the last change and those added
+            // since, as the node lists them. A removed key is not listed: a
+            // removal that has not reached every device holds in amber at the
+            // head of the panel, and `cordelia devices` lists the removed keys.
             Note {
               visible: text !== ""
               text: root.cannotGoOn()
@@ -542,18 +544,6 @@ Panel {
                     cordelia.plain(addedRow.modelData.why_not)], ": "))
                 }
               }
-            }
-            Repeater {
-              model: cordelia.removed
-              InfoPair {
-                required property var modelData
-                label: cordelia.joined([cordelia.plain(modelData.label), cordelia.plain(modelData.words)], " · ")
-                value: "removed"
-              }
-            }
-            Note {
-              visible: cordelia.devices.length + cordelia.added.length > 0
-              text: "Click this device to copy its key. Click another to copy the command to remove it."
             }
 
             // What this device has to tell its person. It is cleared at a

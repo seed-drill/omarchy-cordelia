@@ -130,11 +130,10 @@ Item {
   // This device follows no recovery phrase yet: it syncs nothing until it
   // has one.
   readonly property bool noPhrase: person !== null && person.state === "no_phrase"
-  // The devices of the last change, those added since, and the removed keys,
-  // as the node lists them.
+  // The devices of the last change and those added since, as the node lists
+  // them.
   readonly property var devices: person !== null && person.devices instanceof Array ? person.devices : []
   readonly property var added: person !== null && person.added instanceof Array ? person.added : []
-  readonly property var removed: person !== null && person.removed instanceof Array ? person.removed : []
   // What this device has to tell its person, until it is cleared at a
   // terminal.
   readonly property var notices: person !== null && person.notices instanceof Array ? person.notices : []
