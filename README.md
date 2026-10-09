@@ -34,15 +34,17 @@ step, and a panel to manage it.
   `cordelia devices` lists the removed keys. Cordelia adds a device at a
   terminal, where it asks before it acts, so the panel copies a command and
   runs none:
-  - click a device to copy its key;
+  - click this device to copy its key (another machine needs it to add this
+    one, or to be added from it);
   - *Add a device* copies `cordelia add-device <key> --name <label>`, with the
     key filled in when the clipboard holds one (`cordelia id` prints it on the
     other machine);
   - *Clear these notices* copies `cordelia devices --clear`.
 
-  The panel does not remove a device, and does not copy the command that
-  does. To remove one, run `cordelia remove-device <key>` in a terminal. It
-  asks for your recovery phrase.
+  Your other devices are listed, and a click on one does nothing. The panel
+  does not remove a device, and does not copy the command that does. To
+  remove one, run `cordelia remove-device <key>` in a terminal. It asks for
+  your recovery phrase. `cordelia devices` lists each device's key.
 
   On a machine with no recovery phrase yet, it shows the three ways on, each
   to copy:

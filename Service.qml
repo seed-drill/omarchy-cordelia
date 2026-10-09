@@ -508,11 +508,6 @@ Item {
     return out.join(separator)
   }
 
-  // A device's key, as the node writes one.
-  function isKey(key) {
-    return /^cordelia_pk1[a-z0-9]+$/.test(String(key || ""))
-  }
-
   function copyText(text, note) {
     Quickshell.execDetached(["bash", "-c", "printf %s \"$1\" | wl-copy", "copy", String(text)])
     flash(note)
@@ -566,15 +561,6 @@ Item {
       return
     }
     copyText("cordelia sync map <folder> " + shellWord(name), "Copied. Put the folder in and run it in a terminal.")
-  }
-
-  // Another device's key, by the name the panel shows it under. Removing a
-  // device is done only at a terminal (`cordelia remove-device <key>`), where
-  // it asks for the recovery phrase: the panel copies the key, and names no
-  // command that removes.
-  function copyDeviceKey(key, name) {
-    if (!isKey(key)) return
-    copyText(key, "Copied the key of " + plain(name))
   }
 
   function openFile(path) {

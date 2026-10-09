@@ -723,22 +723,26 @@ Panel {
     wrapMode: Text.WordWrap
   }
 
-  // A row that does one thing when clicked.
+  // A row that does one thing when clicked. One that is given `acts: false`
+  // does nothing: it has no highlight, no pointing hand and no icon at its
+  // end, so that it does not look as if a click did something.
   component ActionRow: CursorSurface {
     id: actionRow
     property string icon: ""
     property string title: ""
     property string detail: ""
     property string actionIcon: ""
+    property bool acts: true
     signal activated()
 
-    hasCursor: rowMouse.containsMouse
+    hasCursor: actionRow.acts && rowMouse.containsMouse
     foreground: root.foreground
     implicitHeight: rowContent.implicitHeight + Style.spacing.rowPaddingX
 
     MouseArea {
       id: rowMouse
       anchors.fill: parent
+      enabled: actionRow.acts
       hoverEnabled: true
       cursorShape: Qt.PointingHandCursor
       onClicked: actionRow.activated()
@@ -789,7 +793,7 @@ Panel {
 
       Text {
         textFormat: Text.PlainText
-        visible: actionRow.actionIcon !== ""
+        visible: actionRow.acts && actionRow.actionIcon !== ""
         text: actionRow.actionIcon
         color: root.dim
         font.family: root.fontFamily
@@ -800,9 +804,10 @@ Panel {
   }
 
   // One of this person's devices, by its label and the first words of its
-  // key's fingerprint. A click copies the device's key, and nothing else: a
-  // device is removed only at a terminal, and the panel offers no row that
-  // looks as if it removed one.
+  // key's fingerprint. A click on this device's own row copies its key, which
+  // another machine needs to add it or to be added from it. Another device's
+  // row does nothing: a device is removed only at a terminal, and the panel
+  // offers no row that looks as if it removed one.
   component DeviceRow: ActionRow {
     id: deviceRow
     property var device: ({})
@@ -813,11 +818,9 @@ Panel {
     title: root.deviceName(deviceRow.device) + (deviceRow.mine ? "  (this device)" : "")
     detail: cordelia.joined([cordelia.plain(deviceRow.device.words), deviceRow.device.left === true ? "has left" : "",
       deviceRow.note], " · ")
+    acts: deviceRow.mine
     actionIcon: String.fromCodePoint(0xF018F) // copy
-    onActivated: {
-      if (deviceRow.mine) cordelia.copyKey()
-      else cordelia.copyDeviceKey(String(deviceRow.device.key || ""), root.deviceName(deviceRow.device))
-    }
+    onActivated: cordelia.copyKey()
   }
 
   // A labelled switch.
