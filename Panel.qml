@@ -382,27 +382,6 @@ Panel {
             onActivated: cordelia.startNode()
           }
 
-          // ── Sync ────────────────────────────────────────────────
-          Column {
-            visible: cordelia.running && cordelia.syncOn
-            width: parent.width
-            spacing: Style.space(8)
-
-            SwitchRow {
-              width: parent.width
-              title: "Home memory"
-              detail: root.homeSays()
-              checked: cordelia.home
-              onToggled: cordelia.setHome(!cordelia.home)
-            }
-
-            InfoPair {
-              visible: cordelia.waiting > 0
-              label: "Waiting to send"
-              value: String(cordelia.waiting)
-            }
-          }
-
           // ── Folders that stopped syncing ────────────────────────
           Column {
             visible: cordelia.running && cordelia.notice !== null
@@ -454,33 +433,6 @@ Panel {
                 title: cordelia.plain(root.fileName(modelData))
                 detail: "Two machines edited this at once. Merge it, then delete this file."
                 onActivated: cordelia.openFile(modelData)
-              }
-            }
-          }
-
-          // ── Relays ──────────────────────────────────────────────
-          Column {
-            visible: cordelia.running
-            width: parent.width
-            spacing: Style.space(6)
-
-            PanelSeparator { foreground: root.foreground }
-            PanelSectionHeader {
-              text: "RELAYS"
-              foreground: root.foreground
-              fontFamily: root.fontFamily
-            }
-            Note {
-              visible: cordelia.noRelay
-              text: "No relay connected. Changes wait here until one is."
-            }
-            Repeater {
-              model: cordelia.relays
-              NoteRow {
-                required property var modelData
-                width: column.width
-                title: cordelia.plain(modelData.name)
-                detail: root.relaySays(modelData)
               }
             }
           }
@@ -631,8 +583,9 @@ Panel {
           }
 
           // ── What syncs ──────────────────────────────────────────
+          // Home memory first, then each folder, then what waits to be sent.
           Column {
-            visible: cordelia.running && cordelia.syncOn && cordelia.projects.length > 0
+            visible: cordelia.running && cordelia.syncOn
             width: parent.width
             spacing: Style.space(6)
 
@@ -646,6 +599,13 @@ Panel {
               visible: cordelia.staysHere
               text: "This device sends nothing. These stay on this machine."
             }
+            SwitchRow {
+              width: parent.width
+              title: "Home memory"
+              detail: root.homeSays()
+              checked: cordelia.home
+              onToggled: cordelia.setHome(!cordelia.home)
+            }
             Repeater {
               model: cordelia.projects
               SwitchRow {
@@ -656,6 +616,11 @@ Panel {
                 checked: true
                 onToggled: cordelia.stopSyncing(modelData)
               }
+            }
+            InfoPair {
+              visible: cordelia.waiting > 0
+              label: "Waiting to send"
+              value: String(cordelia.waiting)
             }
           }
 
@@ -703,6 +668,33 @@ Panel {
                 detail: "Click to copy the command to sync it to a folder here"
                 actionIcon: String.fromCodePoint(0xF018F) // copy
                 onActivated: cordelia.copyMapCommand(String(modelData))
+              }
+            }
+          }
+
+          // ── Relays ──────────────────────────────────────────────
+          Column {
+            visible: cordelia.running
+            width: parent.width
+            spacing: Style.space(6)
+
+            PanelSeparator { foreground: root.foreground }
+            PanelSectionHeader {
+              text: "RELAYS"
+              foreground: root.foreground
+              fontFamily: root.fontFamily
+            }
+            Note {
+              visible: cordelia.noRelay
+              text: "No relay connected. Changes wait here until one is."
+            }
+            Repeater {
+              model: cordelia.relays
+              NoteRow {
+                required property var modelData
+                width: column.width
+                title: cordelia.plain(modelData.name)
+                detail: root.relaySays(modelData)
               }
             }
           }

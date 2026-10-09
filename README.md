@@ -20,16 +20,14 @@ step, and a panel to manage it.
   it. If the running node is not the version of the command, the panel says
   so: restart the node. Until then changes are refused; turning sync off
   still works.
-- **The switch:** memory sync on or off for this device. Below it, a switch
-  for home memory.
+- **The switch:** memory sync on or off for this device.
 - **Stopped syncing:** on a machine that had synced everything it found, the
   folders that stopped when only mapped folders came to sync. Each has a
   switch to map it again where the node says it can be mapped, and the node's
   reason where it cannot. A folder that needs a name from you has no switch:
   its row copies the command, for you to put the name in. No folder has a
   switch while sync is off. *I have seen this* puts the notice away.
-- **Relays:** each relay this device is set up with, whether it is connected
-  and for how long, and whether it holds the latest change of your devices.
+- **Conflicts:** files two machines edited at once; click to open one.
 - **Your devices:** each device by its label and the first words of its key's
   fingerprint, the devices added since the last change, the removed keys, and
   what this device has to tell you. Cordelia adds and removes a device at a
@@ -50,8 +48,9 @@ step, and a panel to manage it.
     has the phrase;
   - `cordelia recover`, if you have lost every device. Do not make a new
     phrase first.
-- **Syncing:** each folder that syncs and the name it syncs under, with a
-  switch to stop syncing it from this device. Only mapped folders sync.
+- **Syncing:** home memory first, with a switch of its own. Then each folder
+  that syncs and the name it syncs under, with a switch to stop syncing it
+  from this device. Only mapped folders sync.
 - **Found on this machine:** folders Claude Code has memory for that do not
   sync. One has a switch only where the node says `cordelia sync map` would
   sync it; otherwise it shows the node's reason. A git project syncs under
@@ -59,7 +58,8 @@ step, and a panel to manage it.
   folder syncs under its own name.
 - **On your other devices:** names your other devices sync that have no folder
   here. Click one to copy the command that syncs it to a folder.
-- **Conflicts:** files two machines edited at once; click to open one.
+- **Relays:** each relay this device is set up with, whether it is connected
+  and for how long, and whether it holds the latest change of your devices.
 - **At the foot:** what this device holds (its names, their entries, the size
   of their encrypted content and of the database), and the versions of the
   command, of the running node and of this panel. The sizes are shown only
