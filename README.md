@@ -42,10 +42,14 @@ step, and a panel to manage it.
     other machine);
   - *Clear these notices* copies `cordelia devices --clear`.
 
-  On a machine with no recovery phrase yet, it shows the two ways on, each to
-  copy: `cordelia phrase`, on the machine whose memory is the most up to date,
-  or `cordelia accept <key>`, after `cordelia add-device` on a machine that
-  has the phrase.
+  On a machine with no recovery phrase yet, it shows the three ways on, each
+  to copy:
+  - `cordelia phrase`, if you have no phrase yet, on your most up to date
+    machine;
+  - `cordelia accept <key>`, after `cordelia add-device` on a machine that
+    has the phrase;
+  - `cordelia recover`, if you have lost every device. Do not make a new
+    phrase first.
 - **Syncing:** each folder that syncs and the name it syncs under, with a
   switch to stop syncing it from this device. Only mapped folders sync.
 - **Found on this machine:** folders Claude Code has memory for that do not

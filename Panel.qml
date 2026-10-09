@@ -178,7 +178,7 @@ Panel {
   // a new install.
   function noPhraseSays() {
     var few = cordelia.person !== null && cordelia.person.short ? cordelia.person.short : cordelia.summary
-    return cordelia.sentence(few) + ". Memory stays on this machine. Two ways on, each run in a terminal:"
+    return cordelia.sentence(few) + ". Memory stays on this machine. Three ways on, each run in a terminal:"
   }
 
   // Why this device cannot go on, where it cannot, as the node says it.
@@ -498,8 +498,11 @@ Panel {
               fontFamily: root.fontFamily
             }
 
-            // No recovery phrase yet: nothing syncs, and there are two ways
-            // on. Each is run at a terminal, so each is a command to copy.
+            // No recovery phrase yet: nothing syncs, and there are three
+            // ways on, as the node names them. Each is run at a terminal, so
+            // each is a command to copy. The third is for a person who has
+            // lost every device: a new phrase made first would be in the way
+            // of the recovery.
             Note {
               visible: cordelia.noPhrase
               text: root.noPhraseSays()
@@ -510,7 +513,7 @@ Panel {
               width: parent.width
               icon: String.fromCodePoint(0xF018D) // console
               title: "cordelia phrase"
-              detail: "On the machine whose memory is the most up to date"
+              detail: "No phrase yet: on your most up to date machine"
               actionIcon: String.fromCodePoint(0xF018F) // copy
               onActivated: cordelia.copyText("cordelia phrase", "Copied. Run it in a terminal.")
             }
@@ -523,6 +526,16 @@ Panel {
               actionIcon: String.fromCodePoint(0xF018F) // copy
               onActivated: cordelia.copyText("cordelia accept <key>",
                 "Copied. Put in the key that add-device printed, and run it in a terminal.")
+            }
+            ActionRow {
+              visible: cordelia.noPhrase
+              width: parent.width
+              icon: String.fromCodePoint(0xF018D) // console
+              title: "cordelia recover"
+              detail: "You lost every device: do not make a new phrase"
+              actionIcon: String.fromCodePoint(0xF018F) // copy
+              onActivated: cordelia.copyText("cordelia recover",
+                "Copied. Run it in a terminal. It asks for your twelve words.")
             }
             ActionRow {
               visible: cordelia.deviceKey !== "" && (cordelia.noPhrase || cordelia.person === null)
