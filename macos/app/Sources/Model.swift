@@ -4,8 +4,8 @@
 import Foundation
 
 /// The Omarchy panel commit this app matches. See the README, "Keeping in step".
-let TRACKS = "df6c901"
-let APP_VERSION = "0.2.0"
+let TRACKS = "c50867a"
+let APP_VERSION = "0.3.0"
 
 // ── About ────────────────────────────────────────────────────────────────
 
@@ -109,11 +109,6 @@ struct PersonDevice {
     let whyNot: String
 }
 
-struct Removed {
-    let label: String
-    let words: String
-}
-
 /// One relay. `state` is as the node says it of a relay it is set up with
 /// ("connected", "connecting", "unreachable", "wrong key"), and "" where it
 /// says only where the device stands there. `latest` is "yes", "no",
@@ -138,6 +133,8 @@ struct Model {
     let holds: [Hold]
     let installed: Bool
     let running: Bool
+    /// "personal" on a person's device.
+    let role: String
     /// The command's version and the running node's. A node goes on running
     /// the version it was started as until it is restarted.
     let version: String
@@ -183,10 +180,10 @@ struct Model {
     let personShort: String
     /// Why this device cannot go on, where it cannot, as the node says it.
     let cannotGoOn: String
-    /// The devices of the last change, those added since, and the removed keys.
+    /// The devices of the last change and those added since. A removed key
+    /// is not listed.
     let devices: [PersonDevice]
     let added: [PersonDevice]
-    let removed: [Removed]
     /// What this device has to tell its person, until it is cleared at a terminal.
     let notices: [String]
     let mayAdd: Bool
@@ -206,6 +203,7 @@ struct Model {
         holds = records(st["holds"]).map { Hold(level: $0["level"] as? String ?? "", says: plain($0["says"])) }
         installed = !st.isEmpty && st["state"] as? String != "uninitialised"
         running = st["running"] as? Bool == true
+        role = st["role"] as? String ?? ""
         version = st["version"] as? String ?? ""
         nodeVersion = st["node_version"] as? String ?? ""
         otherVersion = running && !version.isEmpty && nodeVersion != version
@@ -252,7 +250,6 @@ struct Model {
         cannotGoOn = person != nil && !without ? whole(person?["cannot_go_on"]) : ""
         devices = records(person?["devices"]).map { personDevice($0, added: false) }
         added = records(person?["added"]).map { personDevice($0, added: true) }
-        removed = records(person?["removed"]).map { Removed(label: plain($0["label"]), words: plain($0["words"])) }
         notices = records(person?["notices"]).map { plain($0["says"]) }.filter { !$0.isEmpty }
         mayAdd = person?["may_add"] as? Bool == true
         let rows = relayRows(st, stands: person != nil && !without ? records(person?["relays"]) : [])

@@ -1,0 +1,33 @@
+icon: arrow.triangle.2.circlepath
+tooltip: Cordelia: memory fetching 1 folder
+
+    Memory fetching 1 folder   {info, disabled}
+[x] Sync Memory on This Mac   {-> sync off}
+        runs: cordelia sync off
+        tip: Click to stop syncing memory on this device
+────
+    Your Devices: 2   {submenu}
+        desktop  (this device)  |  later super when city   {-> copy-key}
+            tip: Click to copy this device's key
+        Added Since the Last Change   {info, disabled}
+        b  |  produce equip idle logic · added from desktop   {plain, disabled}
+    ────
+        Add a Device  |  Copy the new machine's key first, then click here   {-> copy-add-device}
+            tip: The menu copies the command and runs nothing. Run it in a terminal.
+────
+[x] Home Memory   {-> home off}
+        runs: cordelia sync home off
+        tip: Waiting for its channel to be fetched from a relay. Click to stop syncing it here.
+[x] ~/Work/cordelia-node   {-> stop ~/Work/cordelia-node}
+        runs: cordelia sync unmap /tmp/.tmp3HhudO/home/Work/cordelia-node
+        tip: Syncs as github.com/seed-drill/cordelia-node. Click to stop syncing it here.
+[x] ~/notes   {-> stop ~/notes}
+        runs: cordelia sync unmap /tmp/.tmp3HhudO/home/notes
+        tip: Syncs as lab-notes. Click to stop syncing it here.
+────
+    Relays: 1 connected   {submenu}
+        127.0.0.1:29952  |  Connected 44s · holds the latest change   {plain, disabled}
+────
+    About Cordelia   {-> about}
+    Quit Cordelia Menu   {-> quit}
+        tip: The node keeps running and memory keeps syncing

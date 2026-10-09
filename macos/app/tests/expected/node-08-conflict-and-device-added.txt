@@ -1,0 +1,39 @@
+icon: exclamationmark.triangle.fill urgent
+tooltip: Cordelia: memory: 1 conflict
+
+    Memory: 1 conflict   {urgent, disabled}
+    Memory: 1 device added, not yet cleared   {amber, disabled}
+[x] Sync Memory on This Mac   {-> sync off}
+        runs: cordelia sync off
+        tip: Click to stop syncing memory on this device
+    1 Conflict to Merge   {urgent, submenu}
+        differs.conflict-07ff1642.md   {-> open /tmp/.tmpsj7fQs/home/.claude/projects/-tmp--tmpsj7fQs-home-notes/memory/differs.conflict-07ff1642.md}
+            tip: Two machines edited this at once. Merge it, then delete this file.
+────
+    Your Devices: 2   {submenu}
+        desktop  |  motion chalk pill use   {plain, disabled}
+        Added Since the Last Change   {info, disabled}
+        laptop  (this device)  |  tissue witness blush recall · added from desktop   {-> copy-key}
+            tip: Click to copy this device's key
+    ────
+        This device was added from (motion chalk pill use) "desktop".   {amber, disabled}
+        Clear These Notices  |  Click to copy the command. Run it in a terminal.   {-> copy}
+            copies: cordelia devices --clear
+            says: Copied. Run it in a terminal.
+    ────
+        Add a Device  |  Copy the new machine's key first, then click here   {-> copy-add-device}
+            tip: The menu copies the command and runs nothing. Run it in a terminal.
+────
+[ ] Home Memory   {-> home on}
+        runs: cordelia sync home on
+        tip: What Claude remembers outside any project. Click to sync it. Asks first.
+[x] ~/notes   {-> stop ~/notes}
+        runs: cordelia sync unmap /tmp/.tmpsj7fQs/home/notes
+        tip: Syncs as lab. Click to stop syncing it here.
+────
+    Relays: 1 connected   {submenu}
+        127.0.0.1:25873  |  Connected 1m · holds the latest change   {plain, disabled}
+────
+    About Cordelia   {-> about}
+    Quit Cordelia Menu   {-> quit}
+        tip: The node keeps running and memory keeps syncing

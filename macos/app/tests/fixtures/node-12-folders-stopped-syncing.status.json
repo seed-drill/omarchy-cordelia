@@ -1,0 +1,254 @@
+{
+  "device": "cordelia_pk1q9ps862fzfrquqgtx98jka7heqy9wk2esh8h35szl0mh8a4c20lsq8xwlj",
+  "holds": [
+    {
+      "level": "red",
+      "says": "memory: 1 folder stopped syncing",
+      "what": "stopped_syncing"
+    },
+    {
+      "level": "amber",
+      "says": "memory: 1 device added, not yet cleared",
+      "what": "added"
+    }
+  ],
+  "level": "red",
+  "no_relay_secs": null,
+  "node_version": "0.2.0-alpha.10",
+  "outbox_refused": [],
+  "outbox_waiting": 0,
+  "peers": {
+    "hot": 1,
+    "list": [
+      {
+        "address": "127.0.0.1:24740",
+        "connected_secs": 1,
+        "idle_secs": 0,
+        "key": "cordelia_pk1qvd3rtl7cppv9wqqv423jugym97q77sclxatw0k4c7r56uqxhr7su4gglt",
+        "role": "relay",
+        "state": "hot"
+      }
+    ],
+    "relays": [
+      {
+        "error": null,
+        "host": "127.0.0.1:24740",
+        "key": null,
+        "last_tried_secs": null,
+        "state": "connected",
+        "unreachable_secs": null
+      }
+    ],
+    "warm": 0
+  },
+  "person": {
+    "accepting": [
+      {
+        "asking": false,
+        "key": "cordelia_pk1c939rt8m9urhh0xzxhvve5tkzsfa32eyczjsqra3s83gw5qq4g4sncysfe",
+        "said": "this device has joined: it follows the recovery phrase of the device whose key was typed, and has applied change 1",
+        "taken": true,
+        "taken_at": 1791521447,
+        "typed_at": 1791521447,
+        "until": 1791525047,
+        "words": "young maid vocal biology"
+      }
+    ],
+    "added": [
+      {
+        "applied": 1,
+        "at": 1791521447,
+        "by": {
+          "key": "cordelia_pk1c939rt8m9urhh0xzxhvve5tkzsfa32eyczjsqra3s83gw5qq4g4sncysfe",
+          "label": "desktop",
+          "words": "young maid vocal biology"
+        },
+        "counted": true,
+        "key": "cordelia_pk1q9ps862fzfrquqgtx98jka7heqy9wk2esh8h35szl0mh8a4c20lsq8xwlj",
+        "label": "laptop",
+        "left": false,
+        "sent": true,
+        "this_device": true,
+        "why_not": null,
+        "words": "exit motion peace meat"
+      }
+    ],
+    "among": "several",
+    "apart": null,
+    "applied_at": null,
+    "cannot_go_on": null,
+    "change": 1,
+    "devices": [
+      {
+        "applied": 1,
+        "key": "cordelia_pk1c939rt8m9urhh0xzxhvve5tkzsfa32eyczjsqra3s83gw5qq4g4sncysfe",
+        "label": "desktop",
+        "left": false,
+        "maker": true,
+        "sent": true,
+        "this_device": false,
+        "words": "young maid vocal biology"
+      }
+    ],
+    "folders": 1,
+    "latest": "6e4bd2fd0e575e9ac2a8279bdbfb62c6c0bb72110f1055cdbc34f5adc56e6f53",
+    "left_out": [],
+    "may_add": true,
+    "names": {
+      "carried_to_go": [],
+      "carried_to_go_since": null,
+      "sent": [
+        "lab"
+      ],
+      "to_go": [],
+      "to_go_since": null
+    },
+    "names_not_listed": [],
+    "names_not_shown": 0,
+    "not_carried": [],
+    "not_reached": [],
+    "notices": [
+      {
+        "id": "bfb459297b690542b48323fdcbbe670b00205bb653a0db097b786e85e02163c8",
+        "kind": "added",
+        "says": "this device was added from (young maid vocal biology) \"desktop\""
+      }
+    ],
+    "others": 1,
+    "phrase_words": "text detail rapid omit",
+    "relays": [
+      {
+        "another_form": 0,
+        "connected_secs": 1,
+        "heard_since_woke": false,
+        "holds_latest": null,
+        "no_room": null,
+        "no_room_at": null,
+        "refuses": null,
+        "relay": "127.0.0.1:24740"
+      }
+    ],
+    "removed": [],
+    "removed_a_key": false,
+    "says": [
+      "this device was added from (young maid vocal biology) \"desktop\"",
+      "has not heard from 127.0.0.1:24740 since it woke: a change made while it was off may not have reached it",
+      "accepted the device (young maid vocal biology): this device has joined: it follows the recovery phrase of the device whose key was typed, and has applied change 1"
+    ],
+    "short": null,
+    "state": "applied",
+    "statements_left": null,
+    "sync_on": true,
+    "this_device": "cordelia_pk1q9ps862fzfrquqgtx98jka7heqy9wk2esh8h35szl0mh8a4c20lsq8xwlj",
+    "waiting": [
+      {
+        "name": null,
+        "relay": "127.0.0.1:24740",
+        "waits": 0
+      }
+    ]
+  },
+  "role": "personal",
+  "running": true,
+  "state": "attention",
+  "summary": "memory: 1 folder stopped syncing",
+  "sync": {
+    "all": false,
+    "available": [
+      "github.com/seed-drill/cordelia-node"
+    ],
+    "conflicts": [],
+    "dir": "/tmp/.tmpQ05CLj/home/.claude",
+    "enabled": true,
+    "errors": [],
+    "exclude": [
+      "github.com/sam/private"
+    ],
+    "excluded": [],
+    "folders": 1,
+    "home": false,
+    "home_name": "~",
+    "last_change_at": "2026-10-09T04:50:53.591245578+00:00",
+    "last_cycle_at": "2026-10-09T04:51:22.354312878+00:00",
+    "mappings": [
+      {
+        "folder": "/tmp/.tmpQ05CLj/home/work/lab",
+        "name": "lab"
+      }
+    ],
+    "moved_on": true,
+    "notice": {
+      "dir": "/tmp/.tmpQ05CLj/home/.claude",
+      "folders": [
+        {
+          "at": "2026-10-09T04:50:43.540114532+00:00",
+          "cwd": "/tmp/.tmpQ05CLj/home/work/tools",
+          "folder": "/tmp/.tmpQ05CLj/home/.claude/projects/-tmp--tmpQ05CLj-home-work-tools",
+          "mappable": true,
+          "name": "github.com/seed-drill/cordelia-node",
+          "synced_under": "/tmp/.tmpQ05CLj/home/.claude"
+        }
+      ],
+      "not_known": false,
+      "records": [
+        {
+          "at": "2026-10-09T04:50:43.540114532+00:00",
+          "dir": "/tmp/.tmpQ05CLj/home/.claude",
+          "folders": 1
+        }
+      ],
+      "stopped": 1
+    },
+    "projects": [
+      {
+        "channel": "cordelia_ch1qss83v5xumhlqumy576xqpkjxn7e7k5u4tvflwlq35487qc9cjjsefkf74",
+        "conflicts": [],
+        "cwd": "/tmp/.tmpQ05CLj/home/work/lab",
+        "error": null,
+        "failed": [],
+        "failed_more": 0,
+        "folder": "/tmp/.tmpQ05CLj/home/.claude/projects/-tmp--tmpQ05CLj-home-work-lab",
+        "last_published_at": "2026-10-09T04:50:53.575023690+00:00",
+        "last_pulled_at": null,
+        "mapped": true,
+        "project": "lab",
+        "too_large": [],
+        "waiting": false
+      }
+    ],
+    "projects_waiting": 0,
+    "publishes_nothing": null,
+    "stands": "applied",
+    "unmapped": [
+      {
+        "cwd": "/tmp/.tmpQ05CLj/home/deep/notes",
+        "folder": "/tmp/.tmpQ05CLj/home/.claude/projects/-tmp--tmpQ05CLj-home-deep-notes",
+        "mappable": true,
+        "name": null,
+        "needs_name": true,
+        "says": "needs a name (not a git project)"
+      },
+      {
+        "cwd": "/tmp/.tmpQ05CLj/home/work/tools",
+        "folder": "/tmp/.tmpQ05CLj/home/.claude/projects/-tmp--tmpQ05CLj-home-work-tools",
+        "mappable": true,
+        "name": "github.com/seed-drill/cordelia-node"
+      },
+      {
+        "cwd": null,
+        "directory": "/tmp/.tmpQ05CLj/home/work/other",
+        "folder": "/tmp/.tmpQ05CLj/home/.claude/projects/workspace",
+        "mappable": false,
+        "name": null,
+        "says": "this layout cannot be mapped: Claude Code did not name the folder after its directory",
+        "why_not": "laid_out_by_hand"
+      }
+    ],
+    "unsynced": [
+      "/tmp/.tmpQ05CLj/home/.claude/projects/-tmp--tmpQ05CLj-home-deep-notes",
+      "/tmp/.tmpQ05CLj/home/.claude/projects/workspace"
+    ]
+  },
+  "uptime_secs": 5,
+  "version": "0.2.0-alpha.10"
+}

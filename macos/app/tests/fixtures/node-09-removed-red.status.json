@@ -1,0 +1,201 @@
+{
+  "device": "cordelia_pk1f78yce5c6z5ww89qy42rkdf6nv8tpg8cuvnada74rksfrfwmtces2ex2fu",
+  "holds": [
+    {
+      "level": "red",
+      "says": "memory not syncing: this device was removed",
+      "what": "stopped"
+    },
+    {
+      "level": "amber",
+      "says": "memory: 2 devices added, not yet cleared",
+      "what": "added"
+    }
+  ],
+  "level": "red",
+  "no_relay_secs": null,
+  "node_version": "0.2.0-alpha.10",
+  "outbox_refused": [],
+  "outbox_waiting": 0,
+  "peers": {
+    "hot": 1,
+    "list": [
+      {
+        "address": "127.0.0.1:21012",
+        "connected_secs": 25,
+        "idle_secs": 0,
+        "key": "cordelia_pk1sckhlqdxcmxx7ppmgdf3u0h938nx09p3e3eu7p4z3qczu9tumt3ql38fp4",
+        "role": "relay",
+        "state": "hot"
+      }
+    ],
+    "relays": [
+      {
+        "error": null,
+        "host": "127.0.0.1:21012",
+        "key": null,
+        "last_tried_secs": null,
+        "state": "connected",
+        "unreachable_secs": null
+      }
+    ],
+    "warm": 0
+  },
+  "person": {
+    "accepting": [
+      {
+        "asking": false,
+        "key": "cordelia_pk106naak20vrxvrkqhu734m834m42z557f69l0dqataxc8tw87n9gqvd8mtd",
+        "said": "this device has joined: it follows the recovery phrase of the device whose key was typed, and has applied change 1",
+        "taken": true,
+        "taken_at": 1791521925,
+        "typed_at": 1791521925,
+        "until": 1791525525,
+        "words": "gun average pony upset"
+      }
+    ],
+    "added": [
+      {
+        "applied": 1,
+        "at": 1791521925,
+        "by": {
+          "key": "cordelia_pk106naak20vrxvrkqhu734m834m42z557f69l0dqataxc8tw87n9gqvd8mtd",
+          "label": "laptop",
+          "words": "gun average pony upset"
+        },
+        "counted": true,
+        "key": "cordelia_pk1f78yce5c6z5ww89qy42rkdf6nv8tpg8cuvnada74rksfrfwmtces2ex2fu",
+        "label": "desktop",
+        "left": false,
+        "sent": true,
+        "this_device": true,
+        "why_not": null,
+        "words": "arch actress nominee task"
+      },
+      {
+        "applied": 1,
+        "at": 1791521926,
+        "by": {
+          "key": "cordelia_pk1f78yce5c6z5ww89qy42rkdf6nv8tpg8cuvnada74rksfrfwmtces2ex2fu",
+          "label": "desktop",
+          "words": "arch actress nominee task"
+        },
+        "counted": true,
+        "key": "cordelia_pk154kjjuwe0sy0ekr2dkg3frhfg5t2f8swafucm4fwl96aw06hfaaqa9m58q",
+        "label": "tablet",
+        "left": false,
+        "sent": true,
+        "this_device": false,
+        "why_not": null,
+        "words": "squeeze nice wait olive"
+      }
+    ],
+    "among": "stopped",
+    "apart": null,
+    "applied_at": null,
+    "cannot_go_on": "this device was removed. `cordelia init --new-key` gives it a new key; it is then added as a new device",
+    "change": 1,
+    "devices": [
+      {
+        "applied": 1,
+        "key": "cordelia_pk106naak20vrxvrkqhu734m834m42z557f69l0dqataxc8tw87n9gqvd8mtd",
+        "label": "laptop",
+        "left": false,
+        "maker": true,
+        "sent": true,
+        "this_device": false,
+        "words": "gun average pony upset"
+      }
+    ],
+    "folders": 0,
+    "latest": "e5e506fc44c55d70886ce3bef0f70441dd492c98da5d889088142c375836918c",
+    "left_out": [],
+    "may_add": false,
+    "names": {
+      "carried_to_go": [],
+      "carried_to_go_since": null,
+      "sent": [],
+      "to_go": [],
+      "to_go_since": null
+    },
+    "names_not_listed": [],
+    "names_not_shown": 0,
+    "not_carried": [],
+    "not_reached": [],
+    "notices": [
+      {
+        "id": "7601088e3b947533c5962675b37bae1ca2e1450cc71a606993b13a163f56fbfd",
+        "kind": "added",
+        "says": "this device was added from (gun average pony upset) \"laptop\""
+      },
+      {
+        "id": "ff3925aed9ab3258965e51241e9982f8f82c7146fc46f34b1a839a809f0e7158",
+        "kind": "added",
+        "says": "new device: (squeeze nice wait olive) \"tablet\", added from (arch actress nominee task) \"desktop\""
+      }
+    ],
+    "others": 0,
+    "phrase_words": "fiber bread sing solve",
+    "relays": [
+      {
+        "another_form": 0,
+        "connected_secs": 25,
+        "heard_since_woke": true,
+        "holds_latest": null,
+        "no_room": null,
+        "no_room_at": null,
+        "refuses": null,
+        "relay": "127.0.0.1:21012"
+      }
+    ],
+    "removed": [],
+    "removed_a_key": false,
+    "says": [
+      "this device was removed. `cordelia init --new-key` gives it a new key; it is then added as a new device",
+      "this device was added from (gun average pony upset) \"laptop\"",
+      "new device: (squeeze nice wait olive) \"tablet\", added from (arch actress nominee task) \"desktop\""
+    ],
+    "short": "this device was removed",
+    "state": "removed",
+    "statements_left": null,
+    "sync_on": false,
+    "this_device": "cordelia_pk1f78yce5c6z5ww89qy42rkdf6nv8tpg8cuvnada74rksfrfwmtces2ex2fu",
+    "waiting": [
+      {
+        "name": null,
+        "relay": "127.0.0.1:21012",
+        "waits": 0
+      }
+    ]
+  },
+  "role": "personal",
+  "running": true,
+  "state": "attention",
+  "summary": "memory not syncing: this device was removed",
+  "sync": {
+    "all": false,
+    "available": null,
+    "conflicts": [],
+    "dir": null,
+    "enabled": false,
+    "errors": [],
+    "exclude": [],
+    "excluded": null,
+    "folders": 0,
+    "home": true,
+    "home_name": null,
+    "last_change_at": null,
+    "last_cycle_at": null,
+    "mappings": [],
+    "moved_on": false,
+    "notice": null,
+    "projects": [],
+    "projects_waiting": 0,
+    "publishes_nothing": null,
+    "stands": "removed",
+    "unmapped": null,
+    "unsynced": null
+  },
+  "uptime_secs": 30,
+  "version": "0.2.0-alpha.10"
+}

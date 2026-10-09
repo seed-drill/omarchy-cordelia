@@ -1,7 +1,7 @@
 icon: cordelia dimmed
 tooltip: Cordelia
 
-    Status: Not installed   {info, disabled}
+    Not set up on this Mac   {info, disabled}
 ────
     Install Cordelia…   {-> open-url https://seeddrill.ai/install}
 ────

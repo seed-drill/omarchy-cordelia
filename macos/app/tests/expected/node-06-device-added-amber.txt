@@ -1,0 +1,38 @@
+icon: exclamationmark.triangle amber
+tooltip: Cordelia: memory: 1 device added, not yet cleared
+
+    Memory: 1 device added, not yet cleared   {amber, disabled}
+[x] Sync Memory on This Mac   {-> sync off}
+        runs: cordelia sync off
+        tip: Click to stop syncing memory on this device
+────
+    Your Devices: 2   {submenu}
+        desktop  |  later super when city   {plain, disabled}
+        Added Since the Last Change   {info, disabled}
+        b  (this device)  |  produce equip idle logic · added from desktop   {-> copy-key}
+            tip: Click to copy this device's key
+    ────
+        This device was added from (later super when city) "desktop".   {amber, disabled}
+        Clear These Notices  |  Click to copy the command. Run it in a terminal.   {-> copy}
+            copies: cordelia devices --clear
+            says: Copied. Run it in a terminal.
+    ────
+        Add a Device  |  Copy the new machine's key first, then click here   {-> copy-add-device}
+            tip: The menu copies the command and runs nothing. Run it in a terminal.
+────
+[x] Home Memory   {-> home off}
+        runs: cordelia sync home off
+        tip: What Claude remembers outside any project. Click to stop syncing it here.
+[x] ~/code/cn   {-> stop ~/code/cn}
+        runs: cordelia sync unmap /tmp/.tmptzHMkK/home/code/cn
+        tip: Syncs as github.com/seed-drill/cordelia-node. Click to stop syncing it here.
+[x] ~/Documents/lab   {-> stop ~/Documents/lab}
+        runs: cordelia sync unmap /tmp/.tmptzHMkK/home/Documents/lab
+        tip: Syncs as lab-notes. Click to stop syncing it here.
+────
+    Relays: 1 connected   {submenu}
+        127.0.0.1:29952  |  Connected 41s · holds the latest change   {plain, disabled}
+────
+    About Cordelia   {-> about}
+    Quit Cordelia Menu   {-> quit}
+        tip: The node keeps running and memory keeps syncing

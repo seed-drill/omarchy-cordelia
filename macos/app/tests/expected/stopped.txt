@@ -1,12 +1,11 @@
 icon: cordelia dimmed
 tooltip: Cordelia: the node is not running
 
-    Status: The node is not running   {info, disabled}
+    The node is not running   {info, disabled}
 ────
     Start Cordelia   {-> start-node}
         tip: It runs in the background and keeps memory in step
 ────
-    cordelia 0.2.0-alpha.9 · menu 0.2.0   {info, disabled}
     About Cordelia   {-> about}
     Quit Cordelia Menu   {-> quit}
         tip: The node keeps running and memory keeps syncing

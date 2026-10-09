@@ -1,0 +1,40 @@
+{
+  "device": "cordelia_pk1ejed3shvax5vryr5wud4e7ujghzzkg2e9vrfh4tvkr0kakxkk5kq0449n4",
+  "held": {
+    "by": "later_database",
+    "why": "the database at /tmp/.tmpNKxlGF/data/cordelia.db is from a later version of Cordelia than this one: it is at schema version 21, and this is Cordelia 0.2.0-alpha.10, which knows schema version 18 and none after. Nothing was changed. Install the later version again; or, to go back to this one, put back the copy that the later version made, as its release notes say."
+  },
+  "holds": [
+    {
+      "level": "red",
+      "says": "memory not syncing: the database is from a later version",
+      "what": "held"
+    }
+  ],
+  "level": "red",
+  "no_relay_secs": 2,
+  "node_version": "0.2.0-alpha.10",
+  "outbox_refused": [],
+  "outbox_waiting": 0,
+  "peers": {
+    "hot": 0,
+    "list": [],
+    "relays": [
+      {
+        "error": null,
+        "host": "127.0.0.1:9",
+        "key": null,
+        "last_tried_secs": 1,
+        "state": "connecting",
+        "unreachable_secs": null
+      }
+    ],
+    "warm": 0
+  },
+  "role": "personal",
+  "running": true,
+  "state": "attention",
+  "summary": "memory not syncing: the database is from a later version",
+  "uptime_secs": 6,
+  "version": "0.2.0-alpha.10"
+}

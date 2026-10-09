@@ -1,0 +1,22 @@
+icon: exclamationmark.triangle amber
+tooltip: Cordelia: memory: a removal not yet applied by every device
+
+    Memory: a removal not yet applied by every device   {amber, disabled}
+[ ] Sync Memory on This Mac   {-> sync on}
+        runs: cordelia sync claude
+        tip: Click to sync Claude Code's memory
+────
+    Your Devices: 2   {submenu}
+        laptop  (this device)  |  quit argue arrow opera   {-> copy-key}
+            tip: Click to copy this device's key
+        desktop  |  eye drill top immense   {plain, disabled}
+    ────
+        Add a Device  |  Copy the new machine's key first, then click here   {-> copy-add-device}
+            tip: The menu copies the command and runs nothing. Run it in a terminal.
+────
+    Relays: 1 connected   {submenu}
+        127.0.0.1:21013  |  Connected 32s · holds the latest change   {plain, disabled}
+────
+    About Cordelia   {-> about}
+    Quit Cordelia Menu   {-> quit}
+        tip: The node keeps running and memory keeps syncing

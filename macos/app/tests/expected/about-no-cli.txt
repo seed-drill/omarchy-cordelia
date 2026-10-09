@@ -1,5 +1,5 @@
 Cordelia
-Version 0.2.0
+Version 0.3.0
 Your AI agent's memory, in step across your machines.
-cordelia not found · panel df6c901
+cordelia not found · panel c50867a
 seeddrill.ai

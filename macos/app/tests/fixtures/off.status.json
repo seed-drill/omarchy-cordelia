@@ -1,7 +1,7 @@
 {
   "device": "cordelia_pk1thismacqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq",
-  "version": "0.2.0-alpha.9",
-  "node_version": "0.2.0-alpha.9",
+  "version": "0.2.0-alpha.10",
+  "node_version": "0.2.0-alpha.10",
   "role": "personal",
   "running": true,
   "state": "off",

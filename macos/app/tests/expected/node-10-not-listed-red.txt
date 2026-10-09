@@ -1,0 +1,30 @@
+icon: exclamationmark.triangle.fill urgent
+tooltip: Cordelia: memory not syncing: not in the last change
+
+    Memory not syncing: not in the last change   {urgent, disabled}
+    Memory: 2 devices added, not yet cleared   {amber, disabled}
+[ ] Sync Memory on This Mac   {-> sync on}
+        runs: cordelia sync claude
+        tip: Click to sync Claude Code's memory
+────
+    Your Devices: 3   {submenu}
+        This device is not in a change made on (quit argue arrow opera) "laptop": if it is yours, add i…   {urgent, disabled}
+            tip: This device is not in a change made on (quit argue arrow opera) "laptop": if it is yours, add it again from a device that is.
+        laptop  |  quit argue arrow opera   {plain, disabled}
+        Added Since the Last Change   {info, disabled}
+        desktop  |  eye drill top immense · added from laptop   {plain, disabled}
+        tablet  (this device)  |  various tobacco inch hazard · added from desktop   {-> copy-key}
+            tip: Click to copy this device's key
+    ────
+        New device: (eye drill top immense) "desktop", added from (quit argue arrow opera) "laptop".   {amber, disabled}
+        This device was added from (eye drill top immense) "desktop".   {amber, disabled}
+        Clear These Notices  |  Click to copy the command. Run it in a terminal.   {-> copy}
+            copies: cordelia devices --clear
+            says: Copied. Run it in a terminal.
+────
+    Relays: 1 connected   {submenu}
+        127.0.0.1:21013  |  Connected 18s · has not said whether it holds the latest change   {plain, disabled}
+────
+    About Cordelia   {-> about}
+    Quit Cordelia Menu   {-> quit}
+        tip: The node keeps running and memory keeps syncing

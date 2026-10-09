@@ -11,6 +11,14 @@ tooltip: Cordelia: 1 conflict to merge
         MEMORY.conflict-studio.md   {-> open /Users/alex/.claude/projects/-Users-alex-work-app/memory/MEMORY.conflict-studio.md}
             tip: Two machines edited this at once. Merge it, then delete this file.
 ────
+    Your Devices: 2   {submenu}
+        macbook  (this device)  |  amber lake quiet stone   {-> copy-key}
+            tip: Click to copy this device's key
+        studio  |  river maple candle north   {plain, disabled}
+    ────
+        Add a Device  |  Copy the new machine's key first, then click here   {-> copy-add-device}
+            tip: The menu copies the command and runs nothing. Run it in a terminal.
+────
 [x] Home Memory   {-> home off}
         runs: cordelia sync home off
         tip: Syncs as alex-home. Click to stop syncing it here.
@@ -42,28 +50,16 @@ tooltip: Cordelia: 1 conflict to merge
         github.com/example/notes   {-> copy}
             copies: cordelia sync map <folder> github.com/example/notes
             says: Copied. Put the folder in and run it in a terminal.
-            tip: Click to copy the command that syncs a folder with it
+            tip: Click to copy the command to sync it to a folder here
     ────
         Found Here, Cannot Be Mapped: 2   {submenu}
             ~/.claude/projects/-Users-alex  |  Its directory is not known   {info, disabled}
             /opt/outside  |  Outside your home directory: it cannot be mapped   {info, disabled}
 ────
-    Your Devices: 2   {submenu}
-        macbook  (this device)  |  amber lake quiet stone   {-> copy-key}
-            tip: Click to copy this device's key
-        studio  |  river maple candle north   {submenu}
-            Copy the Command That Removes It   {-> copy}
-                copies: cordelia remove-device cordelia_pk1studio…qqqqqq
-                says: Copied. Run it in a terminal: it asks for the phrase.
-                tip: Runs nothing: the command is for a terminal, and asks for the recovery phrase
-    ────
-        Add a Device  |  Copies the command, with a key from the clipboard   {-> copy-add-device}
-            tip: Copy the other device's key (cordelia id) first. Runs nothing: the command is for a terminal.
     Relays: 1 of 2 connected   {urgent, submenu}
-        relay1.example.net:9474  |  Connected 1h 19m · does not hold the latest change yet · refused 2 entries for room   {info, disabled}
+        relay1.example.net:9474  |  Connected 1h 19m · does not hold the latest change yet · refused 2 entries for room   {plain, disabled}
         relay2.example.net:9474  |  Unreachable: timed out · has not said whether it holds the latest change   {urgent, disabled}
 ────
-    cordelia 0.2.0-alpha.9 · node 0.2.0-alpha.9 · menu 0.2.0   {info, disabled}
     About Cordelia   {-> about}
     Quit Cordelia Menu   {-> quit}
         tip: The node keeps running and memory keeps syncing

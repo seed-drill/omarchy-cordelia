@@ -5,6 +5,7 @@
 //       [--status-file F]          a saved `status --json` instead of the node,
 //       [--config F] [--home D]    another settings file or home directory
 //       [--node-agent S]           ok, needs-approval or absent, instead of asking macOS
+//       [--stored-bytes N]         that size of stored memory, instead of asking `cordelia stats`
 //   Cordelia --dump-about          print what the About window says and exit; with
 //       [--cli-version V]          that version instead of asking `cordelia` ("" for none)
 //   Cordelia --dump-add-device     print the command "Add a Device" would copy and what it
@@ -64,8 +65,14 @@ if arguments.contains("--dump-menu") {
     } else {
         status = CLI(command: config.command).status()
     }
-    let tree = buildMenu(Model(status: status, home: home), config: config, home: home,
-                         nodeAgent: agent ?? nodeAgentState(home: home))
+    let model = Model(status: status, home: home)
+    // The size is asked of the node on this Mac only: never for a saved status.
+    var stored = option("--stored-bytes").flatMap { Int($0) }
+    if stored == nil && option("--status-file") == nil && maySize(model) {
+        stored = CLI(command: config.command).storedBytes()
+    }
+    let tree = buildMenu(model, config: config, home: home,
+                         nodeAgent: agent ?? nodeAgentState(home: home), storedBytes: stored)
     print(dump(tree), terminator: "")
     exit(0)
 }

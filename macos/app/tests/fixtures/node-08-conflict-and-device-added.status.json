@@ -1,0 +1,205 @@
+{
+  "device": "cordelia_pk1qll3vs3743qg7e99kn8w59k28ccm2s59w5rnrwnjzdm8j9yd2s7s3tx7pa",
+  "holds": [
+    {
+      "level": "red",
+      "says": "memory: 1 conflict",
+      "what": "conflicts"
+    },
+    {
+      "level": "amber",
+      "says": "memory: 1 device added, not yet cleared",
+      "what": "added"
+    }
+  ],
+  "level": "red",
+  "no_relay_secs": null,
+  "node_version": "0.2.0-alpha.10",
+  "outbox_refused": [],
+  "outbox_waiting": 0,
+  "peers": {
+    "hot": 1,
+    "list": [
+      {
+        "address": "127.0.0.1:25873",
+        "connected_secs": 69,
+        "idle_secs": 0,
+        "key": "cordelia_pk1jp9wramj657hcz5j8wkau4tz0r26wc8ly230rexkzytzncqcmtfszpgm87",
+        "role": "relay",
+        "state": "hot"
+      }
+    ],
+    "relays": [
+      {
+        "error": null,
+        "host": "127.0.0.1:25873",
+        "key": null,
+        "last_tried_secs": null,
+        "state": "connected",
+        "unreachable_secs": null
+      }
+    ],
+    "warm": 0
+  },
+  "person": {
+    "accepting": [
+      {
+        "asking": false,
+        "key": "cordelia_pk1hzpzd92apwycnw2f0zcdgmfxctg83v4eeqx6d8nt33lncg52hepq7wtvt5",
+        "said": "this device has joined: it follows the recovery phrase of the device whose key was typed, and has applied change 1",
+        "taken": true,
+        "taken_at": 1791521556,
+        "typed_at": 1791521556,
+        "until": 1791525156,
+        "words": "motion chalk pill use"
+      }
+    ],
+    "added": [
+      {
+        "applied": 1,
+        "at": 1791521556,
+        "by": {
+          "key": "cordelia_pk1hzpzd92apwycnw2f0zcdgmfxctg83v4eeqx6d8nt33lncg52hepq7wtvt5",
+          "label": "desktop",
+          "words": "motion chalk pill use"
+        },
+        "counted": true,
+        "key": "cordelia_pk1qll3vs3743qg7e99kn8w59k28ccm2s59w5rnrwnjzdm8j9yd2s7s3tx7pa",
+        "label": "laptop",
+        "left": false,
+        "sent": true,
+        "this_device": true,
+        "why_not": null,
+        "words": "tissue witness blush recall"
+      }
+    ],
+    "among": "several",
+    "apart": null,
+    "applied_at": null,
+    "cannot_go_on": null,
+    "change": 1,
+    "devices": [
+      {
+        "applied": 1,
+        "key": "cordelia_pk1hzpzd92apwycnw2f0zcdgmfxctg83v4eeqx6d8nt33lncg52hepq7wtvt5",
+        "label": "desktop",
+        "left": false,
+        "maker": true,
+        "sent": true,
+        "this_device": false,
+        "words": "motion chalk pill use"
+      }
+    ],
+    "folders": 1,
+    "latest": "c162f23fbbb8c36732e5e51c1d7c8fe79463f639e081bbcea8d59ac8088f1fff",
+    "left_out": [],
+    "may_add": true,
+    "names": {
+      "carried_to_go": [],
+      "carried_to_go_since": null,
+      "sent": [
+        "lab"
+      ],
+      "to_go": [],
+      "to_go_since": null
+    },
+    "names_not_listed": [],
+    "names_not_shown": 0,
+    "not_carried": [],
+    "not_reached": [],
+    "notices": [
+      {
+        "id": "23a1d84d2f6b38bd15951ff7a8bd323f7b3419e00b7999ec386563e824f79058",
+        "kind": "added",
+        "says": "this device was added from (motion chalk pill use) \"desktop\""
+      }
+    ],
+    "others": 1,
+    "phrase_words": "repeat tired similar police",
+    "relays": [
+      {
+        "another_form": 0,
+        "connected_secs": 69,
+        "heard_since_woke": true,
+        "holds_latest": true,
+        "no_room": null,
+        "no_room_at": null,
+        "refuses": null,
+        "relay": "127.0.0.1:25873"
+      }
+    ],
+    "removed": [],
+    "removed_a_key": false,
+    "says": [
+      "this device was added from (motion chalk pill use) \"desktop\"",
+      "accepted the device (motion chalk pill use): this device has joined: it follows the recovery phrase of the device whose key was typed, and has applied change 1"
+    ],
+    "short": null,
+    "state": "applied",
+    "statements_left": null,
+    "sync_on": true,
+    "this_device": "cordelia_pk1qll3vs3743qg7e99kn8w59k28ccm2s59w5rnrwnjzdm8j9yd2s7s3tx7pa",
+    "waiting": [
+      {
+        "name": null,
+        "relay": "127.0.0.1:25873",
+        "waits": 0
+      }
+    ]
+  },
+  "role": "personal",
+  "running": true,
+  "state": "attention",
+  "summary": "memory: 1 conflict",
+  "sync": {
+    "all": false,
+    "available": [],
+    "conflicts": [
+      "/tmp/.tmpsj7fQs/home/.claude/projects/-tmp--tmpsj7fQs-home-notes/memory/differs.conflict-07ff1642.md"
+    ],
+    "dir": "/tmp/.tmpsj7fQs/home/.claude",
+    "enabled": true,
+    "errors": [],
+    "exclude": [],
+    "excluded": [],
+    "folders": 1,
+    "home": true,
+    "home_name": null,
+    "last_change_at": "2026-10-09T04:53:25.106848580+00:00",
+    "last_cycle_at": "2026-10-09T04:53:40.124026299+00:00",
+    "mappings": [
+      {
+        "folder": "/tmp/.tmpsj7fQs/home/notes",
+        "name": "lab"
+      }
+    ],
+    "moved_on": false,
+    "notice": null,
+    "projects": [
+      {
+        "channel": "cordelia_ch1nv2gt8wycnjnfc0mnn6ycnf39s7yxfz888sjgwwd75m0esaxrmxqvggacu",
+        "conflicts": [
+          "/tmp/.tmpsj7fQs/home/.claude/projects/-tmp--tmpsj7fQs-home-notes/memory/differs.conflict-07ff1642.md"
+        ],
+        "cwd": "/tmp/.tmpsj7fQs/home/notes",
+        "error": null,
+        "failed": [],
+        "failed_more": 0,
+        "folder": "/tmp/.tmpsj7fQs/home/.claude/projects/-tmp--tmpsj7fQs-home-notes",
+        "last_published_at": "2026-10-09T04:53:25.092545934+00:00",
+        "last_pulled_at": "2026-10-09T04:53:05.066098821+00:00",
+        "mapped": true,
+        "project": "lab",
+        "too_large": [],
+        "waiting": false
+      }
+    ],
+    "projects_waiting": 0,
+    "publishes_nothing": null,
+    "stands": "applied",
+    "unmapped": [],
+    "unsynced": []
+  },
+  "uptime_secs": 74,
+  "version": "0.2.0-alpha.10"
+}

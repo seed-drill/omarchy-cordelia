@@ -1,0 +1,177 @@
+{
+  "device": "cordelia_pk10uykkf5nfq5t47eplfzgkd0ev5pf5mv68kme2phjzlu0k6hgmkyqxtf3e3",
+  "held": {
+    "by": "first_start",
+    "why": "the first start on this version is not done: the copy of the database from before this version could not be made (could not remove /tmp/.tmpeDb2qg/data/before-0.2.0-alpha.10.partial: Permission denied (os error 13)). It needs 372923 bytes of room, and the volume has 3690643456. Nothing was changed, and nothing syncs until it is done: the node tries again by itself, and needs no restart."
+  },
+  "holds": [
+    {
+      "level": "red",
+      "says": "memory not syncing: the first start on this version is not done",
+      "what": "held"
+    },
+    {
+      "level": "red",
+      "says": "memory stays here: no recovery phrase yet",
+      "what": "no_phrase"
+    }
+  ],
+  "level": "red",
+  "no_relay_secs": 2,
+  "node_version": "0.2.0-alpha.10",
+  "outbox_refused": [],
+  "outbox_waiting": 0,
+  "peers": {
+    "hot": 0,
+    "list": [],
+    "relays": [
+      {
+        "error": null,
+        "host": "127.0.0.1:9",
+        "key": null,
+        "last_tried_secs": 1,
+        "state": "connecting",
+        "unreachable_secs": null
+      }
+    ],
+    "warm": 0
+  },
+  "person": {
+    "accepting": [],
+    "added": [],
+    "among": "no_phrase",
+    "apart": null,
+    "applied_at": null,
+    "cannot_go_on": null,
+    "change": null,
+    "devices": [],
+    "folders": 1,
+    "latest": null,
+    "left_out": [],
+    "may_add": false,
+    "names": {
+      "carried_to_go": [],
+      "carried_to_go_since": null,
+      "sent": [],
+      "to_go": [],
+      "to_go_since": null
+    },
+    "names_not_listed": [],
+    "names_not_shown": 0,
+    "not_carried": [],
+    "not_reached": [],
+    "notices": [],
+    "others": 0,
+    "phrase_words": null,
+    "relays": [],
+    "removed": [],
+    "removed_a_key": false,
+    "says": [
+      "no recovery phrase yet: memory stays on this machine.",
+      "  - This is your first machine: make a phrase here (`cordelia phrase`).",
+      "  - Another machine has the phrase: add this one from it (`cordelia add-device` there, `cordelia accept` here).",
+      "  - Every device that has the phrase is lost: recover here with it (`cordelia recover`). Do not make a new phrase first."
+    ],
+    "short": "no recovery phrase yet",
+    "state": "no_phrase",
+    "statements_left": null,
+    "sync_on": true,
+    "this_device": "cordelia_pk10uykkf5nfq5t47eplfzgkd0ev5pf5mv68kme2phjzlu0k6hgmkyqxtf3e3",
+    "waiting": []
+  },
+  "role": "personal",
+  "running": true,
+  "state": "attention",
+  "summary": "memory not syncing: the first start on this version is not done",
+  "sync": {
+    "all": false,
+    "available": [
+      "github.com/sam/site"
+    ],
+    "conflicts": [],
+    "dir": "/tmp/.tmpeDb2qg/home/.claude",
+    "enabled": true,
+    "errors": [],
+    "exclude": [
+      "github.com/sam/private"
+    ],
+    "excluded": [
+      "github.com/sam/private"
+    ],
+    "folders": 3,
+    "home": false,
+    "home_name": "~",
+    "last_change_at": "2026-10-05T09:12:40.118734522+00:00",
+    "last_cycle_at": "2026-10-05T09:12:44.512203817+00:00",
+    "mappings": [
+      {
+        "folder": "/tmp/.tmpeDb2qg/home/work/lab",
+        "name": "lab"
+      }
+    ],
+    "moved_on": false,
+    "notice": null,
+    "projects": [
+      {
+        "channel": "grp_lab",
+        "conflicts": [],
+        "cwd": "/home/sam/work/lab",
+        "error": null,
+        "failed": [],
+        "failed_more": 0,
+        "folder": "/home/sam/.claude/projects/-home-sam-work-lab",
+        "last_published_at": "2026-10-05T09:12:40.118734522+00:00",
+        "last_pulled_at": null,
+        "mapped": true,
+        "project": "github.com/sam/lab",
+        "too_large": [],
+        "waiting": false
+      },
+      {
+        "channel": "grp_tools",
+        "conflicts": [],
+        "cwd": "/home/sam/work/tools",
+        "error": null,
+        "failed": [],
+        "failed_more": 0,
+        "folder": "/home/sam/.claude/projects/-home-sam-work-tools",
+        "last_published_at": null,
+        "last_pulled_at": null,
+        "mapped": false,
+        "project": "github.com/sam/tools",
+        "too_large": [],
+        "waiting": false
+      },
+      {
+        "channel": null,
+        "conflicts": [],
+        "cwd": "/home/sam",
+        "error": null,
+        "failed": [],
+        "failed_more": 0,
+        "folder": "/home/sam/.claude/projects/-home-sam",
+        "last_published_at": null,
+        "last_pulled_at": null,
+        "mapped": false,
+        "project": "~",
+        "too_large": [],
+        "waiting": true
+      }
+    ],
+    "projects_waiting": 1,
+    "publishes_nothing": null,
+    "stands": "no_phrase",
+    "unmapped": [
+      {
+        "cwd": "/home/sam/scratch",
+        "folder": "/home/sam/.claude/projects/-home-sam-scratch",
+        "name": null
+      }
+    ],
+    "unsynced": [
+      "/home/sam/.claude/projects/-home-sam-scratch"
+    ]
+  },
+  "uptime_secs": 4,
+  "version": "0.2.0-alpha.10"
+}

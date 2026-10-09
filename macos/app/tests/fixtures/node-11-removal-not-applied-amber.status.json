@@ -1,0 +1,151 @@
+{
+  "device": "cordelia_pk1tczk7w4nasvqv43knhe4s5h3gnh08ql0a3800y4wveqtz6yl3yes304fuu",
+  "holds": [
+    {
+      "level": "amber",
+      "says": "memory: a removal not yet applied by every device",
+      "what": "removal_not_applied"
+    }
+  ],
+  "level": "amber",
+  "no_relay_secs": null,
+  "node_version": "0.2.0-alpha.10",
+  "outbox_refused": [],
+  "outbox_waiting": 0,
+  "peers": {
+    "hot": 1,
+    "list": [
+      {
+        "address": "127.0.0.1:21013",
+        "connected_secs": 31,
+        "idle_secs": 0,
+        "key": "cordelia_pk1xmlw09umtj54jsdlqngla6s6p5k2telaampw6y45j6atqh2w7wwq65mu94",
+        "role": "relay",
+        "state": "hot"
+      }
+    ],
+    "relays": [
+      {
+        "error": null,
+        "host": "127.0.0.1:21013",
+        "key": null,
+        "last_tried_secs": null,
+        "state": "connected",
+        "unreachable_secs": null
+      }
+    ],
+    "warm": 0
+  },
+  "person": {
+    "accepting": [],
+    "added": [],
+    "among": "several",
+    "apart": null,
+    "applied_at": 1791521944,
+    "cannot_go_on": null,
+    "change": 3,
+    "devices": [
+      {
+        "applied": 3,
+        "key": "cordelia_pk1tczk7w4nasvqv43knhe4s5h3gnh08ql0a3800y4wveqtz6yl3yes304fuu",
+        "label": "laptop",
+        "left": false,
+        "maker": true,
+        "sent": true,
+        "this_device": true,
+        "words": "quit argue arrow opera"
+      },
+      {
+        "applied": null,
+        "key": "cordelia_pk18ej6zd42vs6u0jfvtln9ss6vtpf8jydmnq35p5xv0aypd72gqxeqdk33cg",
+        "label": "desktop",
+        "left": false,
+        "maker": false,
+        "sent": false,
+        "this_device": false,
+        "words": "eye drill top immense"
+      }
+    ],
+    "folders": 0,
+    "latest": "b00207f435ab15dc65eca8c934f43c35d05f6c535c1dc12c2c4d437e4cf4d4e6",
+    "left_out": [],
+    "may_add": true,
+    "names": {
+      "carried_to_go": [],
+      "carried_to_go_since": null,
+      "sent": [],
+      "to_go": [],
+      "to_go_since": null
+    },
+    "names_not_listed": [],
+    "names_not_shown": 0,
+    "not_carried": [],
+    "not_reached": [],
+    "notices": [],
+    "others": 1,
+    "phrase_words": "lonely mystery awesome panda",
+    "relays": [
+      {
+        "another_form": 0,
+        "connected_secs": 32,
+        "heard_since_woke": true,
+        "holds_latest": true,
+        "no_room": null,
+        "no_room_at": null,
+        "refuses": null,
+        "relay": "127.0.0.1:21013"
+      }
+    ],
+    "removed": [
+      {
+        "key": "cordelia_pk1hcekk7v9gqfe33hd39rt0tjeethxu86q5z3te2txxk24rcmwhenqvp3aka",
+        "label": "tablet",
+        "words": "various tobacco inch hazard"
+      }
+    ],
+    "removed_a_key": true,
+    "says": [],
+    "short": null,
+    "state": "applied",
+    "statements_left": null,
+    "sync_on": false,
+    "this_device": "cordelia_pk1tczk7w4nasvqv43knhe4s5h3gnh08ql0a3800y4wveqtz6yl3yes304fuu",
+    "waiting": [
+      {
+        "name": null,
+        "relay": "127.0.0.1:21013",
+        "waits": 0
+      }
+    ]
+  },
+  "role": "personal",
+  "running": true,
+  "state": "off",
+  "summary": "memory: a removal not yet applied by every device",
+  "sync": {
+    "all": false,
+    "available": null,
+    "conflicts": [],
+    "dir": null,
+    "enabled": false,
+    "errors": [],
+    "exclude": [],
+    "excluded": null,
+    "folders": 0,
+    "home": true,
+    "home_name": null,
+    "last_change_at": null,
+    "last_cycle_at": null,
+    "mappings": [],
+    "moved_on": false,
+    "notice": null,
+    "projects": [],
+    "projects_waiting": 0,
+    "publishes_nothing": null,
+    "stands": "applied",
+    "unmapped": null,
+    "unsynced": null
+  },
+  "uptime_secs": 37,
+  "version": "0.2.0-alpha.10"
+}
