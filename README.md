@@ -59,13 +59,11 @@ step, and a panel to manage it.
   from this device. The last line is what waits to be sent, where anything
   does. Only mapped folders sync. On a machine that sends nothing yet, the
   heading is "Mapped".
-- **Found on this machine:** folders Claude Code has memory for that do not
-  sync. One has a switch only where the node says `cordelia sync map` would
-  sync it; otherwise it shows the node's reason. A git project syncs under
-  its remote, so the same project on another machine joins it; any other
-  folder syncs under its own name.
-- **On your other devices:** names your other devices sync that have no folder
-  here. Click one to copy the command that syncs it to a folder.
+- **Not syncing here:** one quiet line near the foot, where anything holds:
+  how many folders Claude Code has memory for here that do not sync, and how
+  many names only your other devices sync. Click it to copy
+  `cordelia sync status`, which lists each with what to do. None of them is
+  for a click in the panel, so the panel counts them and does not list them.
 - **Relays:** each relay this device is set up with, whether it is connected
   and for how long, and whether it holds the latest change of your devices.
 - **At the foot:** one line. The version of Cordelia, the version of this
