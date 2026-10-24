@@ -122,6 +122,18 @@ Panel {
   }
 
   // The foot of the panel, in one line.
+  // "Not syncing here: 1 folder found, 1 name on your other devices", or
+  // the part that holds; empty where neither does.
+  function notSyncingHere() {
+    var parts = []
+    var found = cordelia.found.length
+    var elsewhere = cordelia.elsewhere.length
+    if (found > 0) parts.push(found + (found === 1 ? " folder" : " folders") + " found")
+    if (elsewhere > 0) parts.push(elsewhere + (elsewhere === 1 ? " name" : " names") + " on your other devices")
+    if (parts.length === 0) return ""
+    return "Not syncing here: " + parts.join(", ") + ". Click to copy the command that lists them."
+  }
+
   function foot() {
     return cordelia.joined([versions(), stored()], " · ")
   }
@@ -621,54 +633,6 @@ Panel {
             }
           }
 
-          // ── Found here, not syncing ─────────────────────────────
-          Column {
-            visible: cordelia.running && cordelia.syncOn && cordelia.found.length > 0
-            width: parent.width
-            spacing: Style.space(6)
-
-            PanelSeparator { foreground: root.foreground }
-            PanelSectionHeader {
-              text: "FOUND ON THIS MACHINE"
-              foreground: root.foreground
-              fontFamily: root.fontFamily
-            }
-            Repeater {
-              model: cordelia.found
-              FolderRow {
-                required property var modelData
-                width: column.width
-                entry: modelData
-              }
-            }
-          }
-
-          // ── On the other devices, with no folder here ───────────
-          Column {
-            visible: cordelia.running && cordelia.syncOn && cordelia.elsewhere.length > 0
-            width: parent.width
-            spacing: Style.space(6)
-
-            PanelSeparator { foreground: root.foreground }
-            PanelSectionHeader {
-              text: "ON YOUR OTHER DEVICES"
-              foreground: root.foreground
-              fontFamily: root.fontFamily
-            }
-            Repeater {
-              model: cordelia.elsewhere
-              ActionRow {
-                required property var modelData
-                width: column.width
-                icon: String.fromCodePoint(0xF0322) // laptop
-                title: cordelia.plain(modelData)
-                detail: "Click to copy the command to sync it to a folder here"
-                actionIcon: String.fromCodePoint(0xF018F) // copy
-                onActivated: cordelia.copyMapCommand(String(modelData))
-              }
-            }
-          }
-
           // ── Relays ──────────────────────────────────────────────
           Column {
             visible: cordelia.running
@@ -693,6 +657,23 @@ Panel {
                 title: cordelia.plain(modelData.name)
                 detail: root.relaySays(modelData)
               }
+            }
+          }
+
+          // ── Not syncing here: one quiet line, the list in `sync status` ──
+          // A folder found here that syncs nothing, and names only other
+          // devices sync, are counted, not listed: none is for a click here,
+          // and `cordelia sync status` lists each with what to do.
+          Note {
+            id: notSyncingLine
+            visible: cordelia.running && cordelia.syncOn && text !== ""
+            text: root.notSyncingHere()
+            font.pixelSize: Style.font.caption
+            MouseArea {
+              anchors.fill: parent
+              hoverEnabled: true
+              cursorShape: Qt.PointingHandCursor
+              onClicked: cordelia.copyText("cordelia sync status", "Copied. Run it in a terminal to see each, and what to do.")
             }
           }
 
