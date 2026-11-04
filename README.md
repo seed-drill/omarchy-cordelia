@@ -14,13 +14,20 @@ step, and a panel to manage it.
   added yet): a warning sign, which the bar highlights. Amber is for what to
   know of (a device added and not yet cleared, a relay without the latest
   change): the same sign in outline, in a milder colour. The mark is
-  `assets/cordelia-mark.svg`, drawn in the bar's own colour.
+  `assets/cordelia-mark.svg`, drawn in the bar's own colour. A speech bubble
+  at its corner says that messages wait for you, between your agents or in a
+  shared channel. Where two of your agents are held until you read, the node
+  says so (Cordelia 0.2.0-alpha.18 and later), and the icon turns amber.
 - **The head of the panel:** the node's summary. Where anything holds, every
   thing that holds is listed in its place, red first, each as the node says
   it. If the running node is not the version of the command, the panel says
   so: restart the node. Until then changes are refused; turning sync off
   still works.
 - **The switch:** memory sync on or off for this device.
+- **Messages for you:** how many messages wait for you to read them. Click to
+  open a terminal that runs `cordelia msg log`, where you read them and say
+  whether to mark them read. The panel marks nothing itself: what it could
+  do, an agent running as you could do too, so a person reads at a terminal.
 - **Stopped syncing:** on a machine that had synced everything it found, the
   folders that stopped when only mapped folders came to sync. Each has a
   switch to map it again where the node says it can be mapped, and the node's

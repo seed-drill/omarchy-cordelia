@@ -62,6 +62,12 @@ Panel {
     return Qt.rgba((a.r + b.r) / 2, (a.g + b.g) / 2, (a.b + b.b) / 2, 1)
   }
 
+  // How many messages wait for you, in a few words.
+  function forYou() {
+    var n = cordelia.unreadForYou
+    return n === 1 ? "1 message waits for you" : n + " messages wait for you"
+  }
+
   function headline() {
     if (!cordelia.loaded) return "Checking…"
     if (!cordelia.installed) return "Not set up on this machine"
@@ -251,16 +257,35 @@ Panel {
     foreground: root.barIconColor
     // The bar highlights red, and never amber.
     active: root.attention
-    tooltipText: cordelia.installed ? "Cordelia: " + cordelia.plain(cordelia.summary) : "Cordelia"
+    tooltipText: !cordelia.installed ? "Cordelia"
+      : "Cordelia: " + cordelia.plain(cordelia.summary)
+        + (cordelia.unreadForYou > 0 ? ". " + root.forYou() : "")
     onPressed: function(buttonCode) {
       if (buttonCode === Qt.RightButton) cordelia.refresh()
       else root.toggle()
     }
   }
 
+  // The mark, with a speech bubble at its corner where messages wait for
+  // you. Where a pair of your agents is held until you read, the node says
+  // so as an amber hold, and the mark turns amber with the rest.
   Component {
     id: barMark
-    Mark { color: root.barIconColor }
+    Item {
+      Mark { anchors.fill: parent; color: root.barIconColor }
+      Text {
+        visible: cordelia.unreadForYou > 0
+        anchors.top: parent.top
+        anchors.right: parent.right
+        anchors.topMargin: -parent.height * 0.2
+        anchors.rightMargin: -parent.width * 0.25
+        textFormat: Text.PlainText
+        text: String.fromCodePoint(0xF0361) // message: a speech bubble
+        color: root.barIconColor
+        font.family: root.fontFamily
+        font.pixelSize: Math.max(6, Math.round(parent.height * 0.6))
+      }
+    }
   }
 
   KeyboardPanel {
@@ -399,6 +424,24 @@ Panel {
             title: "Start the node"
             detail: "It runs in the background and keeps memory in step"
             onActivated: cordelia.startNode()
+          }
+
+          // ── Messages for you ────────────────────────────────────
+          // You read them, and mark them read, at a terminal: the click
+          // opens one that runs `cordelia msg log`.
+          Column {
+            visible: cordelia.running && cordelia.unreadForYou > 0
+            width: parent.width
+            spacing: Style.space(6)
+
+            PanelSeparator { foreground: root.foreground }
+            ActionRow {
+              width: parent.width
+              icon: String.fromCodePoint(0xF01EE) // email
+              title: root.forYou()
+              detail: "Opens a terminal to read them. There you can mark them read."
+              onActivated: cordelia.readMessages()
+            }
           }
 
           // ── Folders that stopped syncing ────────────────────────

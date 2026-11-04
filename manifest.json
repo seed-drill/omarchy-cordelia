@@ -2,10 +2,10 @@
   "schemaVersion": 1,
   "id": "seeddrill.cordelia",
   "name": "Cordelia",
-  "version": "0.4.3",
+  "version": "0.5.0",
   "author": "Seed Drill Labs",
   "license": "MIT",
-  "description": "Cordelia in the Omarchy bar: whether your agent's memory is in step across your devices, and what needs you, with what syncs, relays, your devices and conflicts.",
+  "description": "Cordelia in the Omarchy bar: whether your agent's memory is in step across your devices, and what needs you, messages that wait for you, with what syncs, relays, your devices and conflicts.",
   "kinds": [
     "bar-widget"
   ],
