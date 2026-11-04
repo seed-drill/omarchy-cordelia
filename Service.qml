@@ -155,6 +155,13 @@ Item {
   }
   readonly property string deviceKey: String(status.device || "")
   readonly property int waiting: Number(status.outbox_waiting || 0)
+  // The messages between your agents, and in your shared channels, that wait
+  // for you to read them. Only you, at a terminal, mark them read: what the
+  // panel could do, an agent running as you could do too.
+  readonly property var messages: record(status.messages) || ({})
+  readonly property var shared: record(status.shared) || ({})
+  readonly property int unreadForYou: Number(messages.unread_by_a_person || 0)
+    + Number(shared.unread_by_a_person || 0)
 
   // The switch moves the moment it is clicked; the real state follows.
   // -1 follows the node, 0 or 1 is a change still being applied.
@@ -516,6 +523,13 @@ Item {
     var out = []
     for (var i = 0; i < parts.length; i++) if (parts[i] !== "") out.push(parts[i])
     return out.join(separator)
+  }
+
+  // Opens a terminal that runs `cordelia msg log`, where you read the
+  // messages and say whether to mark them read. The panel marks nothing.
+  function readMessages() {
+    Quickshell.execDetached(["omarchy-launch-terminal", "bash", "-c",
+      "\"$1\" msg log; echo; read -r -p 'Press Enter to close. ' _", "cordelia", cli])
   }
 
   function copyText(text, note) {
