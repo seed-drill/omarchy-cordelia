@@ -14,6 +14,9 @@ enum Act {
     /// The switch: on or off, as the row showed it when it was clicked.
     case setSync(on: Bool)
     case startNode
+    /// Open a terminal that runs `cordelia msg log`, where the person reads the messages
+    /// and marks them read. The menu marks nothing itself.
+    case readMessages
     case home(on: Bool)
     /// Sync a folder the node lists, with what its row says maps it.
     case map(args: [String], cwd: String, under: String, title: String)
@@ -41,6 +44,7 @@ enum Act {
         switch self {
         case .setSync(let on): return "sync " + (on ? "on" : "off")
         case .startNode: return "start-node"
+        case .readMessages: return "read-messages"
         case .home(let on): return "home " + (on ? "on" : "off")
         case .map(_, _, let under, let title): return "map \(title)" + (under.isEmpty ? "" : " as \(under)")
         case .stop(_, let title): return "stop \(title)"
@@ -142,6 +146,8 @@ struct MenuTree {
     var amber: Bool
     /// Drawn dimmed, as an inactive menu bar item is: nothing is being passed on.
     var dimmed: Bool
+    /// A speech bubble at the mark's corner: messages wait for the person (Panel.qml's bar mark).
+    var bubble: Bool
     var tooltip: String
     var rows: [Row]
 }
@@ -248,7 +254,10 @@ func buildMenu(_ m: Model, config: Config, home: String, cliVersion: String = ""
                  urgent: red,
                  amber: amber,
                  dimmed: !red && !amber && ["off", "stopped", "offline", "uninitialised"].contains(m.state),
-                 tooltip: m.summary.isEmpty ? "Cordelia" : "Cordelia: " + plain(m.summary),
+                 // As the panel: on the mark only, never on a state's symbol.
+                 bubble: m.unreadForYou > 0 && SYMBOLS[sign] == nil,
+                 tooltip: (m.summary.isEmpty ? "Cordelia" : "Cordelia: " + plain(m.summary))
+                     + (m.unreadForYou > 0 ? ". " + forYou(m.unreadForYou) : ""),
                  rows: rows + tail)
     }
 
@@ -296,6 +305,14 @@ func buildMenu(_ m: Model, config: Config, home: String, cliVersion: String = ""
     rows.append(Row(title: "Sync Memory on This Mac", checked: m.syncOn, act: .setSync(on: !m.syncOn),
                     tip: m.syncOn ? "Click to stop syncing memory on this device"
                                   : "Click to sync Claude Code's memory"))
+
+    // ── Messages for you ── You read them, and mark them read, at a terminal: the
+    // click opens one that runs `cordelia msg log`.
+    if m.unreadForYou > 0 {
+        rows.append(.line)
+        rows.append(Row(title: forYou(m.unreadForYou), act: .readMessages,
+                        tip: "Opens a terminal to read them. There you can mark them read."))
+    }
 
     // Conflicts and the notice stay above the devices: they show only when
     // something needs you.
@@ -517,6 +534,11 @@ func buildMenu(_ m: Model, config: Config, home: String, cliVersion: String = ""
     return tree(rows)
 }
 
+/// How many messages wait for the person, in a few words (Panel.forYou).
+func forYou(_ n: Int) -> String {
+    n == 1 ? "1 message waits for you" : "\(n) messages wait for you"
+}
+
 // ── The dump ─────────────────────────────────────────────────────────────
 
 /// A command as the dump prints it: a key in it is shortened, as a row shows one.
@@ -528,7 +550,7 @@ private func shown(_ command: String) -> String {
 
 func dump(_ tree: MenuTree) -> String {
     var out = ["icon: \(tree.symbol)" + (tree.urgent ? " urgent" : "") + (tree.amber ? " amber" : "")
-                   + (tree.dimmed ? " dimmed" : ""),
+                   + (tree.dimmed ? " dimmed" : "") + (tree.bubble ? " bubble" : ""),
                "tooltip: \(tree.tooltip)",
                ""]
     func walk(_ rows: [Row], _ depth: Int) {

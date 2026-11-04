@@ -256,6 +256,9 @@ final class Actions {
         case .openLoginItems:
             openLoginItemsSettings()
 
+        case .readMessages:
+            readMessages(command: cfg.command)
+
         case .startNode:
             work.async {
                 let target = "gui/\(getuid())/ai.seeddrill.cordelia"
@@ -286,6 +289,24 @@ func firstParagraph(_ text: String) -> String {
         else if !out.isEmpty { break }
     }
     return out.joined(separator: "\n")
+}
+
+/// Opens a terminal that runs `cordelia msg log`, where the person reads the messages and says
+/// whether to mark them read (Service.readMessages). The menu marks nothing. The script is
+/// opened, not scripted into Terminal: that needs no automation permission, and it opens in
+/// whichever terminal the person has chosen for scripts.
+private func readMessages(command: String) {
+    let quoted = "'" + command.replacingOccurrences(of: "'", with: "'\\''") + "'"
+    let script = "#!/bin/bash\n\(quoted) msg log\necho\nread -r -p 'Press Enter to close. ' _\n"
+    let url = FileManager.default.temporaryDirectory.appendingPathComponent("cordelia-messages.command")
+    do {
+        try script.write(to: url, atomically: true, encoding: .utf8)
+        try FileManager.default.setAttributes([.posixPermissions: 0o700], ofItemAtPath: url.path)
+    } catch {
+        Notifier.post("Could not open a terminal for the messages")
+        return
+    }
+    launch("/usr/bin/open", [url.path])
 }
 
 func copyToClipboard(_ text: String) {

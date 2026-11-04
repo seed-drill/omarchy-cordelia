@@ -76,8 +76,10 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate, UNUser
             red.isTemplate = false
             button.image = red
         } else {
-            image.isTemplate = true
-            button.image = image
+            // Messages wait for the person: a speech bubble at the mark's corner.
+            let shown = tree.bubble ? withBubble(image) : image
+            shown.isTemplate = true
+            button.image = shown
         }
         button.appearsDisabled = tree.dimmed
         button.toolTip = tree.tooltip

@@ -100,9 +100,29 @@ func cordeliaMarkImage(points: CGFloat = 18) -> NSImage {
     return image
 }
 
+/// The mark with a speech bubble at its top right corner, while messages wait for the
+/// person (Panel.qml's bar mark). The mark draws a little smaller to give the bubble room,
+/// and a clear ring keeps the two apart. A template image, as the mark is: the bar tints it.
+func withBubble(_ mark: NSImage) -> NSImage {
+    let bubble = NSImage(systemSymbolName: "bubble.left.fill", accessibilityDescription: nil)
+    let image = NSImage(size: mark.size, flipped: false) { rect in
+        mark.draw(in: NSRect(x: 0, y: 0, width: rect.width * 0.8, height: rect.height * 0.8))
+        let side = rect.width * 0.5
+        let badge = NSRect(x: rect.width - side, y: rect.height - side, width: side, height: side)
+        NSGraphicsContext.current?.compositingOperation = .clear
+        NSBezierPath(ovalIn: badge.insetBy(dx: -side * 0.12, dy: -side * 0.12)).fill()
+        NSGraphicsContext.current?.compositingOperation = .sourceOver
+        bubble?.draw(in: badge)
+        return true
+    }
+    image.isTemplate = true
+    image.accessibilityDescription = "Cordelia: messages wait for you"
+    return image
+}
+
 /// Writes the menu bar image as a PNG at `scale` times its size, black on
-/// clear, to look at it (`Cordelia --make-menubar-image FILE`).
-func writeMenuBarImage(_ file: String, scale: Int = 8) -> Bool {
+/// clear, to look at it (`Cordelia --make-menubar-image FILE [--bubble]`).
+func writeMenuBarImage(_ file: String, scale: Int = 8, bubble: Bool = false) -> Bool {
     let points: CGFloat = 18
     let px = Int(points) * scale
     guard let rep = NSBitmapImageRep(bitmapDataPlanes: nil, pixelsWide: px, pixelsHigh: px,
@@ -111,8 +131,12 @@ func writeMenuBarImage(_ file: String, scale: Int = 8) -> Bool {
           let context = NSGraphicsContext(bitmapImageRep: rep) else { return false }
     NSGraphicsContext.saveGraphicsState()
     NSGraphicsContext.current = context
-    NSColor.black.setStroke()
-    strokeCordeliaMark(in: NSRect(x: 0, y: 0, width: px, height: px), weight: 2.75)
+    if bubble {
+        withBubble(cordeliaMarkImage(points: CGFloat(px))).draw(in: NSRect(x: 0, y: 0, width: px, height: px))
+    } else {
+        NSColor.black.setStroke()
+        strokeCordeliaMark(in: NSRect(x: 0, y: 0, width: px, height: px), weight: 2.75)
+    }
     NSGraphicsContext.restoreGraphicsState()
     guard let png = rep.representation(using: .png, properties: [:]) else { return false }
     return FileManager.default.createFile(atPath: file, contents: png)

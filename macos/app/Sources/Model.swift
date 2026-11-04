@@ -191,6 +191,10 @@ struct Model {
     let noRelay: Bool
     let deviceKey: String
     let waiting: Int
+    /// The messages between the person's agents, and in their shared channels, that wait for
+    /// the person to read them (Service.unreadForYou). Only the person, at a terminal, marks
+    /// them read: what the menu could do, an agent running as the person could do too.
+    let unreadForYou: Int
 
     init(status st: JSON, home homeDir: String) {
         let s = st["sync"] as? JSON ?? [:]
@@ -257,6 +261,8 @@ struct Model {
         noRelay = !rows.contains { $0.connected }
         deviceKey = st["device"] as? String ?? ""
         waiting = integer(st["outbox_waiting"]) ?? 0
+        unreadForYou = (integer(record(st["messages"])?["unread_by_a_person"]) ?? 0)
+            + (integer(record(st["shared"])?["unread_by_a_person"]) ?? 0)
     }
 }
 
