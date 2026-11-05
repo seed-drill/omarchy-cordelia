@@ -160,8 +160,19 @@ Item {
   // panel could do, an agent running as you could do too.
   readonly property var messages: record(status.messages) || ({})
   readonly property var shared: record(status.shared) || ({})
-  readonly property int unreadForYou: Number(messages.unread_by_a_person || 0)
-    + Number(shared.unread_by_a_person || 0)
+  // A shared channel's count is in its own entry of `shared.channels`.
+  readonly property int unreadForYou: {
+    var n = 0
+    var mine = Number(messages.unread_by_a_person)
+    if (mine > 0) n += mine
+    var channels = shared.channels instanceof Array ? shared.channels : []
+    for (var i = 0; i < channels.length; i++) {
+      var channel = record(channels[i])
+      var count = channel ? Number(channel.unread_by_a_person) : 0
+      if (count > 0) n += count
+    }
+    return n
+  }
 
   // The switch moves the moment it is clicked; the real state follows.
   // -1 follows the node, 0 or 1 is a change still being applied.
