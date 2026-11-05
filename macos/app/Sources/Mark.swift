@@ -103,8 +103,10 @@ func cordeliaMarkImage(points: CGFloat = 18) -> NSImage {
 /// The mark with a speech bubble at its top right corner, while messages wait for the
 /// person (Panel.qml's bar mark). The mark draws a little smaller to give the bubble room,
 /// and a clear ring keeps the two apart. A template image, as the mark is: the bar tints it.
+/// The bubble is round, as the panel's is since 0404cf4 (its "chat" glyph, U+F0B79):
+/// `message.fill`, not `bubble.left.fill`, which draws a rounded square.
 func withBubble(_ mark: NSImage) -> NSImage {
-    let bubble = NSImage(systemSymbolName: "bubble.left.fill", accessibilityDescription: nil)
+    let bubble = NSImage(systemSymbolName: "message.fill", accessibilityDescription: nil)
     let image = NSImage(size: mark.size, flipped: false) { rect in
         mark.draw(in: NSRect(x: 0, y: 0, width: rect.width * 0.8, height: rect.height * 0.8))
         let side = rect.width * 0.5

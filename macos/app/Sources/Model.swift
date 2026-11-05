@@ -4,8 +4,8 @@
 import Foundation
 
 /// The Omarchy panel commit this app matches. See the README, "Keeping in step".
-let TRACKS = "86a5c4b"
-let APP_VERSION = "0.3.0"
+let TRACKS = "0404cf4"
+let APP_VERSION = "0.3.1"
 
 // ── About ────────────────────────────────────────────────────────────────
 
