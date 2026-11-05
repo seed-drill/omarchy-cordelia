@@ -162,11 +162,14 @@ Item {
   readonly property var shared: record(status.shared) || ({})
   // A shared channel's count is in its own entry of `shared.channels`.
   readonly property int unreadForYou: {
-    var n = Number(messages.unread_by_a_person || 0)
-    var channels = Array.isArray(shared.channels) ? shared.channels : []
+    var n = 0
+    var mine = Number(messages.unread_by_a_person)
+    if (mine > 0) n += mine
+    var channels = shared.channels instanceof Array ? shared.channels : []
     for (var i = 0; i < channels.length; i++) {
       var channel = record(channels[i])
-      if (channel) n += Number(channel.unread_by_a_person || 0)
+      var count = channel ? Number(channel.unread_by_a_person) : 0
+      if (count > 0) n += count
     }
     return n
   }
