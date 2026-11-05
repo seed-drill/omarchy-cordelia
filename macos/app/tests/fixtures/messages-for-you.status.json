@@ -224,6 +224,46 @@
     "unread_by_a_person": 2
   },
   "shared": {
-    "unread_by_a_person": 1
+    "acts_of_removed_devices": [],
+    "channels": [
+      {
+        "also_a_name": false,
+        "beyond_shown": 0,
+        "held_back": 0,
+        "id": "e73f2c84b78d2934a6c45f85cd3698cd4ce21e52c4157ff8df6c6cacc6fc7db8",
+        "keys": 1,
+        "labelled": 1,
+        "name": "design-notes",
+        "new_since_written": 0,
+        "not_moved_yet": 0,
+        "not_stored": 0,
+        "offers": [],
+        "reached": true,
+        "refused_at_a_relay": 0,
+        "refused_for_room": 0,
+        "refused_keys": [],
+        "relays": [
+          {
+            "connected": true,
+            "not_reached": null,
+            "relay": "127.0.0.1:29952",
+            "words": "ribbon salad oyster glide"
+          }
+        ],
+        "rows_let_go": 0,
+        "subscribed": [
+          "lab-notes"
+        ],
+        "unread_by_a_person": 1,
+        "unread_by_an_agent": 0,
+        "waiting": 0,
+        "words": "orbit canal fringe velvet"
+      }
+    ],
+    "made_anew_past_a_bound": [],
+    "passed_over": [],
+    "past_a_bound": [],
+    "removed_device_holds": [],
+    "typed": []
   }
 }
