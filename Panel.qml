@@ -280,7 +280,7 @@ Panel {
         anchors.topMargin: -parent.height * 0.2
         anchors.rightMargin: -parent.width * 0.25
         textFormat: Text.PlainText
-        text: String.fromCodePoint(0xF0361) // message: a speech bubble
+        text: String.fromCodePoint(0xF0B79) // chat: a round speech bubble
         color: root.barIconColor
         font.family: root.fontFamily
         font.pixelSize: Math.max(6, Math.round(parent.height * 0.6))
