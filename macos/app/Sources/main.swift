@@ -13,6 +13,7 @@
 //   Cordelia --login-item on|off|status   open this app at login, or not
 //   Cordelia --make-iconset DIR    write the app icon's PNGs (used by build.sh)
 //   Cordelia --make-menubar-image FILE   write the menu bar mark as a PNG, enlarged, to look at
+//                                        (--bubble: with the speech bubble of messages waiting)
 //   Cordelia --version
 
 import AppKit
@@ -91,7 +92,7 @@ if let dir = option("--make-iconset") {
 }
 
 if let file = option("--make-menubar-image") {
-    exit(writeMenuBarImage(file) ? 0 : 1)
+    exit(writeMenuBarImage(file, bubble: arguments.contains("--bubble")) ? 0 : 1)
 }
 
 let app = NSApplication.shared
