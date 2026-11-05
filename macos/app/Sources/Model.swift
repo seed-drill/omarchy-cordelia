@@ -4,8 +4,8 @@
 import Foundation
 
 /// The Omarchy panel commit this app matches. See the README, "Keeping in step".
-let TRACKS = "0404cf4"
-let APP_VERSION = "0.3.1"
+let TRACKS = "97d9e20"
+let APP_VERSION = "0.3.2"
 
 // ── About ────────────────────────────────────────────────────────────────
 
@@ -261,8 +261,11 @@ struct Model {
         noRelay = !rows.contains { $0.connected }
         deviceKey = st["device"] as? String ?? ""
         waiting = integer(st["outbox_waiting"]) ?? 0
-        unreadForYou = (integer(record(st["messages"])?["unread_by_a_person"]) ?? 0)
-            + (integer(record(st["shared"])?["unread_by_a_person"]) ?? 0)
+        // A shared channel's count is in its own entry of `shared.channels`.
+        // Only a number above 0 adds: anything else is skipped.
+        let mine = integer(record(st["messages"])?["unread_by_a_person"])
+        let inChannels = records(record(st["shared"])?["channels"]).map { integer($0["unread_by_a_person"]) }
+        unreadForYou = ([mine] + inChannels).compactMap { $0 }.filter { $0 > 0 }.reduce(0, +)
     }
 }
 
